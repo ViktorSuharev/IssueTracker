@@ -9,7 +9,6 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <third-party.postgres.version>9.1-901-1.jdbc4</third-party.postgres.version>
     </properties>
 
     <parent>
@@ -29,9 +28,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.visu</groupId>
-            <artifactId>app-ui</artifactId>
-            <version>${version}</version>
+            <groupId>com.netcracker.edu</groupId>
+            <artifactId>tms-ui</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -41,7 +40,6 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${third-party.postgres.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

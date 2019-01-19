@@ -11,8 +11,8 @@ class HeaderPanel extends React.Component {
             <div className="row">
               <div className="col-lg-8 col-md-10 mx-auto">
                 <div className="site-heading">
-                  <h1>Happy New Year</h1>
-                  <span className="subheading">Some text ...</span>
+                  <h1>Hi everybody</h1>
+                  <span className="subheading">There will be Issue Tracker application soon...</span>
                 </div>
               </div>
             </div>

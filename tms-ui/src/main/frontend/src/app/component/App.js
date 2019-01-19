@@ -15,7 +15,6 @@ class App extends React.Component {
     return (
       <div>
           <HeaderPanel/>
-          <h1>There will be Tracker Issue application soon...</h1>
       </div>
     );
   }
