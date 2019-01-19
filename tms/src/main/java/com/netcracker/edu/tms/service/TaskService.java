@@ -1,4 +1,4 @@
 package com.netcracker.edu.tms.service;
 
-public class TaskService {
+public interface TaskService {
 }
