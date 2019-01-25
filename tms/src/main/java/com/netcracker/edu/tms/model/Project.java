@@ -30,13 +30,9 @@ public class Project {
     @Column(name = "creator_id")
     private BigInteger creator_id;
 
-    @Column(name = "list_of_users_id")
-    private  BigInteger list_of_users_id;
 
     @Column(name = "name")
     private String name;
 
-    /*@Column(name = "list_of_tasks_id")
-    private BigInteger list_of_tasks_id;*/
 
 }

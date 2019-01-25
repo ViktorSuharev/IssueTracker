@@ -60,16 +60,16 @@ public class ProjectDaoJPAImpl implements ProjectDao {
         try {
             if(entityManager.contains(oldProject)){
                 entityManager.merge(project);
-                LOGGER.info("updateEmployee called with \""+project+"\"");
+                LOGGER.info("updateProject called with \""+project+"\"");
 
                 return true;
             }else{
-                LOGGER.warn("No such Employee in updateEmpoyee appeared");
-                throw new IllegalStateException("No such Employee");//Not found entity to update
+                LOGGER.warn("No such Project in updateProject appeared");
+                throw new IllegalStateException("No such Project");//Not found entity to update
             }
 
-        } catch (IllegalArgumentException e) {
-            LOGGER.warn("IllegalArgumentException in updateEmpoyee appeared",e);
+        } catch (Exception e) {
+            LOGGER.warn("IllegalArgumentException in updateProject appeared",e);
             throw e;
         }
 
@@ -91,6 +91,10 @@ public class ProjectDaoJPAImpl implements ProjectDao {
             }
         } catch (IllegalArgumentException e) {
             LOGGER.warn("IllegalArgumentException in deleteEmployee appeared",e);
+            throw e;
+        }
+        catch (NullPointerException e) {
+            LOGGER.warn("NullPointerException in deleteEmployee appeared",e);
             throw e;
         }
     }

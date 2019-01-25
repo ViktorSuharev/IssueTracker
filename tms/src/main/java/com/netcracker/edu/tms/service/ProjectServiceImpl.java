@@ -20,7 +20,7 @@ public class ProjectServiceImpl implements ProjectService {
         try{
             return projectDao.getProjectById(projectId);
         }catch (IllegalArgumentException e){
-            Project empl=new Project(BigInteger.valueOf(-1),BigInteger.valueOf(1),BigInteger.valueOf(1),"stub");
+            Project empl=new Project(BigInteger.valueOf(-1),BigInteger.valueOf(1),"stub");
             return empl;
         }
     }
@@ -38,9 +38,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public boolean updateProject(Project project, Project oldProject) {
-        try{
-            return projectDao.updateProject(project,oldProject);
-        }catch (IllegalArgumentException e) {
+        try {
+            return projectDao.updateProject(project, oldProject);
+        } catch (Exception e) {
             return false;
         }
     }
@@ -52,7 +52,10 @@ public class ProjectServiceImpl implements ProjectService {
             return projectDao.deleteProject(project);
         }catch (IllegalArgumentException e){
             return false;
-        }
+
+         }catch (NullPointerException e){
+             return false;
+         }
     }
 
     @Override
