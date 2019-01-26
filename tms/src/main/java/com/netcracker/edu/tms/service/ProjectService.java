@@ -38,6 +38,10 @@ public interface ProjectService {
 
 
     /**
+     *
+     */
+    List<Project> findProjectsByCreatorId(BigInteger creatorId);
+    /**
      * Select all projects from DB
      * @return list of {@link Project} or empty list
      */

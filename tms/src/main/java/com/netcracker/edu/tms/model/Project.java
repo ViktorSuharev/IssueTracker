@@ -17,7 +17,7 @@ import java.math.BigInteger;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "project")
+@Table(name = "projects")
 
 public class Project {
 

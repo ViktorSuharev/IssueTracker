@@ -17,29 +17,16 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project getProjectById(BigInteger projectId) {
-        try{
-            return projectDao.getProjectById(projectId);
-        }catch (IllegalArgumentException e){
-            Project empl=new Project(BigInteger.valueOf(-1),BigInteger.valueOf(1),"stub");
-            return empl;
-        }
+
+        return projectDao.getProjectById(projectId);
+
     }
 
     @Override
     @Transactional
     public boolean addProject(Project newProject) {
-        try{
-            return projectDao.addProject(newProject);
-        }catch (Exception e){
-            return false;
-        }
-    }
-
-    @Override
-    @Transactional
-    public boolean updateProject(Project project, Project oldProject) {
         try {
-            return projectDao.updateProject(project, oldProject);
+            return projectDao.addProject(newProject);
         } catch (Exception e) {
             return false;
         }
@@ -47,15 +34,27 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
+    public boolean updateProject(Project project, Project oldProject) {
+
+        return projectDao.updateProject(project, oldProject);
+
+    }
+
+    @Override
+    @Transactional
     public boolean deleteProject(Project project) {
-        try{
+        try {
             return projectDao.deleteProject(project);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return false;
 
-         }catch (NullPointerException e){
-             return false;
-         }
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+    @Override
+    public List<Project> findProjectsByCreatorId(BigInteger creator_id){
+        return projectDao.findProjectsByCreatorId(creator_id);
     }
 
     @Override

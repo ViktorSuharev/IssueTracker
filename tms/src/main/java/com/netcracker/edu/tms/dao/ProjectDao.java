@@ -58,7 +58,7 @@ public interface ProjectDao {
      * @param creator_id
      * @return list of {@link Project} or empty list
      */
-    List<Project> getProjectsByCreatorId(String creator_id);
+    List<Project> findProjectsByCreatorId(BigInteger creator_id);
 
 
 
