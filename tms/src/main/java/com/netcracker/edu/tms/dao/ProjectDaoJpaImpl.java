@@ -20,89 +20,73 @@ public class ProjectDaoJpaImpl implements ProjectDao {
 
     @Override
     public Project getProjectById(BigInteger projectId) {
-        LOGGER.debug("getEmployeeById called with {}", projectId);
+        LOGGER.debug("getProjectById called with {}", projectId);
         return entityManager.find(Project.class, projectId);
     }
 
     @Override
-    public List<Project> getProjectByName(String name) {
-        try {
-            Query query = entityManager.createQuery(QueryConsts.SELECT_WITH_NAME);
-            query.setParameter("surname", name);
-            List<Project> ret = query.getResultList();
+    public Project getProjectByName(String name) {
+        Query query = entityManager.createQuery(QueryConsts.SELECT_WITH_NAME);
+        query.setParameter("name", name);
+        List<Project> ret = query.getResultList();
 
-            LOGGER.info("getEmployeesBySurname called with \"" + name + "\"");
-            return ret;
-        } catch (IllegalArgumentException e) {
-            LOGGER.warn("IllegalArgumentException in getEmployeesBySurname appeared", e);
-            throw e;
+        LOGGER.info("getProjectByName called with {}", name);
+        if(ret.isEmpty()){
+            return null;
         }
+        return ret.get(0);
     }
 
     @Override
     public boolean addProject(Project project) {
-
         entityManager.persist(project);
-        LOGGER.debug("addEmployee called with {}", project.toString());
+        LOGGER.debug("addProject called with {}", project.toString());
         return true;
-
-
     }
 
     @Override
-    public boolean updateProject(Project project, Project oldProject) {
-
-        if (entityManager.contains(oldProject)) {
+    public boolean updateProject(Project project, BigInteger updatedProjectId) {
+        if (entityManager.find(Project.class, updatedProjectId) != null) {
             entityManager.merge(project);
             LOGGER.debug("updateProject called with {}", project.toString());
-
             return true;
         } else {
-            LOGGER.debug("No such Project with ID= {} in updateProject appeared", oldProject.getId());
+            LOGGER.warn("No such Project with ID= {} in updateProject appeared", updatedProjectId);
             return false;
         }
-
-
     }
 
     @Override
-    public boolean deleteProject(Project project) {
+    public boolean deleteProject(BigInteger projectId) {
+        Project same = entityManager.find(Project.class, projectId);
 
-        BigInteger identifier = project.getId();
-
-        Project same = entityManager.find(Project.class, identifier);
-
-        if (same.equals(project)) {
+        if (same != null) {
             entityManager.remove(same);
-            LOGGER.debug("deleteProject called with {}", project.toString());
+            LOGGER.debug("deleteProject called with {}", projectId.toString());
             return true;
         } else {
-            LOGGER.debug("No such Employee in deleteEmpoyee appeared");
+            LOGGER.debug("No such Project in deleteProject appeared");
             return false;
         }
-
-
     }
 
     @Override
-    public List<Project> findProjectsByCreatorId(BigInteger creator_id) {
-            if(creator_id.equals(BigInteger.valueOf(-1))){
-                return Collections.emptyList();
-            }
-            Query query = entityManager.createQuery(QueryConsts.SELECT_PROJECTS_BY_CREATOR_ID);
-            query.setParameter("creator_id", creator_id);
-            List<Project> ret = query.getResultList();
-
-            LOGGER.debug("findProjectsByCreatorId called with {}", creator_id);
-            return ret;
-
+    public List<Project> findProjectsByCreatorId(BigInteger creatorId) {
+        if (creatorId.compareTo(BigInteger.ZERO) <= 0) {
+            return Collections.emptyList();
+        }
+        Query query = entityManager.createQuery(QueryConsts.SELECT_PROJECTS_BY_CREATOR_ID);
+        query.setParameter("creator_id", creatorId);
+        List<Project> ret = query.getResultList();
+        LOGGER.debug("findProjectsByCreatorId called with {}", creatorId);
+        return ret;
     }
 
     @Override
     public List<Project> getAllProjects() {
         Query query = entityManager.createQuery(QueryConsts.SELECT_ALL);
         List<Project> ret = query.getResultList();
-        LOGGER.debug("getAllEmployees called");
+        LOGGER.debug("getAllProjects called");
         return ret;
     }
 

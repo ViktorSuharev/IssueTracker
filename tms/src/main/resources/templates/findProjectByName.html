@@ -5,22 +5,22 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<h2>Find Project by creator ID</h2>
+<h2>Find Project by name</h2>
 
 <h3>Search</h3>
-<form action="#" th:action="@{/findProjectsByCreatorId}" method="get">
-    <p>Creator ID <input type="text" th:name="creator_id"/></p>
+<form action="#" th:action="@{/findProjectByName}" method="get">
+    <p>Project name <input type="text" th:name="name"/></p>
     <p><input type="submit" value="Submit"/></p>
 </form>
 
-<div th:if="${creator_id}">
-    <br>
 
-        <div th:if="${creator_id} > 0">
+
+
+        <div th:if="${error} ==1">
             <h3>Result</h3>
-            <h2> All projects which were created by User with with ID=
-                <div th:text="${creator_id}"></div>
-            </h2>
+            <h2>Project with name =
+                <div th:text="${name}"></div>
+
                 <table border="1">
                     <thead>
                     <tr>
@@ -30,7 +30,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="project : ${projects}">
+                    <tr>
                         <td th:text="${project.id}"></td>
                         <td th:text="${project.creator_id}"></td>
                         <td th:text="${project.name}"></td>
@@ -39,11 +39,14 @@
                 </table>
 
         </div>
-        <div th:if="${creator_id}==-1">
-            <p>Projects not found</p>
+        <div th:if="${error}==2">
+            <p>Project not found</p>
+        </div>
+        <div th:if="${error}==-1">
+            <p>Please type name of the project</p>
         </div>
 
-</div>
+
 
 <br>
 <p>Back to <a href="/">home</a></p>

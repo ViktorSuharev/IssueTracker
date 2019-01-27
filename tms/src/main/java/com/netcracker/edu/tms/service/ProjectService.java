@@ -9,6 +9,7 @@ public interface ProjectService {
 
     /**
      * Get project by specified id
+     *
      * @param projectId
      * @return {@link Project} or null
      */
@@ -16,6 +17,7 @@ public interface ProjectService {
 
     /**
      * Add new project to database
+     *
      * @param newProject
      * @return true or false depending on operation result
      */
@@ -23,29 +25,39 @@ public interface ProjectService {
 
     /**
      * Update existent project
+     *
      * @param project
-     *  @param oldProject
+     * @param oldProjectId
      * @return true or false depending on operation result
      */
-    boolean updateProject(Project project,Project oldProject);
+    boolean updateProject(Project project, BigInteger oldProjectId);
 
     /**
      * Delete project
-     * @param project
+     *
+     * @param projectId
      * @return true or false depending on operation result
      */
-    boolean deleteProject(Project project);
+    boolean deleteProject(BigInteger projectId);
 
 
     /**
      *
      */
     List<Project> findProjectsByCreatorId(BigInteger creatorId);
+
     /**
      * Select all projects from DB
+     *
      * @return list of {@link Project} or empty list
      */
     List<Project> getAllProjects();
+
+    /**
+     *
+     */
+    Project getProjectsByName(String name);
+
 
     // List<User> getProjectsTeam(BigInteger projectId);
     //  List<Task> getProjectsTasks(BigInteger projectId);

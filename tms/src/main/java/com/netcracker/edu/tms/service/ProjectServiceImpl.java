@@ -17,48 +17,39 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project getProjectById(BigInteger projectId) {
-
         return projectDao.getProjectById(projectId);
-
     }
 
     @Override
     @Transactional
     public boolean addProject(Project newProject) {
-        try {
-            return projectDao.addProject(newProject);
-        } catch (Exception e) {
-            return false;
-        }
+        return projectDao.addProject(newProject);
     }
 
     @Override
     @Transactional
-    public boolean updateProject(Project project, Project oldProject) {
-
-        return projectDao.updateProject(project, oldProject);
-
+    public boolean updateProject(Project project, BigInteger oldProjectId) {
+        return projectDao.updateProject(project, oldProjectId);
     }
 
     @Override
     @Transactional
-    public boolean deleteProject(Project project) {
-        try {
-            return projectDao.deleteProject(project);
-        } catch (IllegalArgumentException e) {
-            return false;
-
-        } catch (NullPointerException e) {
-            return false;
-        }
+    public boolean deleteProject(BigInteger projectId) {
+        return projectDao.deleteProject(projectId);
     }
+
     @Override
-    public List<Project> findProjectsByCreatorId(BigInteger creator_id){
-        return projectDao.findProjectsByCreatorId(creator_id);
+    public List<Project> findProjectsByCreatorId(BigInteger creatorId) {
+        return projectDao.findProjectsByCreatorId(creatorId);
     }
 
     @Override
     public List<Project> getAllProjects() {
         return projectDao.getAllProjects();
+    }
+
+    @Override
+    public Project getProjectsByName(String name) {
+        return projectDao.getProjectByName(name);
     }
 }

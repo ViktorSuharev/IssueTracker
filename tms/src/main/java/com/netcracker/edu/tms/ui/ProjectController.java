@@ -12,7 +12,6 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
-
 @Controller
 public class ProjectController {
 
@@ -38,7 +37,6 @@ public class ProjectController {
 
         BigInteger projectId = ControllersUtils.toBigInteger(id);
 
-
         Project project = projectId != null ? projectService.getProjectById(projectId) : null;
         project = project != null ? project : ControllersUtils.getNonexistentProject();
 
@@ -46,7 +44,6 @@ public class ProjectController {
 
         return "find";
     }
-
 
     @GetMapping("/delete")
     public String deleteProject(Model model, @RequestParam(value = "id", required = false) String id) {
@@ -58,13 +55,12 @@ public class ProjectController {
         }
         BigInteger projectId = ControllersUtils.toBigInteger(id);
 
-        if (projectId != null) {
+        if (!projectId.equals(BigInteger.valueOf(-1))) {
             Project projectToDelete = projectService.getProjectById(projectId);
             projectToDelete = projectToDelete != null ? projectToDelete : ControllersUtils.getNonexistentProject();
-            projectService.deleteProject(projectToDelete);
+            projectService.deleteProject(projectId);
 
             model.addAttribute("projectToDelete", projectToDelete);
-
 
         } else {
             Project projectToDelete = ControllersUtils.getNonexistentProject();
@@ -90,7 +86,6 @@ public class ProjectController {
             return "update";
         }
 
-
         Project newProject = new Project(ControllersUtils.toBigInteger(id), ControllersUtils.toBigInteger(creator_id), name);
         if (newProject.getId().equals(BigInteger.valueOf(-1)) || newProject.getCreator_id().equals(BigInteger.valueOf(-1))) {
             model.addAttribute("newProject", ControllersUtils.getNonexistentProject());
@@ -102,19 +97,16 @@ public class ProjectController {
         Project oldProject = projectService.getProjectById(newProject.getId());
         oldProject = oldProject != null ? oldProject : ControllersUtils.getNonexistentProject();
 
-
-        if (projectService.updateProject(newProject, oldProject)) {
+        if (projectService.updateProject(newProject, ControllersUtils.toBigInteger(id))) {
             model.addAttribute("newProject", newProject);
         } else {
             model.addAttribute("newProject", ControllersUtils.getNonexistentProject());
         }
 
-
         List<Project> projectList = projectService.getAllProjects();
         model.addAttribute("projects", projectList);
         return "update";
     }
-
 
     @GetMapping("/create")
     public String createProject(@RequestParam(value = "creator_id", required = false) String creator_id,
@@ -128,7 +120,12 @@ public class ProjectController {
             return "create";
         } else {
             Project newProject = new Project(null, ControllersUtils.toBigInteger(creator_id), name);
-
+            if (newProject.getCreator_id().compareTo(BigInteger.ONE) < 0) {
+                model.addAttribute("addedProject", null);
+                List<Project> projectList = projectService.getAllProjects();
+                model.addAttribute("projects", projectList);
+                return "create";
+            }
             projectService.addProject(newProject);
             model.addAttribute("addedProject", newProject);
 
@@ -136,27 +133,49 @@ public class ProjectController {
             model.addAttribute("projects", projectList);
         }
 
-
         return "create";
     }
 
     @GetMapping("/findProjectsByCreatorId")
-    public String findProjetsByCreatorId(@RequestParam(value = "creator_id",required = false) String creator_id, Model model){
+    public String findProjetsByCreatorId(@RequestParam(value = "creator_id", required = false) String creatorId, Model model) {
 
-        if (!ControllersUtils.isFilled(creator_id)) {
+        if (!ControllersUtils.isFilled(creatorId)) {
             model.addAttribute("creator_id", -1);
 
             return "findProjectsByCreatorId";
         }
 
-
-
-        BigInteger creatorId = ControllersUtils.toBigInteger(creator_id);
-        List<Project> ret= creatorId!=null? projectService.findProjectsByCreatorId(creatorId)
-                                                                   : Collections.emptyList();
-        model.addAttribute("projects",ret);
-        model.addAttribute("creator_id",creatorId);
+        BigInteger creatorIdBig = ControllersUtils.toBigInteger(creatorId);
+        List<Project> ret = creatorIdBig.compareTo(BigInteger.ONE) > 0 ? projectService.findProjectsByCreatorId(creatorIdBig)
+                : Collections.emptyList();
+        model.addAttribute("projects", ret);
+        model.addAttribute("creator_id", creatorIdBig);
 
         return "findProjectsByCreatorId";
+    }
+
+    @GetMapping("/findProjectByName")
+    public String findProjectByName(@RequestParam(value = "name", required = false) String name, Model model) {
+
+        if (!ControllersUtils.isFilled(name)) {
+            model.addAttribute("name", -1);
+            model.addAttribute("error", -1);
+
+            return "findProjectByName";
+        }
+
+        Project ret = projectService.getProjectsByName(name);
+        if (ret == null) {
+            model.addAttribute("project", null);
+            model.addAttribute("name", name);
+            model.addAttribute("error", 2);
+            return "findProjectByName";
+        }
+
+        model.addAttribute("project", ret);
+        model.addAttribute("name", name);
+        model.addAttribute("error", 1);
+
+        return "findProjectByName";
     }
 }

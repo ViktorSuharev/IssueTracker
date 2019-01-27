@@ -20,19 +20,12 @@ import java.math.BigInteger;
 @Table(name = "projects")
 
 public class Project {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-
     private BigInteger id;
-
     @Column(name = "creator_id")
     private BigInteger creator_id;
-
-
     @Column(name = "name")
     private String name;
-
-
 }

@@ -24,7 +24,7 @@ public interface ProjectDao {
      * @param name
      * @return {@link Project} or null
      */
-    List<Project> getProjectByName(String name);
+    Project getProjectByName(String name);
 
     /**
      * Add new project to database
@@ -38,19 +38,19 @@ public interface ProjectDao {
      * update existent project in database
      *
      * @param project
-     * @param oldProject
+     * @param updatedProjectId
      * @return true or false depending on operation result
      */
-    boolean updateProject(Project project,Project oldProject);
+    boolean updateProject(Project project, BigInteger updatedProjectId);
 
     /**
      * delete project from database
      *
-     * @param project
+     * @param projectId
      * @return true or false depending on operation result
      */
 
-    boolean deleteProject(Project project);
+    boolean deleteProject(BigInteger projectId);
 
     /**
      * Select list of projects from DB by specified creator_id
@@ -59,7 +59,6 @@ public interface ProjectDao {
      * @return list of {@link Project} or empty list
      */
     List<Project> findProjectsByCreatorId(BigInteger creator_id);
-
 
 
     /**
@@ -72,14 +71,14 @@ public interface ProjectDao {
     /**
      * Select project's team
      * @param project_id
-     * @return List<{@link User}> team
+     * @return List<{ @ link   User }> team
      *//*
     List<User> getProjectsTeam(BigInteger projectId);*/
 
     /**
      * Select project's tasks
      * @param project_id
-     * @return List<{@link Task}> tasks
+     * @return List<{ @ link   Task }> tasks
      *//*
     List<Task> getProjectsTasks(BigInteger projectId);*/
 
