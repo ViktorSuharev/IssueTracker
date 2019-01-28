@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
-import javax.persistence.*;
+import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 @Repository
 public class ProjectDaoJpaImpl implements ProjectDao {
@@ -65,14 +67,14 @@ public class ProjectDaoJpaImpl implements ProjectDao {
             LOGGER.debug("deleteProject called with {}", projectId.toString());
             return true;
         } else {
-            LOGGER.debug("No such Project in deleteProject appeared");
+            LOGGER.warn("No such Project with id={} in deleteProject appeared", projectId);
             return false;
         }
     }
 
     @Override
     public List<Project> findProjectsByCreatorId(BigInteger creatorId) {
-        if (creatorId.compareTo(BigInteger.ZERO) <= 0) {
+        if (BigInteger.ZERO.compareTo(creatorId) >= 0) {
             return Collections.emptyList();
         }
         Query query = entityManager.createQuery(QueryConsts.SELECT_PROJECTS_BY_CREATOR_ID);

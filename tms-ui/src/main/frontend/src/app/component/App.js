@@ -1,6 +1,5 @@
 import React from "react";
-import HeaderPanel from "./header/HeaderPanel";
-import ArticleList from "./header/ArticleList";
+
 import articles from "./header/articles";
 import 'bootstrap/dist/css/bootstrap.css';
 import ProjectHeader from "./header/ProjectHeader";
