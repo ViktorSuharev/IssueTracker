@@ -10,7 +10,7 @@ class HeaderPanel extends React.Component {
           <div className="container">
             <div className="row">
               <div className="col-lg-8 col-md-10 mx-auto">
-                <div className="site-heading">
+                <div className="site-heading" style={{color:'red'}}>
                   <h1>Hi everybody</h1>
                   <span className="subheading">There will be Issue Tracker application soon...</span>
                 </div>
