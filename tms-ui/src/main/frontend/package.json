@@ -10,6 +10,7 @@
     "react-scripts": "^1.1.4"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "big.js": "^5.1.2",
     "bootstrap": "^4.2.1",
     "github-fork-ribbon-css": "^0.2.1",

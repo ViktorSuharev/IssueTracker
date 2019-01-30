@@ -1,7 +1,7 @@
 import React from 'react';
 
-export default function TaskListHeader({articles}) {
-    const article = articles[0]
+export default function TaskListHeader() {
+
 
     return (
         <div>

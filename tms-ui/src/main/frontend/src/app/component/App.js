@@ -4,6 +4,8 @@ import articles from "./header/articles";
 import 'bootstrap/dist/css/bootstrap.css';
 import ProjectHeader from "./header/ProjectHeader";
 import TaskListHeader from "./header/TaskListHeader";
+import GetAllProjects from "./header/GetAllProjects";
+
 
 
 class App extends React.Component {
@@ -24,6 +26,9 @@ class App extends React.Component {
                 <hr/>
 
                 <TaskListHeader articles={articles}/>
+
+                <GetAllProjects/>
+
 
             </div>
         );
