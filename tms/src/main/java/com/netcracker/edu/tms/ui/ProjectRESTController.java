@@ -17,9 +17,19 @@ public class ProjectRESTController {
     @Autowired
     private ProjectService projectService;
 
-    @GetMapping()
-    public ResponseEntity<List<Project>> getAllEmployees() {
+    @GetMapping("/")
+    public ResponseEntity<List<Project>> getAllProjects() {
         return new ResponseEntity<>(projectService.getAllProjects(), HttpStatus.OK);
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<Project> addNewProject(@RequestBody Project newProject){
+        Project newProj=new Project(null,newProject.getCreator_id(),newProject.getName());
+        boolean ret=projectService.addProject(newProj);
+        if(!ret){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(newProject,HttpStatus.OK);
     }
 
 }

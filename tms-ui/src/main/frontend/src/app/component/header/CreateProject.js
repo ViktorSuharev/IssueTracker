@@ -17,11 +17,13 @@ class CreateProject extends React.Component {
         this.onSubmitName = this.onSubmitName.bind(this);
         this.onSelectChange = this.onSelectChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onSubmitProject = this.onSubmitProject.bind(this);
     }
 
     onSubmitName(event) {
-        if (event.target.value == null) {
-            alert("Вы не ввели имя проекта!");
+        console.log("onSubmitName: ", this.state.name);
+        if (!this.state.name) {
+            alert("on Submit: Вы не ввели имя проекта!");
         } else {
             alert(`New project's name was updated with name: "${this.state.name}"`);
         }
@@ -30,7 +32,13 @@ class CreateProject extends React.Component {
 
 
     onNameChange(event) {
-        this.setState({name: event.target.value});
+        const newName = event.target.value;
+
+        this.setState({name: newName}, function () {
+            console.log("onNameChange: ", newName);
+        });
+        console.log("this.name: ", this.state.name);
+
     }
 
     componentDidMount() {
@@ -39,6 +47,39 @@ class CreateProject extends React.Component {
                 const users = res.data;
                 this.setState({users: users});
             })
+    };
+
+    onSubmitProject(event) {
+        event.preventDefault();
+        console.log("onSubmitProject with creatorId: 34 and name: ", this.state.name);
+
+        const newProject = {
+            id: null,      //always
+            creator_id: 4, //from Session soon
+            name: this.state.name
+        };
+
+        if(!this.state.name){
+            alert("Create project: Вы не ввели имя проекта!");
+        }else{
+            axios(`http://localhost:8090/projects/`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                data: newProject,
+            })
+                .then(res => {
+                    console.log(res.status);
+                    console.log(res.data);
+                    alert(`Новый проект с именем: "${this.state.name}" и id создателя: "4" создан!`);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+
     };
 
     onSelectChange(event) {
@@ -88,6 +129,7 @@ class CreateProject extends React.Component {
         event.preventDefault();
     };
 
+
     render() {
         const options = this.state.users.map(user =>
             <option value={user.id || ''} key={user.id || ''}>
@@ -109,11 +151,11 @@ class CreateProject extends React.Component {
                     </div>
 
                     <div className="d-flex mr-4 justify-content-end align-self-end mt-2" style={{"fontSize": "30px"}}>
-                        <button type="button" className="btn btn-outline-success   btn-sm">
-                            <Link to="/team">
+                        <form onSubmit={this.onSubmitProject}>
+                            <button type="submit" className="btn btn-outline-success   btn-sm">
                                 Create project
-                            </Link>
-                        </button>
+                            </button>
+                        </form>
                     </div>
                 </div>
                 <hr/>
@@ -121,7 +163,7 @@ class CreateProject extends React.Component {
                 <form onSubmit={this.onSubmitName}>
                     <div className="d-flex flex-row">
                         <div className="d-flex mr-4 justify-content-end align-self-end mt-2">
-                            <label> Название: <input type="text" name="name" value={this.state.name}
+                            <label> Название: <input type="text" value={this.state.name}
                                                      onChange={this.onNameChange}/>
                             </label>
                         </div>
