@@ -1,12 +1,15 @@
 import React from 'react';
 import * as axios from 'axios';
+import './index.css';
 
 
-class Team extends React.Component {
+class Info extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            users: []
+            users: [],
+            projects: [],
+            project: []
         };
 
     }
@@ -17,6 +20,14 @@ class Team extends React.Component {
             .then(res => {
                 const users = res.data;
                 this.setState({users: users});
+            });
+        axios.get(`http://localhost:8090/projects/`)
+            .then(res => {
+                const projects = res.data;
+                console.log(projects[0]);
+                const project = projects[0];
+                this.setState({projects});
+                this.setState({project});
             })
     };
 
@@ -24,19 +35,22 @@ class Team extends React.Component {
     render() {
 
         return (
-            <div>
+            <div id="wrapper">
 
                 <div className=" d-flex flex-row justify-content-center align-items-center">
-                    Team
+                  <h1>
+                      Team
+                  </h1>
+                </div>
+                <div className="pl-sm-2 mr-4 bd-highlights align-self-end" style={{"fontSize": "30px"}}>
+                  Project's creator: {this.state.project.creator_id}
                 </div>
 
                 <div className="table-responsive">
                     <table className="table table-light table-striped table-bordered table-hover table-sm  ">
                         <thead className="thead-dark">
                         <tr>
-                            <th scope="col">ID</th>
                             <th scope="col">Full Name</th>
-                            <th scope="col">Password</th>
                             <th scope="col">EMail</th>
                         </tr>
                         </thead>
@@ -44,9 +58,7 @@ class Team extends React.Component {
 
                         {this.state.users.map(user =>
                             <tr key={user.id}>
-                                <th scope="row">{user.id}</th>
                                 <td> {user.fullName}</td>
-                                <td>{user.password}</td>
                                 <td> {user.email}</td>
                             </tr>
                         )
@@ -61,4 +73,4 @@ class Team extends React.Component {
     }
 }
 
-export default Team;
+export default Info;

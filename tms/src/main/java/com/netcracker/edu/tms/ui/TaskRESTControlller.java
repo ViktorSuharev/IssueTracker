@@ -17,55 +17,20 @@ public class TaskRESTControlller {
     @GetMapping("/")
     public ResponseEntity<List<Task>> getAllEmployees() {
         List<Task> ret = new LinkedList<>();
-        ret.add(new Task(
-                BigInteger.ONE,
-                "stub1",
-                "stub task1",
-                new Date(111),
-                new Date(111),
-                BigInteger.valueOf(1),
-                BigInteger.valueOf(1),
-                BigInteger.valueOf(1),
-                new Date(111),
-                BigInteger.valueOf(1),
-                BigInteger.valueOf(1)));
-
-        ret.add(new Task(
-                BigInteger.valueOf(2),
-                "stub2",
-                "stub task2",
-                new Date(222),
-                new Date(222),
-                BigInteger.valueOf(2),
-                BigInteger.valueOf(2),
-                BigInteger.valueOf(2),
-                new Date(222),
-                BigInteger.valueOf(2),
-                BigInteger.valueOf(2)));
-        ret.add(new Task(
-                BigInteger.valueOf(3),
-                "stub3",
-                "stub task3",
-                new Date(333),
-                new Date(333),
-                BigInteger.valueOf(3),
-                BigInteger.valueOf(3),
-                BigInteger.valueOf(3),
-                new Date(333),
-                BigInteger.valueOf(3),
-                BigInteger.valueOf(3)));
-        ret.add(new Task(
-                BigInteger.valueOf(4),
-                "stub4",
-                "stub task4",
-                new Date(444),
-                new Date(444),
-                BigInteger.valueOf(4),
-                BigInteger.valueOf(4),
-                BigInteger.valueOf(4),
-                new Date(444),
-                BigInteger.valueOf(4),
-                BigInteger.valueOf(4)));
+        for(int i=0;i<20;i++){
+            ret.add(new  Task(
+                   BigInteger.valueOf(i),
+                    "stub"+i,
+                    "stub task"+i,
+                    new Date(111),
+                    new Date(111),
+                    BigInteger.valueOf(i),
+                    BigInteger.valueOf(i),
+                    BigInteger.valueOf(i),
+                    new Date(111),
+                    BigInteger.valueOf(i),
+                    BigInteger.valueOf(i)));
+        }
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 

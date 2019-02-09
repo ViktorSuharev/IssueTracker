@@ -58,8 +58,11 @@ public interface ProjectService {
      */
     Project getProjectsByName(String name);
 
+    /**
+     *
+     */
+    List<Project> getUsersProjects(BigInteger userId);
 
-    // List<User> getProjectsTeam(BigInteger projectId);
-    //  List<Task> getProjectsTasks(BigInteger projectId);
+
 
 }

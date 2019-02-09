@@ -52,4 +52,9 @@ public class ProjectServiceImpl implements ProjectService {
     public Project getProjectsByName(String name) {
         return projectDao.getProjectByName(name);
     }
+
+    @Override
+    public List<Project> getUsersProjects(BigInteger userId){
+        return projectDao.getUsersProjects(userId);
+    }
 }

@@ -18,7 +18,7 @@ public class UserRESTController {
 
         ret.add(new User(
                 BigInteger.valueOf(1),
-                "stubUser1",
+                "stubUser11111111111111111111111111111111111111111",
                 "stubPassword1",
                 "stubEmail1",
                 BigInteger.valueOf(1)));
@@ -26,7 +26,7 @@ public class UserRESTController {
                 BigInteger.valueOf(2),
                 "stubUser2",
                 "stubPassword2",
-                "stubEmail2",
+                "stubEmail22222222222222222222222222222222222222222222222",
                 BigInteger.valueOf(2)));
         ret.add(new User(
                 BigInteger.valueOf(3),
@@ -47,7 +47,7 @@ public class UserRESTController {
                 "stubEmail5",
                 BigInteger.valueOf(3)));
 
-
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
+
 }

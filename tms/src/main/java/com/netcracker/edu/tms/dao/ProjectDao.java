@@ -69,18 +69,10 @@ public interface ProjectDao {
     List<Project> getAllProjects();
 
     /**
-     * Select project's team
-     * @param project_id
-     * @return List<{ @ link   User }> team
-     *//*
-    List<User> getProjectsTeam(BigInteger projectId);*/
-
-    /**
-     * Select project's tasks
-     * @param project_id
-     * @return List<{ @ link   Task }> tasks
-     *//*
-    List<Task> getProjectsTasks(BigInteger projectId);*/
-
+     *
+     *
+     *
+     */
+   List<Project> getUsersProjects(BigInteger userId);
 
 }

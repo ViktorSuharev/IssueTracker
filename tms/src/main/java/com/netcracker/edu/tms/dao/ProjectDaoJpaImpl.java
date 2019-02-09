@@ -92,6 +92,12 @@ public class ProjectDaoJpaImpl implements ProjectDao {
         return ret;
     }
 
-    // List<User> getProjectsTeam(BigInteger projectId);
-    //  List<Task> getProjectsTasks(BigInteger projectId);
+   @Override
+    public List<Project> getUsersProjects(BigInteger userId){
+       Query query = entityManager.createQuery(QueryConsts.SELECT_USERS_PROJECTS);
+       query.setParameter("userId", userId);
+       List<Project> ret = query.getResultList();
+       LOGGER.debug("getUsersProjects called with userId={}",userId);
+       return ret;
+   }
 }

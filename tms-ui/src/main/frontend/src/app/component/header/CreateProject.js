@@ -2,6 +2,7 @@ import React from "react";
 import * as axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
 import {Link} from "react-router-dom";
+import './index.css';
 
 class CreateProject extends React.Component {
     constructor(props) {
@@ -14,20 +15,9 @@ class CreateProject extends React.Component {
         };
 
         this.onNameChange = this.onNameChange.bind(this);
-        this.onSubmitName = this.onSubmitName.bind(this);
         this.onSelectChange = this.onSelectChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
+        this.onAddUser = this.onAddUser.bind(this);
         this.onSubmitProject = this.onSubmitProject.bind(this);
-    }
-
-    onSubmitName(event) {
-        console.log("onSubmitName: ", this.state.name);
-        if (!this.state.name) {
-            alert("on Submit: Вы не ввели имя проекта!");
-        } else {
-            alert(`New project's name was updated with name: "${this.state.name}"`);
-        }
-        event.preventDefault();
     }
 
 
@@ -59,9 +49,9 @@ class CreateProject extends React.Component {
             name: this.state.name
         };
 
-        if(!this.state.name){
-            alert("Create project: Вы не ввели имя проекта!");
-        }else{
+        if (!this.state.name) {
+            alert("Create project: Here are no project's name!");
+        } else {
             axios(`http://localhost:8090/projects/`, {
                 method: 'POST',
                 headers: {
@@ -93,7 +83,7 @@ class CreateProject extends React.Component {
             });
             console.log("user founded:", JSON.stringify(user));
             this.setState({
-                user: user
+                user: Object.assign({}, user)
             }, function () {
                 console.log("this.state.user:", JSON.stringify(this.state.user));
             })
@@ -103,9 +93,23 @@ class CreateProject extends React.Component {
             const newRole = event.target.value;
             console.log("newRole:", newRole);
             {
-                this.state.user.role = newRole
+                this.state.user.role = newRole;
             }
 
+        }
+
+    };
+
+    onAddUser(event) {
+
+        if (!this.state.user.fullName) {
+            alert(`Employee was not selected!`);
+
+        } else {
+            this.setState({addedUsers: [...this.state.addedUsers, this.state.user]});
+            alert(`Вы выбрали сотрудника: ${JSON.stringify(this.state.user)} и его роль в проекте: ${this.state.user.role}`);
+            console.log("OnSubmit:", JSON.stringify(this.state.user));
+            event.preventDefault();
         }
 
     };
@@ -122,35 +126,29 @@ class CreateProject extends React.Component {
 
     };
 
-    onSubmit(event) {
-        this.setState({addedUsers: [...this.state.addedUsers, this.state.user]});
-        alert(`Вы выбрали сотрудника: ${JSON.stringify(this.state.user)} и его роль в проекте: ${this.state.user.role}`);
-        console.log("OnSubmit:", JSON.stringify(this.state.user));
-        event.preventDefault();
-    };
-
 
     render() {
         const options = this.state.users.map(user =>
             <option value={user.id || ''} key={user.id || ''}>
-                {JSON.stringify(user)}
+                {user.fullName}
             </option>);
         return (
-            <div>
+            <div id="wrapper">
                 <div className="d-flex flex-row">
-                    <div className="mt-1 py-2  flex-grow-1  badge badge-primary text-wrap ">
-                        New Project's settings
+                    <div className="mt-1 py-2  flex-grow-1">
+                        <h2>
+                            New Project's settings
+                        </h2>
                     </div>
-                    <div className="d-flex mr-4 justify-content-end align-self-end mt-2" style={{"fontSize": "30px"}}>
-                        <button type="button" className="btn btn-outline-danger  btn-sm"
-                                style={{"fontSize": "30px"}}>
+                    <div className="d-flex mr-4 justify-content-end align-self-end mt-2">
+                        <button type="button" className="btn btn-outline-danger  btn-sm">
                             <Link to="/cancel">
                                 Cancel
                             </Link>
                         </button>
                     </div>
 
-                    <div className="d-flex mr-4 justify-content-end align-self-end mt-2" style={{"fontSize": "30px"}}>
+                    <div className="d-flex mr-4 justify-content-end align-self-end mt-2">
                         <form onSubmit={this.onSubmitProject}>
                             <button type="submit" className="btn btn-outline-success   btn-sm">
                                 Create project
@@ -161,21 +159,18 @@ class CreateProject extends React.Component {
                 <hr/>
 
                 <form onSubmit={this.onSubmitName}>
-                    <div className="d-flex flex-row">
-                        <div className="d-flex mr-4 justify-content-end align-self-end mt-2">
-                            <label> Название: <input type="text" value={this.state.name}
-                                                     onChange={this.onNameChange}/>
+                    <div className="d-flex flex-row mx-1">
+                        <div className=" d-flex mr-4 justify-content-end align-self-end mt-2">
+                            <label> Name: <input type="text" value={this.state.name} className="form-control"
+                                                 onChange={this.onNameChange}/>
                             </label>
-                        </div>
-                        <div className="d-flex mr-4  mt-2">
-                            <input type="submit" value="Submit"/>
                         </div>
                     </div>
                 </form>
 
 
-                <form onSubmit={this.onSubmit}>
-                    <label> Выберете сотрудника в команду
+                <form onSubmit={this.onAddUser}>
+                    <label className="mx-1"> Select employees to team
                         <select defaultValue={""} name="userName" className="form-control"
                                 onChange={this.onSelectChange}>
                             <option value="" disabled={true}>
@@ -185,7 +180,7 @@ class CreateProject extends React.Component {
                             )}
                         </select>
                     </label>
-                    <label> Выберете должность
+                    <label className="mx-2"> Select role in project
                         <select defaultValue={""} name="role" className="form-control"
                                 onChange={this.onSelectChange}>
                             <option value="" disabled={true}>
@@ -196,7 +191,7 @@ class CreateProject extends React.Component {
                             <option value="3">3) Тестировщик</option>
                         </select>
                     </label>
-                    <input type="submit" value="Submit"/>
+                    <input className="mx-2 btn btn-dark" type="submit" value="Add"/>
                 </form>
 
                 <div className=" d-flex flex-row justify-content-center align-items-center">
@@ -206,26 +201,22 @@ class CreateProject extends React.Component {
                     <table className="table table-light table-striped table-bordered table-hover table-sm  ">
                         <thead className="thead-dark">
                         <tr>
-                            <th scope="col">Delete</th>
-                            <th scope="col">ID</th>
-                            <th scope="col">Full Name</th>
-                            <th scope="col">Password</th>
-                            <th scope="col">EMail</th>
-                            <th scope="col">Role</th>
+                            <th style={{"width": "7%"}} scope="col">Delete</th>
+                            <th style={{"width": "43%"}} scope="col">Full Name</th>
+                            <th style={{"width": "43%"}} scope="col">EMail</th>
+                            <th style={{"width": "7%"}} scope="col">Role</th>
                         </tr>
                         </thead>
                         <tbody>
 
                         {this.state.addedUsers.map(user =>
                             <tr key={user.id + user.role}>
-                                <th scope="row">
+                                <th scope="row" className="text-center">
                                     <button onClick={this.onDeleteClick.bind(this, user)}>
                                         Delete
                                     </button>
                                 </th>
-                                <th>{user.id}</th>
                                 <td> {user.fullName}</td>
-                                <td>{user.password}</td>
                                 <td> {user.email}</td>
                                 <td> {user.role}</td>
                             </tr>

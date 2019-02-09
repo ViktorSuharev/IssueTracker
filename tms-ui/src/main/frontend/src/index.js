@@ -1,27 +1,34 @@
-import React from "react";
+import * as React from "react";
 import ReactDOM from "react-dom";
-import App from "./app/component/App";
-import "./index.css";
+import "./app/component/header/index.css";
 import "github-fork-ribbon-css/gh-fork-ribbon.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+
 
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import Team from "./app/component/header/Team";
+import ProjectsTasks from "./app/component/header/ProjectsTasks";
+import Info from "./app/component/header/Info";
 import AddTask from "./app/component/header/AddTask";
 import ProjectsSettings from "./app/component/header/ProjectsSettings";
 import CreateProject from "./app/component/header/CreateProject";
 import Cancel from "./app/component/header/Cancel";
+import PersonalArea from "./app/component/header/PersonalArea";
+import CreatedProjects from "./app/component/header/CreatedProjects";
 
-ReactDOM.render((<Router>
-    <div>
-                     <Route path="/cancel" component={Cancel}/>
-                     <Route path="/createproject" component={CreateProject}/>
-                     <Route path="/project" component={App}/>
-                     <Route path="/projectssettings" component={ProjectsSettings}/>
-                     <Route path="/team" component={Team}/>
-                     <Route path="/addTask" component={AddTask}/>
-    </div>
-                 </Router>),
-    document.getElementById("root"));
+ReactDOM.render((
+        <Router>
+            <div>
+                <Route path="/cancel" component={Cancel}/>
+                <Route path="/createproject" component={CreateProject}/>
+                <Route path="/projectstasks" component={ProjectsTasks}/>
+                <Route path="/projectssettings" component={ProjectsSettings}/>
+                <Route path="/info" component={Info}/>
+                <Route path="/addTask" component={AddTask}/>
+                <Route path="/personalarea" component={PersonalArea}/>
+                <Route path="/CreatedProjects" component={CreatedProjects}/>
+            </div>
+        </Router>),
+    document.getElementById("root")
+);

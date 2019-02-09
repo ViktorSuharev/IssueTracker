@@ -1,13 +1,12 @@
-import React from 'react';
+import *  as React from 'react';
 import * as axios from 'axios';
-import './tableWithScroll.css';
 import {Link} from 'react-router-dom';
 
 
 class GetAllTasksWithProjectID extends React.Component {
     state = {
         tasks: []
-    }
+    };
 
     componentDidMount() {
         axios.get(`http://localhost:8090/tasks/`)
@@ -15,7 +14,7 @@ class GetAllTasksWithProjectID extends React.Component {
                 const tasks = res.data;
                 this.setState({tasks});
             })
-    }
+    };
 
     render() {
         return (
@@ -24,31 +23,25 @@ class GetAllTasksWithProjectID extends React.Component {
                 <div className="mx-2">
                     <form>
                         <button type="submit"
-                                className="btn btn-outline-warning  btn-sm">
-                            <Link to="/AddTask">  Создать таск</Link>
+                                className="btn btn-outline-warning  btn-sm my-2">
+                            <Link to="/AddTask"> Создать таск</Link>
                         </button>
                     </form>
                 </div>
 
 
-                <div className=" d-flex flex-row justify-content-center align-items-center">
-                    Tasks list
-                </div>
-
                 <div className="table-responsive">
                     <table className="table table-light table-striped table-bordered table-hover table-sm  ">
                         <thead className="thead-dark">
                         <tr>
-                            <th scope="col">ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Description</th>
-                            <th scope="col">DeadLine</th>
-                            <th scope="col">Creation date</th>
+                            <th scope="col">Due date</th>
+                            <th scope="col">Created</th>
                             <th scope="col">Reported</th>
                             <th scope="col">Assignee</th>
                             <th scope="col">Status ID</th>
-                            <th scope="col">Modification date</th>
-                            <th scope="col">Project ID</th>
+                            <th scope="col">Last update</th>
                             <th scope="col">Priority ID</th>
 
                         </tr>
@@ -57,18 +50,27 @@ class GetAllTasksWithProjectID extends React.Component {
 
                         {this.state.tasks.map(task =>
                             <tr key={task.id}>
-                                <th scope="row">{task.id}</th>
                                 <td> {task.name}</td>
                                 <td>{task.description}</td>
-                                <td> {task.deadline}</td>
-                                <td>{task.creationDate}</td>
+                                <td>{new Intl.DateTimeFormat('en-GB', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: '2-digit'
+                                }).format(new Date(task.deadline))}</td>
+                                <td>{new Intl.DateTimeFormat('en-GB', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: '2-digit'
+                                }).format(new Date(task.creationDate))}</td>
                                 <td>{task.reportedId}</td>
                                 <td> {task.assigneeId}</td>
                                 <td>{task.statusId}</td>
-                                <td>{task.modificationDate}</td>
-                                <td> {task.projectId}</td>
+                                <td>{new Intl.DateTimeFormat('en-GB', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: '2-digit'
+                                }).format(new Date(task.modificationDate))}</td>
                                 <td> {task.priorityId}</td>
-
                             </tr>
                         )
                         }
