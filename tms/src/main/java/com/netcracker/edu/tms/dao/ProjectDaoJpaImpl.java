@@ -1,7 +1,9 @@
 package com.netcracker.edu.tms.dao;
 
 import com.netcracker.edu.tms.model.Project;
+import com.netcracker.edu.tms.model.User;
 
+import com.netcracker.edu.tms.model.UsersToProjects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
@@ -33,7 +35,7 @@ public class ProjectDaoJpaImpl implements ProjectDao {
         List<Project> ret = query.getResultList();
 
         LOGGER.info("getProjectByName called with {}", name);
-        if(ret.isEmpty()){
+        if (ret.isEmpty()) {
             return null;
         }
         return ret.get(0);
@@ -92,12 +94,22 @@ public class ProjectDaoJpaImpl implements ProjectDao {
         return ret;
     }
 
-   @Override
-    public List<Project> getUsersProjects(BigInteger userId){
-       Query query = entityManager.createQuery(QueryConsts.SELECT_USERS_PROJECTS);
-       query.setParameter("userId", userId);
-       List<Project> ret = query.getResultList();
-       LOGGER.debug("getUsersProjects called with userId={}",userId);
-       return ret;
-   }
+    @Override
+    public List<Project> getUsersProjects(BigInteger userId) {
+        Query query = entityManager.createQuery(QueryConsts.SELECT_USERS_PROJECTS);
+        query.setParameter("userId", userId);
+        List<Project> ret = query.getResultList();
+        LOGGER.debug("getUsersProjects called with userId={}", userId);
+        return ret;
+    }
+
+    @Override
+    public boolean setProjectsTeam(List<User> addedUsers, BigInteger id) {
+        for (User user : addedUsers) {
+            UsersToProjects toAdd = new UsersToProjects(null, user.getId(), id);
+            entityManager.persist(toAdd);
+        }
+        LOGGER.debug("setProjectsTeam called with project id= {} and team={}",id,addedUsers.toString());
+        return true;
+    }
 }

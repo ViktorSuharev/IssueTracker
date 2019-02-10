@@ -2,6 +2,7 @@ package com.netcracker.edu.tms.service;
 
 import com.netcracker.edu.tms.dao.ProjectDao;
 import com.netcracker.edu.tms.model.Project;
+import com.netcracker.edu.tms.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> getUsersProjects(BigInteger userId){
+    public List<Project> getUsersProjects(BigInteger userId) {
         return projectDao.getUsersProjects(userId);
+    }
+
+    @Override
+    @Transactional
+    public boolean setProjectsTeam(List<User> addedUsers, BigInteger id) {
+        return projectDao.setProjectsTeam(addedUsers, id);
     }
 }

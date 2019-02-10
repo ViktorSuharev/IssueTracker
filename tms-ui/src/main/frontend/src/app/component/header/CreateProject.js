@@ -57,7 +57,8 @@ class CreateProject extends React.Component {
                 headers: {
                     'content-type': 'application/json',
                 },
-                data: newProject,
+                data: {newProject: newProject,
+                    addedUsers: this.state.addedUsers}
             })
                 .then(res => {
                     console.log(res.status);

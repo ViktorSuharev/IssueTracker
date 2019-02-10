@@ -2,6 +2,7 @@ package com.netcracker.edu.tms.dao;
 
 
 import com.netcracker.edu.tms.model.Project;
+import com.netcracker.edu.tms.model.User;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -75,4 +76,10 @@ public interface ProjectDao {
      */
    List<Project> getUsersProjects(BigInteger userId);
 
+    /**
+     *
+     *
+     *
+     */
+    boolean setProjectsTeam(List<User> addedUsers, BigInteger id);
 }

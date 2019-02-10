@@ -1,6 +1,8 @@
 package com.netcracker.edu.tms.ui;
 
 import com.netcracker.edu.tms.model.Project;
+import com.netcracker.edu.tms.model.User;
+import com.netcracker.edu.tms.model.WrapperObject;
 import com.netcracker.edu.tms.service.ProjectService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,21 @@ public class ProjectRESTController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Project> addNewProject(@RequestBody Project newProject) {
+    public ResponseEntity<Project> addNewProject(@RequestBody WrapperObject wrapperObject) {
+       Project newProject=wrapperObject.getNewProject();
+       List<User> addedUsers=wrapperObject.getAddedUsers();
+
+       System.out.println(newProject.toString()+addedUsers.toString());
+
         Project newProj = new Project(null, newProject.getCreator_id(), newProject.getName());
         boolean ret = projectService.addProject(newProj);
+
+        if(addedUsers==null||addedUsers.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        boolean retAddedUsers=projectService.setProjectsTeam(addedUsers,newProj.getId());
+
         if (!ret) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
