@@ -3,7 +3,7 @@ import * as axios from 'axios';
 import './index.css';
 
 
-class Info extends React.Component {
+class ProjectInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -73,4 +73,4 @@ class Info extends React.Component {
     }
 }
 
-export default Info;
+export default ProjectInfo;

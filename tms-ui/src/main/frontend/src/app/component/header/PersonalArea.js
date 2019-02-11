@@ -11,6 +11,7 @@ class ProjectsAndTasks extends React.Component {
             users: [],
             projects: [],
             user: [],
+            tasks: []
         };
     }
 
@@ -26,7 +27,13 @@ class ProjectsAndTasks extends React.Component {
                 const projects = res.data;
                 this.setState({projects});
                 console.log(this.state.projects);
-            })
+            });
+        axios.get(`http://localhost:8090/projects/userstasks/1`)
+            .then(res => {
+                const tasks = res.data;
+                this.setState({tasks: tasks});
+                console.log(this.state.tasks);
+            });
     };
 
     render() {
@@ -73,20 +80,70 @@ class ProjectsAndTasks extends React.Component {
 
 
                 <div className="table-responsive">
-                    <table className="table table-light table-striped table-bordered table-hover table-sm  ">
+                    <table className="table table-light  table-bordered table-hover table-sm  ">
                         <thead className="thead-dark">
                         <tr>
-                            <th style={{"width": "70%"}} scope="col">Name</th>
-                            <th style={{"width": "30%"}} scope="col">Creator ID</th>
+                            <th style={{"width": "90%"}} scope="col">Name</th>
+                            <th style={{"width": "10%"}} scope="col">Creator ID</th>
                         </tr>
                         </thead>
                         <tbody>
 
                         {this.state.projects.map(project =>
-                            <tr key={project.id}>
-                                <td> <Link to="/personalarea">{project.name}</Link></td>
-                                <td> {project.creator_id}</td>
-                            </tr>
+                            <React.Fragment>
+                                <tr key={project.id} className="table-active">
+                                    <td><Link to="/personalarea">{project.name}</Link></td>
+                                    <td> {project.creator_id}</td>
+                                </tr>
+
+                                <table className="mx-lg-4 container-fluid">
+                                    <tr>
+                                        <th> Task name</th>
+                                        <th> Description</th>
+                                        <th> Deadline</th>
+                                        <th> CreationDate</th>
+                                        <th> ReportedId</th>
+                                        <th> StatusId</th>
+                                        <th> ModificationDate</th>
+                                        <th> ProjectId</th>
+                                        <th> PriorityId</th>
+                                    </tr>
+
+                                    {this.state.tasks.map(task => {
+
+                                            if (task.projectId === project.id) {
+                                                return (
+                                                    <tr key={task.id}>
+                                                        <td><Link to="/personalarea">{task.name}</Link></td>
+                                                        <td>{task.description}</td>
+                                                        <td>{new Intl.DateTimeFormat('en-GB', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: '2-digit'
+                                                        }).format(new Date(task.deadline))}</td>
+                                                        <td>{new Intl.DateTimeFormat('en-GB', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: '2-digit'
+                                                        }).format(new Date(task.creationDate))}</td>
+                                                        <td>{task.reportedId}</td>
+                                                        <td>{task.statusId}</td>
+                                                        <td>{new Intl.DateTimeFormat('en-GB', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: '2-digit'
+                                                        }).format(new Date(task.modificationDate))}</td>
+                                                        <td>{task.projectId}</td>
+                                                        <td>{task.priorityId}</td>
+
+                                                    </tr>
+                                                )
+                                            }
+
+                                        }
+                                    )}
+                                </table>
+                            </React.Fragment>
                         )
                         }
                         </tbody>

@@ -1,6 +1,7 @@
 package com.netcracker.edu.tms.dao;
 
 import com.netcracker.edu.tms.model.Project;
+import com.netcracker.edu.tms.model.Task;
 import com.netcracker.edu.tms.model.User;
 
 import com.netcracker.edu.tms.model.UsersToProjects;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
@@ -109,7 +111,30 @@ public class ProjectDaoJpaImpl implements ProjectDao {
             UsersToProjects toAdd = new UsersToProjects(null, user.getId(), id);
             entityManager.persist(toAdd);
         }
-        LOGGER.debug("setProjectsTeam called with project id= {} and team={}",id,addedUsers.toString());
+        LOGGER.debug("setProjectsTeam called with project id= {} and team={}", id, addedUsers.toString());
         return true;
+    }
+
+    @Override
+    public List<Task> getUsersTasks(BigInteger userId) {
+        Query query = entityManager.createQuery(QueryConsts.SELECT_USERS_TASKS);
+        query.setParameter("userId", userId);
+        List<Task> ret = query.getResultList();
+        LOGGER.debug("getUsersTasks called with userId={}", userId);
+        return ret;
+    }
+
+    @Override
+    public List<User> getTeamfromProjectId(BigInteger projectId) {
+        Query query = entityManager.createQuery(QueryConsts.SELECT_TEAM_FOR_PROJECT_ID);
+        query.setParameter("projectId", projectId);
+        List<User> ret = query.getResultList();
+        LOGGER.debug("getTeamfromProjectId called with projectId={}", projectId);
+        return ret;
+    }
+
+    @Override
+    public String getNamefromProjectId(BigInteger projectId) {
+       return this.getProjectById(projectId).getName();
     }
 }

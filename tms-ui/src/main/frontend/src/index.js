@@ -9,7 +9,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import ProjectsTasks from "./app/component/header/ProjectsTasks";
-import Info from "./app/component/header/Info";
+import ProjectInfo from "./app/component/header/ProjectInfo";
 import AddTask from "./app/component/header/AddTask";
 import ProjectsSettings from "./app/component/header/ProjectsSettings";
 import CreateProject from "./app/component/header/CreateProject";
@@ -23,8 +23,8 @@ ReactDOM.render((
                 <Route path="/cancel" component={Cancel}/>
                 <Route path="/createproject" component={CreateProject}/>
                 <Route path="/projectstasks" component={ProjectsTasks}/>
-                <Route path="/projectssettings" component={ProjectsSettings}/>
-                <Route path="/info" component={Info}/>
+                <Route path="/projectssettings/:id" component={ProjectsSettings}/>
+                <Route path="/projectinfo" component={ProjectInfo}/>
                 <Route path="/addTask" component={AddTask}/>
                 <Route path="/personalarea" component={PersonalArea}/>
                 <Route path="/CreatedProjects" component={CreatedProjects}/>

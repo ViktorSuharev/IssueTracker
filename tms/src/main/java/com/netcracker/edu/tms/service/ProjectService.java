@@ -1,6 +1,7 @@
 package com.netcracker.edu.tms.service;
 
 import com.netcracker.edu.tms.model.Project;
+import com.netcracker.edu.tms.model.Task;
 import com.netcracker.edu.tms.model.User;
 
 import java.math.BigInteger;
@@ -68,6 +69,25 @@ public interface ProjectService {
      *
      */
    boolean setProjectsTeam(List<User> addedUsers,BigInteger id);
+
+    /**
+     *
+     */
+    List<Task> getUsersTasks(BigInteger userId);
+
+    /**
+     *
+     *
+     *
+     */
+    List<User> getTeamfromProjectId(BigInteger projectId);
+
+    /**
+     *
+     *
+     *
+     */
+    String getNamefromProjectId(BigInteger projectId);
 
 
 

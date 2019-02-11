@@ -1,6 +1,7 @@
 package com.netcracker.edu.tms.ui;
 
 import com.netcracker.edu.tms.model.Project;
+import com.netcracker.edu.tms.model.Task;
 import com.netcracker.edu.tms.model.User;
 import com.netcracker.edu.tms.model.WrapperObject;
 import com.netcracker.edu.tms.service.ProjectService;
@@ -47,6 +48,26 @@ public class ProjectRESTController {
         return new ResponseEntity<>(newProject, HttpStatus.OK);
     }
 
+    @PostMapping("/{id}")
+    public ResponseEntity<Project> updateProject(@RequestBody WrapperObject wrapperObject) {
+        Project projectToUpdate=wrapperObject.getNewProject();
+        List<User> addedUsers=wrapperObject.getAddedUsers();
+        System.out.println(projectToUpdate.toString()+addedUsers.toString());
+
+        boolean ret=projectService.updateProject(projectToUpdate,projectToUpdate.getId());
+
+        if(addedUsers==null||addedUsers.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        boolean retAddedUsers=projectService.setProjectsTeam(addedUsers,projectToUpdate.getId());
+        if (!ret) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(projectToUpdate, HttpStatus.OK);
+
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<List<Project>> getAllProjects(@PathVariable(name = "id", required = true) BigInteger userId) {
         return new ResponseEntity<>(projectService.getUsersProjects(userId), HttpStatus.OK);
@@ -57,4 +78,18 @@ public class ProjectRESTController {
         return new ResponseEntity<>(projectService.findProjectsByCreatorId(userId), HttpStatus.OK);
     }
 
+    @GetMapping("/userstasks/{id}")
+    public ResponseEntity<List<Task>> getUsersTasks(@PathVariable(name = "id", required = true) BigInteger userId){
+        return new ResponseEntity<>(projectService.getUsersTasks(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/teamfromprojectid/{id}")
+    public ResponseEntity<List<User>> getTeamfromProjectId(@PathVariable(name = "id", required = true) BigInteger projectId){
+        return new ResponseEntity<>(projectService.getTeamfromProjectId(projectId), HttpStatus.OK);
+    }
+
+    @GetMapping("/namefromprojectid/{id}")
+    public ResponseEntity<String> getNamefromProjectId(@PathVariable(name = "id", required = true) BigInteger projectId){
+        return new ResponseEntity<>(projectService.getNamefromProjectId(projectId), HttpStatus.OK);
+    }
 }

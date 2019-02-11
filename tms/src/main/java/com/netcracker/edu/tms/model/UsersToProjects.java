@@ -17,7 +17,7 @@ import java.math.BigInteger;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "userstoprojects")
+@Table(name = "users_to_projects")
 public class UsersToProjects {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

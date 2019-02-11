@@ -107,12 +107,25 @@ class CreateProject extends React.Component {
             alert(`Employee was not selected!`);
 
         } else {
-            this.setState({addedUsers: [...this.state.addedUsers, this.state.user]});
-            alert(`Вы выбрали сотрудника: ${JSON.stringify(this.state.user)} и его роль в проекте: ${this.state.user.role}`);
-            console.log("OnSubmit:", JSON.stringify(this.state.user));
+            var curUser = new User(this.state.user.id, this.state.user.fullName, this.state.user.email, this.state.user.role);
+            console.log("OnSubmit:", JSON.stringify(curUser));
+            const len = this.state.addedUsers.length;
+
+            var selectedYet = false;
+            var i;
+            for (i = 0; i < len; ++i) {
+                if (this.state.addedUsers[i].id === curUser.id) {
+                    selectedYet = true;
+                }
+            }
+            if (selectedYet === true) {
+                alert(`The user is selected yet: ${JSON.stringify(curUser)}`);
+            } else {
+                alert(`Вы выбрали сотрудника: ${JSON.stringify(curUser)} и его роль в проекте: ${curUser.role}`);
+                this.setState({addedUsers: [...this.state.addedUsers, curUser]});
+            }
             event.preventDefault();
         }
-
     };
 
     onDeleteClick = (userToDelete) => {
@@ -159,7 +172,7 @@ class CreateProject extends React.Component {
                 </div>
                 <hr/>
 
-                <form onSubmit={this.onSubmitName}>
+                <form>
                     <div className="d-flex flex-row mx-1">
                         <div className=" d-flex mr-4 justify-content-end align-self-end mt-2">
                             <label> Name: <input type="text" value={this.state.name} className="form-control"
@@ -187,9 +200,9 @@ class CreateProject extends React.Component {
                             <option value="" disabled={true}>
                                 Select role
                             </option>
-                            <option value="1">1) Проект манеджер</option>
-                            <option value="2">2) Разработчик</option>
-                            <option value="3">3) Тестировщик</option>
+                            <option value="1">Проект манеджер</option>
+                            <option value="2">Разработчик</option>
+                            <option value="3">Тестировщик</option>
                         </select>
                     </label>
                     <input className="mx-2 btn btn-dark" type="submit" value="Add"/>
@@ -226,11 +239,18 @@ class CreateProject extends React.Component {
                         </tbody>
                     </table>
                 </div>
-
-
             </div>
         );
     }
 }
 
 export default CreateProject;
+
+class User {
+    constructor(id, fullName, email, role) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.role = role;
+    }
+}

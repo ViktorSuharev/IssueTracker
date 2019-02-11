@@ -78,7 +78,6 @@ class CreatedProjects extends React.Component {
                         <thead className="thead-dark">
                         <tr>
                             <th style={{"width": "70%"}} scope="col">Name</th>
-                            <th style={{"width": "30%"}} scope="col">Creator ID</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -86,7 +85,6 @@ class CreatedProjects extends React.Component {
                         {this.state.projects.map(project =>
                             <tr key={project.id}>
                                 <td> <Link to="/createdprojects">{project.name}</Link></td>
-                                <td> {project.creator_id}</td>
                             </tr>
                         )
                         }
