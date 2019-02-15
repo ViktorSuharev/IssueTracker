@@ -102,7 +102,7 @@ class ProjectsSettings extends React.Component {
                     'content-type': 'application/json',
                 },
                 data: {
-                    userToDelete: userToDelete,
+                    userToDeleteFromTeam: userToDelete,
                     projectId: this.state.projectId
                 }
             }

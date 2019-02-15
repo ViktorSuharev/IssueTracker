@@ -81,6 +81,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional
     public boolean deleteUserFromTeam(User userToDelete, BigInteger projectId){
         return projectDao.deleteUserFromTeam(userToDelete,projectId);
     }

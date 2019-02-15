@@ -80,20 +80,21 @@ public class UserRestController {
     }
 
     @PostMapping("/userstoprojects")
-    public ResponseEntity<User> deleteUserFromProjectsTeam(@RequestBody DeletedUserFromTeam DeletedUserFromTeam) {
-        User userToDelete = DeletedUserFromTeam.getUserToDeleteFromTeam();
-        BigInteger projectId = DeletedUserFromTeam.getProjectId();
+    public ResponseEntity<User> deleteUserFromProjectsTeam(@RequestBody DeletedUserFromTeam deletedUserFromTeam) {
+        User userToDeleteFromTeam = deletedUserFromTeam.getUserToDeleteFromTeam();
+        BigInteger projectId = deletedUserFromTeam.getProjectId();
 
-        if (userToDelete == null || projectId == null) {
+        System.out.println(userToDeleteFromTeam.toString()+projectId.toString());
+        if (userToDeleteFromTeam == null || projectId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        boolean operationResult = projectService.deleteUserFromTeam(userToDelete, projectId);
+        boolean operationResult = projectService.deleteUserFromTeam(userToDeleteFromTeam, projectId);
 
         if (!operationResult) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(userToDelete, HttpStatus.OK);
+        return new ResponseEntity<>(userToDeleteFromTeam, HttpStatus.OK);
 
     }
 }
