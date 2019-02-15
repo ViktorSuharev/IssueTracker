@@ -4,6 +4,7 @@ import com.netcracker.edu.tms.dao.ProjectDao;
 import com.netcracker.edu.tms.model.Project;
 import com.netcracker.edu.tms.model.Task;
 import com.netcracker.edu.tms.model.User;
+import com.netcracker.edu.tms.model.UsersToProjects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,28 +57,31 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> getUsersProjects(BigInteger userId) {
-        return projectDao.getUsersProjects(userId);
+    public List<Project> getProjectsByUserId(BigInteger userId) {
+        return projectDao.getProjectsByUserId(userId);
     }
 
     @Override
     @Transactional
     public boolean setProjectsTeam(List<User> addedUsers, BigInteger id) {
-        return projectDao.setProjectsTeam(addedUsers, id);
+        for (User toAdd : addedUsers) {
+            projectDao.addUsersToProjects(new UsersToProjects(null, toAdd.getId(), id));
+        }
+        return true;
     }
 
     @Override
-    public List<Task> getUsersTasks(BigInteger userId) {
-        return projectDao.getUsersTasks(userId);
+    public List<Task> getTasksByUserId(BigInteger userId) {
+        return projectDao.getTasksByUserId(userId);
     }
 
     @Override
-    public List<User> getTeamfromProjectId(BigInteger projectId){
-        return projectDao.getTeamfromProjectId(projectId);
+    public List<User> getTeamByProjectId(BigInteger projectId) {
+        return projectDao.getTeamByProjectId(projectId);
     }
 
     @Override
-    public String getNamefromProjectId(BigInteger projectId){
-        return projectDao.getNamefromProjectId(projectId);
+    public boolean deleteUserFromTeam(User userToDelete, BigInteger projectId){
+        return projectDao.deleteUserFromTeam(userToDelete,projectId);
     }
 }

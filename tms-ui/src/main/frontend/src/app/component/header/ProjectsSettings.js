@@ -17,29 +17,31 @@ class ProjectsSettings extends React.Component {
         this.onNameChange = this.onNameChange.bind(this);
         this.onSelectChange = this.onSelectChange.bind(this);
         this.onAddUser = this.onAddUser.bind(this);
-        this.onUpdateProject= this.onUpdateProject.bind(this);
+        this.onUpdateProject = this.onUpdateProject.bind(this);
     };
+
     componentDidMount() {
-        axios.get(`http://localhost:8090/projects/teamfromprojectid/2`) //here will be projectId
+        axios.get(`http://localhost:8090/projects/users/${this.state.projectId}`)
             .then(res => {
                 const addedUsers = res.data;
                 this.setState({addedUsers: addedUsers});
-                console.log( JSON.stringify(this.state.addedUsers));
+                console.log(JSON.stringify(this.state.addedUsers));
             });
-        axios.get(`http://localhost:8090/projects/namefromprojectid/2`) //here will be projectId
+        axios.get(`http://localhost:8090/projects/${this.state.projectId}/name`) //here will be projectId
             .then(res => {
                 const name = res.data;
                 this.setState({name: name});
-                console.log( JSON.stringify(this.state.name));
+                console.log(JSON.stringify(this.state.name));
             });
         axios.get(`http://localhost:8090/users/`)
             .then(res => {
                 const users = res.data;
                 this.setState({users: users});
-                console.log( JSON.stringify(this.state.users));
+                console.log(JSON.stringify(this.state.users));
             });
 
     };
+
     onNameChange(event) {
         const newName = event.target.value;
 
@@ -49,12 +51,13 @@ class ProjectsSettings extends React.Component {
         console.log("this.name: ", this.state.name);
 
     };
+
     onUpdateProject(event) {
         event.preventDefault();
         console.log("onSubmitProject with creatorId: 34 and name: ", this.state.name);
 
         const updatedProject = {
-            id: 2,      //from url soon
+            id: this.state.projectId,      //from url soon
             creator_id: 4, //from Session soon
             name: this.state.name
         };
@@ -82,6 +85,7 @@ class ProjectsSettings extends React.Component {
                 });
         }
     };
+
     onDeleteClick = (userToDelete) => {
 
         const addedUsersNew = this.state.addedUsers.filter((user) => {
@@ -92,7 +96,20 @@ class ProjectsSettings extends React.Component {
             console.log("delete user with id:", userToDelete.id);
         });
 
+        axios(`http://localhost:8090/users/userstoprojects`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                data: {
+                    userToDelete: userToDelete,
+                    projectId: this.state.projectId
+                }
+            }
+        );
+
     };
+
     onAddUser(event) {
 
         if (!this.state.user.fullName) {
@@ -119,6 +136,7 @@ class ProjectsSettings extends React.Component {
             event.preventDefault();
         }
     };
+
     onSelectChange(event) {
         const sw = event.target.name;
         if (sw == "userName") {

@@ -1,16 +1,14 @@
 package com.netcracker.edu.tms.dao;
 
-
 import com.netcracker.edu.tms.model.Project;
 import com.netcracker.edu.tms.model.Task;
 import com.netcracker.edu.tms.model.User;
+import com.netcracker.edu.tms.model.UsersToProjects;
 
 import java.math.BigInteger;
 import java.util.List;
 
-
 public interface ProjectDao {
-
 
     /**
      * Select project from DB by specified id
@@ -55,13 +53,12 @@ public interface ProjectDao {
     boolean deleteProject(BigInteger projectId);
 
     /**
-     * Select list of projects from DB by specified creator_id
+     * Select list of projects from DB by specified creatorId
      *
-     * @param creator_id
+     * @param creatorId
      * @return list of {@link Project} or empty list
      */
-    List<Project> findProjectsByCreatorId(BigInteger creator_id);
-
+    List<Project> findProjectsByCreatorId(BigInteger creatorId);
 
     /**
      * Select all projects from DB
@@ -72,36 +69,27 @@ public interface ProjectDao {
 
     /**
      *
-     *
-     *
      */
-   List<Project> getUsersProjects(BigInteger userId);
+    List<Project> getProjectsByUserId(BigInteger userId);
 
     /**
      *
-     *
-     *
      */
-    boolean setProjectsTeam(List<User> addedUsers, BigInteger id);
+    List<Task> getTasksByUserId(BigInteger userId);
 
     /**
      *
-     *
-     *
      */
-    List<Task> getUsersTasks(BigInteger userId);
+    List<User> getTeamByProjectId(BigInteger projectId);
 
     /**
      *
-     *
-     *
      */
-    List<User> getTeamfromProjectId(BigInteger projectId);
+    boolean addUsersToProjects(UsersToProjects toAdd);
 
     /**
      *
-     *
-     *
      */
-    String getNamefromProjectId(BigInteger projectId);
+    boolean deleteUserFromTeam(User userToDelete, BigInteger projectId);
+
 }

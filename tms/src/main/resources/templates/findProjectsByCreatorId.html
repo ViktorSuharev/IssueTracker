@@ -9,7 +9,7 @@
 
 <h3>Search</h3>
 <form action="#" th:action="@{/findProjectsByCreatorId}" method="get">
-    <p>Creator ID <input type="text" th:name="creator_id"/></p>
+    <p>Creator ID <input type="text" th:name="creatorId"/></p>
     <p><input type="submit" value="Submit"/></p>
 </form>
 
@@ -32,7 +32,7 @@
                     <tbody>
                     <tr th:each="project : ${projects}">
                         <td th:text="${project.id}"></td>
-                        <td th:text="${project.creator_id}"></td>
+                        <td th:text="${project.creatorId}"></td>
                         <td th:text="${project.name}"></td>
                     </tr>
                     </tbody>

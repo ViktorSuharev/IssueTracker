@@ -27,7 +27,7 @@
                 </tr>
                 <tr>
                     <td>Creator ID</td>
-                    <td th:text="${projectToDelete.creator_id}"/>
+                    <td th:text="${projectToDelete.creatorId}"/>
                 </tr>
                 <tr>
                     <td>Name</td>
@@ -61,7 +61,7 @@
     <tbody>
     <tr th:each="project : ${projects}">
         <td th:text="${project.id}"></td>
-        <td th:text="${project.creator_id}"></td>
+        <td th:text="${project.creatorId}"></td>
         <td th:text="${project.name}"></td>
     </tr>
     </tbody>

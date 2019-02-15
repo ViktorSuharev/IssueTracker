@@ -25,7 +25,7 @@ public class Project {
     @Column(name = "id", unique = true, nullable = false)
     private BigInteger id;
     @Column(name = "creator_id")
-    private BigInteger creator_id;
+    private BigInteger creatorId;
     @Column(name = "name")
     private String name;
 }

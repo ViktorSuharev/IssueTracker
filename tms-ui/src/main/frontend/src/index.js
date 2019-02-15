@@ -22,12 +22,12 @@ ReactDOM.render((
             <div>
                 <Route path="/cancel" component={Cancel}/>
                 <Route path="/createproject" component={CreateProject}/>
-                <Route path="/projectstasks" component={ProjectsTasks}/>
+                <Route path="/projectstasks/:id" component={ProjectsTasks}/>
                 <Route path="/projectssettings/:id" component={ProjectsSettings}/>
-                <Route path="/projectinfo" component={ProjectInfo}/>
+                <Route path="/projectinfo/:id" component={ProjectInfo}/>
                 <Route path="/addTask" component={AddTask}/>
                 <Route path="/personalarea" component={PersonalArea}/>
-                <Route path="/CreatedProjects" component={CreatedProjects}/>
+                <Route path="/createdprojects/:id" component={CreatedProjects}/>
             </div>
         </Router>),
     document.getElementById("root")

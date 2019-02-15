@@ -16,7 +16,8 @@ class ProjectsTasks extends React.Component {
             next: null,
             operation: null,
             projects: [],
-            project: []
+            project: [],
+            projectId: this.props.match.params.id,
         };
     }
 
@@ -25,8 +26,8 @@ class ProjectsTasks extends React.Component {
         axios.get(`http://localhost:8090/projects/`)
             .then(res => {
                 const projects = res.data;
-                console.log(projects[0]);
-                const project = projects[0];
+                console.log(projects[this.state.projectId]);
+                const project = projects[this.state.projectId];
                 this.setState({projects});
                 this.setState({project});
             })
@@ -37,7 +38,8 @@ class ProjectsTasks extends React.Component {
             <div id="wrapper">
 
                 <ProjectHeader project_name={this.state.project.name}
-                               creator_id={this.state.project.creator_id}/>
+                               creator_id={this.state.project.creator_id}
+                               projectId={this.state.projectId}/>
                 <hr/>
                 <GetAllTasksWithProjectID/>
             </div>

@@ -42,7 +42,6 @@ public interface ProjectService {
      */
     boolean deleteProject(BigInteger projectId);
 
-
     /**
      *
      */
@@ -63,32 +62,26 @@ public interface ProjectService {
     /**
      *
      */
-    List<Project> getUsersProjects(BigInteger userId);
+    List<Project> getProjectsByUserId(BigInteger userId);
 
     /**
      *
      */
-   boolean setProjectsTeam(List<User> addedUsers,BigInteger id);
+    boolean setProjectsTeam(List<User> addedUsers, BigInteger id);
 
     /**
      *
      */
-    List<Task> getUsersTasks(BigInteger userId);
+    List<Task> getTasksByUserId(BigInteger userId);
 
     /**
      *
-     *
-     *
      */
-    List<User> getTeamfromProjectId(BigInteger projectId);
+    List<User> getTeamByProjectId(BigInteger projectId);
 
     /**
      *
-     *
-     *
      */
-    String getNamefromProjectId(BigInteger projectId);
-
-
+    boolean deleteUserFromTeam(User userToDelete, BigInteger projectId);
 
 }

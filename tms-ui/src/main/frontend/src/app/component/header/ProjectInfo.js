@@ -9,13 +9,17 @@ class ProjectInfo extends React.Component {
         this.state = {
             users: [],
             projects: [],
-            project: []
+            project: [],
+            projectId: this.props.match.params.id,
+            creatorId: '',
+            creator: []
         };
 
     }
 
 
     componentDidMount() {
+
         axios.get(`http://localhost:8090/users/`)
             .then(res => {
                 const users = res.data;
@@ -24,11 +28,26 @@ class ProjectInfo extends React.Component {
         axios.get(`http://localhost:8090/projects/`)
             .then(res => {
                 const projects = res.data;
-                console.log(projects[0]);
-                const project = projects[0];
+                console.log("Current project: ", projects[this.state.projectId]);
+                const project = projects[this.state.projectId];
+
                 this.setState({projects});
                 this.setState({project});
+
+                this.setState({creatorId: project.creatorId});
+                console.log("creatorId: ", this.state.creatorId);
             })
+            .then(res => {
+                const url = `http://localhost:8090/users/${this.state.creatorId}`;
+                axios.get(url)
+                    .then(res => {
+                        console.log("url: ", url);
+                        const creator = res.data;
+                        this.setState({creator});
+                        console.log("creator's full name: ", this.state.creator.fullName);
+                    });
+            });
+
     };
 
 
@@ -38,12 +57,12 @@ class ProjectInfo extends React.Component {
             <div id="wrapper">
 
                 <div className=" d-flex flex-row justify-content-center align-items-center">
-                  <h1>
-                      Team
-                  </h1>
+                    <h1>
+                        Team
+                    </h1>
                 </div>
                 <div className="pl-sm-2 mr-4 bd-highlights align-self-end" style={{"fontSize": "30px"}}>
-                  Project's creator: {this.state.project.creator_id}
+                    Project's creator: {this.state.creator.fullName}
                 </div>
 
                 <div className="table-responsive">

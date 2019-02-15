@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
-public class TaskRESTControlller {
+public class TaskRestControlller {
 
     @GetMapping("/")
     public ResponseEntity<List<Task>> getAllEmployees() {

@@ -10,7 +10,7 @@
 
 <form action="#" th:action="@{/create}" method="get">
 
-    <p>Creator ID <input type="text" th:name="creator_id" /></p>
+    <p>Creator ID <input type="text" th:name="creatorId" /></p>
     <p>Name<input type="text" th:name="name" /></p>
     <p><input type="submit" value="Submit" /></p>
 </form>
@@ -28,7 +28,7 @@
                 </tr>
                 <tr>
                     <td>Creator ID</td>
-                    <td th:text="${addedProject.creator_id}"/>
+                    <td th:text="${addedProject.creatorId}"/>
                 </tr>
                 <tr>
                     <td>Name</td>
@@ -59,7 +59,7 @@
     <tbody>
     <tr th:each="project : ${projects}">
         <td th:text="${project.id}"></td>
-        <td th:text="${project.creator_id}"></td>
+        <td th:text="${project.creatorId}"></td>
         <td th:text="${project.name}"></td>
     </tr>
     </tbody>

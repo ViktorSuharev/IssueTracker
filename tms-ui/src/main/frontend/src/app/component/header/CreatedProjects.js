@@ -12,6 +12,7 @@ class CreatedProjects extends React.Component {
             users: [],
             projects: [],
             user: [],
+            userId: this.props.match.params.id,
         };
     };
 
@@ -20,9 +21,9 @@ class CreatedProjects extends React.Component {
             .then(res => {
                 const users = res.data;
                 this.setState({users: users});
-                this.setState({user: users[0]});
+                this.setState({user: users[0]}); //userId from session soon
             });
-        axios.get(`http://localhost:8090/projects/createdby/4`)
+        axios.get(`http://localhost:8090/users/projects/4`) //userId from session soon
             .then(res => {
                 const projects = res.data;
                 this.setState({projects});

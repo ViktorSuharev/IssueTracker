@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
@@ -82,7 +81,7 @@ public class ProjectDaoJpaImpl implements ProjectDao {
             return Collections.emptyList();
         }
         Query query = entityManager.createQuery(QueryConsts.SELECT_PROJECTS_BY_CREATOR_ID);
-        query.setParameter("creator_id", creatorId);
+        query.setParameter("creatorId", creatorId);
         List<Project> ret = query.getResultList();
         LOGGER.debug("findProjectsByCreatorId called with {}", creatorId);
         return ret;
@@ -97,44 +96,51 @@ public class ProjectDaoJpaImpl implements ProjectDao {
     }
 
     @Override
-    public List<Project> getUsersProjects(BigInteger userId) {
+    public List<Project> getProjectsByUserId(BigInteger userId) {
         Query query = entityManager.createQuery(QueryConsts.SELECT_USERS_PROJECTS);
         query.setParameter("userId", userId);
         List<Project> ret = query.getResultList();
-        LOGGER.debug("getUsersProjects called with userId={}", userId);
+        LOGGER.debug("getProjectsByUserId called with userId={}", userId);
         return ret;
     }
 
     @Override
-    public boolean setProjectsTeam(List<User> addedUsers, BigInteger id) {
-        for (User user : addedUsers) {
-            UsersToProjects toAdd = new UsersToProjects(null, user.getId(), id);
-            entityManager.persist(toAdd);
-        }
-        LOGGER.debug("setProjectsTeam called with project id= {} and team={}", id, addedUsers.toString());
+    public List<Task> getTasksByUserId(BigInteger userId) {
+        Query query = entityManager.createQuery(QueryConsts.SELECT_USERS_TASKS);
+        query.setParameter("userId", userId);
+        List<Task> ret = query.getResultList();
+        LOGGER.debug("getTasksByUserId called with userId={}", userId);
+        return ret;
+    }
+
+    @Override
+    public List<User> getTeamByProjectId(BigInteger projectId) {
+        Query query = entityManager.createQuery(QueryConsts.SELECT_TEAM_FOR_PROJECT_ID);
+        query.setParameter("projectId", projectId);
+        List<User> ret = query.getResultList();
+        LOGGER.debug("getTeamByProjectId called with projectId={}", projectId);
+        return ret;
+    }
+
+    @Override
+    public boolean addUsersToProjects(UsersToProjects toAdd) {
+        entityManager.persist(toAdd);
+        LOGGER.debug("addUsersToProjects called with entry={}", toAdd.toString());
         return true;
     }
 
     @Override
-    public List<Task> getUsersTasks(BigInteger userId) {
-        Query query = entityManager.createQuery(QueryConsts.SELECT_USERS_TASKS);
-        query.setParameter("userId", userId);
-        List<Task> ret = query.getResultList();
-        LOGGER.debug("getUsersTasks called with userId={}", userId);
-        return ret;
-    }
+    public boolean deleteUserFromTeam(User userToDelete, BigInteger projectId){
 
-    @Override
-    public List<User> getTeamfromProjectId(BigInteger projectId) {
-        Query query = entityManager.createQuery(QueryConsts.SELECT_TEAM_FOR_PROJECT_ID);
-        query.setParameter("projectId", projectId);
-        List<User> ret = query.getResultList();
-        LOGGER.debug("getTeamfromProjectId called with projectId={}", projectId);
-        return ret;
-    }
+        UsersToProjects same = entityManager.find(UsersToProjects.class, userToDelete.getId());
 
-    @Override
-    public String getNamefromProjectId(BigInteger projectId) {
-       return this.getProjectById(projectId).getName();
+        if (same != null) {
+            entityManager.remove(same);
+            LOGGER.debug("deleteUserFromTeam called with {}", userToDelete.getId());
+            return true;
+        } else {
+            LOGGER.warn("No such User with id={} in deleteUserFromTeam appeared", userToDelete.getId());
+            return false;
+        }
     }
 }

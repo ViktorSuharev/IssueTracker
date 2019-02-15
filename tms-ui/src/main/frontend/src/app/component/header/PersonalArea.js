@@ -11,7 +11,8 @@ class ProjectsAndTasks extends React.Component {
             users: [],
             projects: [],
             user: [],
-            tasks: []
+            tasks: [],
+            userId:'1' //from session soon
         };
     }
 
@@ -20,15 +21,15 @@ class ProjectsAndTasks extends React.Component {
             .then(res => {
                 const users = res.data;
                 this.setState({users: users});
-                this.setState({user: users[0]});
+                this.setState({user: users[0]});//from session soon
             });
-        axios.get(`http://localhost:8090/projects/1`)
+        axios.get(`http://localhost:8090/projects/1`) //from session soon
             .then(res => {
                 const projects = res.data;
                 this.setState({projects});
                 console.log(this.state.projects);
             });
-        axios.get(`http://localhost:8090/projects/userstasks/1`)
+        axios.get(`http://localhost:8090/users/tasks/1`) //from session soon
             .then(res => {
                 const tasks = res.data;
                 this.setState({tasks: tasks});
@@ -70,7 +71,7 @@ class ProjectsAndTasks extends React.Component {
                     </div>
                     <hr/>
                     <div className=" flex-grow-1 ">
-                        <Link to="/createdprojects">
+                        <Link to={`createdprojects/${this.state.userId}`}>
                             <button type="button" className="btn btn-outline-dark mx-2  btn-sm">
                                 Created projects
                             </button>
@@ -92,7 +93,7 @@ class ProjectsAndTasks extends React.Component {
                         {this.state.projects.map(project =>
                             <React.Fragment>
                                 <tr key={project.id} className="table-active">
-                                    <td><Link to="/personalarea">{project.name}</Link></td>
+                                    <td><Link to={`/projectstasks/${project.id}`}>{project.name}</Link></td>
                                     <td> {project.creator_id}</td>
                                 </tr>
 

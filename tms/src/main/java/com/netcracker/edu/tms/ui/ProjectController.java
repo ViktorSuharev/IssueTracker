@@ -75,19 +75,19 @@ public class ProjectController {
 
     @GetMapping("/update")
     public String updateProject(@RequestParam(value = "id", required = false) String id,
-                                @RequestParam(value = "creator_id", required = false) String creator_id,
+                                @RequestParam(value = "creatorId", required = false) String creatorId,
                                 @RequestParam(value = "name", required = false) String name,
                                 Model model) {
 
-        if (!ControllersUtils.isFilled(id) || !ControllersUtils.isFilled(creator_id) || !ControllersUtils.isFilled(name)) {
+        if (!ControllersUtils.isFilled(id) || !ControllersUtils.isFilled(creatorId) || !ControllersUtils.isFilled(name)) {
             model.addAttribute("newProject", ControllersUtils.getNonexistentProject());
             List<Project> projectList = projectService.getAllProjects();
             model.addAttribute("projects", projectList);
             return "update";
         }
 
-        Project newProject = new Project(ControllersUtils.toBigInteger(id), ControllersUtils.toBigInteger(creator_id), name);
-        if (newProject.getId().equals(BigInteger.valueOf(-1)) || newProject.getCreator_id().equals(BigInteger.valueOf(-1))) {
+        Project newProject = new Project(ControllersUtils.toBigInteger(id), ControllersUtils.toBigInteger(creatorId), name);
+        if (newProject.getId().equals(BigInteger.valueOf(-1)) || newProject.getCreatorId().equals(BigInteger.valueOf(-1))) {
             model.addAttribute("newProject", ControllersUtils.getNonexistentProject());
             List<Project> projectList = projectService.getAllProjects();
             model.addAttribute("projects", projectList);
@@ -109,18 +109,18 @@ public class ProjectController {
     }
 
     @GetMapping("/create")
-    public String createProject(@RequestParam(value = "creator_id", required = false) String creator_id,
+    public String createProject(@RequestParam(value = "creatorId", required = false) String creatorId,
                                 @RequestParam(value = "name", required = false) String name,
                                 Model model) {
-        if (creator_id == null || name == null) {
+        if (creatorId == null || name == null) {
 
             model.addAttribute("addedProject", null);
             List<Project> projectList = projectService.getAllProjects();
             model.addAttribute("projects", projectList);
             return "create";
         } else {
-            Project newProject = new Project(null, ControllersUtils.toBigInteger(creator_id), name);
-            if (newProject.getCreator_id().compareTo(BigInteger.ONE) < 0) {
+            Project newProject = new Project(null, ControllersUtils.toBigInteger(creatorId), name);
+            if (newProject.getCreatorId().compareTo(BigInteger.ONE) < 0) {
                 model.addAttribute("addedProject", null);
                 List<Project> projectList = projectService.getAllProjects();
                 model.addAttribute("projects", projectList);
@@ -137,7 +137,7 @@ public class ProjectController {
     }
 
     @GetMapping("/findProjectsByCreatorId")
-    public String findProjetsByCreatorId(@RequestParam(value = "creator_id", required = false) String creatorId, Model model) {
+    public String findProjetsByCreatorId(@RequestParam(value = "creatorId", required = false) String creatorId, Model model) {
 
         if (!ControllersUtils.isFilled(creatorId)) {
             model.addAttribute("creator_id", -1);

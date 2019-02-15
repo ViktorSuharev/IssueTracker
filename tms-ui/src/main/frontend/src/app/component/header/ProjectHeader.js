@@ -3,6 +3,13 @@ import {Link} from 'react-router-dom';
 
 
 class ProjectHeader extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            projectId: this.props.projectId,
+        };
+    }
+
     render() {
         return (
             <div className="d-flex flex-row">
@@ -14,7 +21,7 @@ class ProjectHeader extends React.Component {
 
 
                 <div className="d-flex mr-4 justify-content-end align-self-end mt-2" style={{"fontSize": "30px"}}>
-                    <button type="button" className="btn btn-outline-success   btn-sm"><Link to="/info"> Info </Link>
+                    <button type="button" className="btn btn-outline-success   btn-sm"><Link to={`/projectinfo/${this.state.projectId}`}> Info </Link>
                     </button>
                 </div>
 
@@ -22,7 +29,7 @@ class ProjectHeader extends React.Component {
                 <div className="d-flex mr-4 justify-content-end align-self-end " style={{"fontSize": "30px"}}>
                     {1 == 1 &&
                     <button type="button" className="btn btn-outline-success   btn-sm"><Link
-                        to="/projectssettings"> Settings</Link></button>
+                        to={`/projectssettings/${this.state.projectId}`}> Settings</Link></button>
                     }
 
                 </div>

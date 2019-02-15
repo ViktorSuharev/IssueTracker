@@ -20,13 +20,14 @@ import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 /**
- * id creator_id name
+ * id creatorId name
  * 1      1      name1
  * 2      2      name2
  * 3      3      name2
@@ -119,7 +120,7 @@ public class ProjectDaoJpaImplTest {
 
     @Test
     public void testFindProjectsByCreatorIdWithProjects() {
-        List<Project> expected = new LinkedList<>();
+        List<Project> expected = new ArrayList<>();
         expected.add(projectDao.getProjectById(BigInteger.ONE));
         expected.add(projectDao.getProjectById(BigInteger.valueOf(6)));
         List<Project> actual = projectDao.findProjectsByCreatorId(BigInteger.ONE);
@@ -135,7 +136,7 @@ public class ProjectDaoJpaImplTest {
 
     @Test
     public void testGetAllProjects() {
-        List<Project> expected = new LinkedList<>();
+        List<Project> expected = new ArrayList<>();
         expected.add(new Project(BigInteger.ONE, BigInteger.ONE, "name1"));
         expected.add(new Project(BigInteger.valueOf(2), BigInteger.valueOf(2), "name2"));
         expected.add(new Project(BigInteger.valueOf(3), BigInteger.valueOf(3), "name3"));
