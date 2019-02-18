@@ -130,7 +130,7 @@ public class ProjectDaoJpaImpl implements ProjectDao {
     }
 
     @Override
-    public boolean deleteUserFromTeam(User userToDelete, BigInteger projectId){
+    public boolean deleteUserFromTeam(User userToDelete, BigInteger projectId) {
 
         UsersToProjects same = entityManager.find(UsersToProjects.class, userToDelete.getId());
 

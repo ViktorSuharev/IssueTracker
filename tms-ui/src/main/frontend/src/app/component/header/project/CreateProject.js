@@ -63,7 +63,7 @@ class CreateProject extends React.Component {
                 .then(res => {
                     console.log(res.status);
                     console.log(res.data);
-                    alert(`Новый проект с именем: "${this.state.name}" и id создателя: "4" создан!`);
+                    alert(`New project with name: "${this.state.name}" and creator's id: "4" was created!`);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -117,11 +117,11 @@ class CreateProject extends React.Component {
                 if (this.state.addedUsers[i].id === curUser.id) {
                     selectedYet = true;
                 }
-            }
+            }ds
             if (selectedYet === true) {
                 alert(`The user is selected yet: ${JSON.stringify(curUser)}`);
             } else {
-                alert(`Вы выбрали сотрудника: ${JSON.stringify(curUser)} и его роль в проекте: ${curUser.role}`);
+                alert(`You chose employee: ${JSON.stringify(curUser)} and his role in project: ${curUser.role}`);
                 this.setState({addedUsers: [...this.state.addedUsers, curUser]});
             }
             event.preventDefault();

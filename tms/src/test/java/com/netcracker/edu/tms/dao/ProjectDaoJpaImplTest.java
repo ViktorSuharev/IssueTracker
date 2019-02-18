@@ -1,74 +1,45 @@
 package com.netcracker.edu.tms.dao;
 
 import com.netcracker.edu.tms.model.Project;
-import org.junit.AfterClass;
+
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 /**
+ * Project
  * id creatorId name
- * 1      1      name1
- * 2      2      name2
- * 3      3      name2
- * 4      4      name3
- * 5      5      name4
- * 6      1      name6
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
+@RunWith(SpringRunner.class)
+@DataJpaTest
+@Import(ProjectDaoJpaImpl.class)
+
 public class ProjectDaoJpaImplTest {
 
     @Autowired
     private ProjectDao projectDao;
 
-    private static EmbeddedDatabase database;
-
-    @BeforeClass
-    public static void setup() throws SQLException {
-        database = new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2).setName("testdb")
-                .addScript("createTestDb.sql").build();
-    }
-
-    @Before
-    public void setupData() throws Exception {
-        database.getConnection().createStatement()
-                .execute(getContentByResourceRelativePath("deleteData.sql"));
-        database.getConnection().createStatement()
-                .execute(getContentByResourceRelativePath("fillData.sql"));
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        database.shutdown();
-    }
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Test
     public void testGetProjectByIdExist() {
-        Project actual;
-        actual = projectDao.getProjectById(BigInteger.valueOf(1L));
-        Project expected = new Project(BigInteger.valueOf(1L), BigInteger.valueOf(1L), "name1");
+        Project expected = new Project(null, BigInteger.valueOf(1L), "name1");
+        BigInteger id = (BigInteger) entityManager.persistAndGetId(expected);
+        expected.setId(id);
+
+        Project actual = projectDao.getProjectById(id);
         Assert.assertEquals(expected, actual);
     }
 
@@ -80,7 +51,8 @@ public class ProjectDaoJpaImplTest {
 
     @Test
     public void testGetProjectByCorrectNameWithProject() {
-        Project expected = new Project(BigInteger.ONE, BigInteger.ONE, "name1");
+        Project expected = new Project(null, BigInteger.ONE, "name1");
+        entityManager.persist(expected);
         Project actual = projectDao.getProjectByName("name1");
         Assert.assertEquals(expected, actual);
     }
@@ -95,8 +67,10 @@ public class ProjectDaoJpaImplTest {
     @Test
     @Transactional
     public void testUpdateProjectWithExistentId() {
-        Project newProject = new Project(BigInteger.ONE, BigInteger.TEN, "name111");
-        Assert.assertTrue(projectDao.updateProject(newProject, newProject.getId()));
+        Project oldProject = new Project(null, BigInteger.TEN, "name111");
+        BigInteger id = (BigInteger) entityManager.persistAndGetId(oldProject);
+        Project newProject = new Project(id, BigInteger.TEN, "name1");
+        Assert.assertTrue(projectDao.updateProject(newProject, id));
     }
 
     @Test
@@ -109,7 +83,9 @@ public class ProjectDaoJpaImplTest {
     @Test
     @Transactional
     public void testDeleteProjectWithExistentId() {
-        Assert.assertTrue(projectDao.deleteProject(BigInteger.ONE));
+        Project oldProject = new Project(null, BigInteger.TEN, "name111");
+        BigInteger id = (BigInteger) entityManager.persistAndGetId(oldProject);
+        Assert.assertTrue(projectDao.deleteProject(id));
     }
 
     @Test
@@ -121,10 +97,13 @@ public class ProjectDaoJpaImplTest {
     @Test
     public void testFindProjectsByCreatorIdWithProjects() {
         List<Project> expected = new ArrayList<>();
-        expected.add(projectDao.getProjectById(BigInteger.ONE));
-        expected.add(projectDao.getProjectById(BigInteger.valueOf(6)));
-        List<Project> actual = projectDao.findProjectsByCreatorId(BigInteger.ONE);
-        Assert.assertEquals(expected, actual);
+        expected.add(new Project(null, BigInteger.TEN, "name1"));
+        expected.add(new Project(null, BigInteger.TEN, "name2"));
+        for (Project in : expected) {
+            entityManager.persist(in);
+        }
+        List<Project> actualReturn = projectDao.findProjectsByCreatorId(BigInteger.TEN);
+        Assert.assertEquals(expected, actualReturn);
     }
 
     @Test
@@ -137,12 +116,15 @@ public class ProjectDaoJpaImplTest {
     @Test
     public void testGetAllProjects() {
         List<Project> expected = new ArrayList<>();
-        expected.add(new Project(BigInteger.ONE, BigInteger.ONE, "name1"));
-        expected.add(new Project(BigInteger.valueOf(2), BigInteger.valueOf(2), "name2"));
-        expected.add(new Project(BigInteger.valueOf(3), BigInteger.valueOf(3), "name3"));
-        expected.add(new Project(BigInteger.valueOf(4), BigInteger.valueOf(4), "name4"));
-        expected.add(new Project(BigInteger.valueOf(5), BigInteger.valueOf(5), "name5"));
-        expected.add(new Project(BigInteger.valueOf(6), BigInteger.valueOf(1), "name6"));
+        expected.add(new Project(null, BigInteger.ONE, "name1"));
+        expected.add(new Project(null, BigInteger.valueOf(2), "name2"));
+        expected.add(new Project(null, BigInteger.valueOf(3), "name3"));
+        expected.add(new Project(null, BigInteger.valueOf(4), "name4"));
+        expected.add(new Project(null, BigInteger.valueOf(5), "name5"));
+        expected.add(new Project(null, BigInteger.valueOf(1), "name6"));
+        for (Project in : expected) {
+            entityManager.persist(in);
+        }
 
         List<Project> actual = projectDao.getAllProjects();
 
@@ -150,12 +132,4 @@ public class ProjectDaoJpaImplTest {
 
     }
 
-    private String getContentByResourceRelativePath(String path)
-            throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(path).getFile());
-
-        return new String(
-                Files.readAllBytes(Paths.get(file.getAbsolutePath())));
-    }
 }

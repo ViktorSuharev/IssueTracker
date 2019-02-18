@@ -57,7 +57,7 @@ public interface ProjectService {
     /**
      *
      */
-    Project getProjectsByName(String name);
+    Project getProjectByName(String name);
 
     /**
      *

@@ -164,7 +164,7 @@ public class ProjectController {
             return "findProjectByName";
         }
 
-        Project ret = projectService.getProjectsByName(name);
+        Project ret = projectService.getProjectByName(name);
         if (ret == null) {
             model.addAttribute("project", null);
             model.addAttribute("name", name);

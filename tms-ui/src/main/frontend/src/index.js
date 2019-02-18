@@ -1,6 +1,6 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
-import "./app/component/header/index.css";
+import "./app/component/header/project/index.css";
 import "github-fork-ribbon-css/gh-fork-ribbon.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -8,14 +8,14 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import ProjectsTasks from "./app/component/header/ProjectsTasks";
-import ProjectInfo from "./app/component/header/ProjectInfo";
-import AddTask from "./app/component/header/AddTask";
-import ProjectsSettings from "./app/component/header/ProjectsSettings";
-import CreateProject from "./app/component/header/CreateProject";
-import Cancel from "./app/component/header/Cancel";
-import PersonalArea from "./app/component/header/PersonalArea";
-import CreatedProjects from "./app/component/header/CreatedProjects";
+import ProjectsTasks from "./app/component/header/project/ProjectsTasks";
+import ProjectInfo from "./app/component/header/project/ProjectInfo";
+import AddTask from "./app/component/header/project/AddTask";
+import ProjectsSettings from "./app/component/header/project/ProjectsSettings";
+import CreateProject from "./app/component/header/project/CreateProject";
+import Cancel from "./app/component/header/project/Cancel";
+import PersonalArea from "./app/component/header/project/PersonalArea";
+import CreatedProjects from "./app/component/header/project/CreatedProjects";
 
 ReactDOM.render((
         <Router>

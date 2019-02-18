@@ -25,7 +25,7 @@ class ProjectHeader extends React.Component {
                     </button>
                 </div>
 
-                {/*Отображение только при сессии админа или создателя */}
+                {/*Display only during the session of the admin or creator*/}
                 <div className="d-flex mr-4 justify-content-end align-self-end " style={{"fontSize": "30px"}}>
                     {1 == 1 &&
                     <button type="button" className="btn btn-outline-success   btn-sm"><Link

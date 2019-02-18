@@ -15,8 +15,12 @@ import java.util.List;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-    @Autowired
     private ProjectDao projectDao;
+
+    @Autowired
+    public ProjectServiceImpl(ProjectDao projectDao) {
+        this.projectDao = projectDao;
+    }
 
     @Override
     public Project getProjectById(BigInteger projectId) {
@@ -52,7 +56,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project getProjectsByName(String name) {
+    public Project getProjectByName(String name) {
         return projectDao.getProjectByName(name);
     }
 
@@ -82,7 +86,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public boolean deleteUserFromTeam(User userToDelete, BigInteger projectId){
-        return projectDao.deleteUserFromTeam(userToDelete,projectId);
+    public boolean deleteUserFromTeam(User userToDelete, BigInteger projectId) {
+        return projectDao.deleteUserFromTeam(userToDelete, projectId);
     }
 }

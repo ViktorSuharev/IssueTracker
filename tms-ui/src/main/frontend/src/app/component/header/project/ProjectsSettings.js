@@ -78,7 +78,7 @@ class ProjectsSettings extends React.Component {
                 .then(res => {
                     console.log(res.status);
                     console.log(res.data);
-                    alert(`Проект с именем: "${this.state.name}" и id создателя: "4" обновлён!`);
+                    alert(`Project with name: "${this.state.name}" and creator's id: "4" was updated!`);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -130,7 +130,7 @@ class ProjectsSettings extends React.Component {
             if (selectedYet === true) {
                 alert(`The user is selected yet: ${JSON.stringify(curUser)}`);
             } else {
-                alert(`Вы выбрали сотрудника: ${JSON.stringify(curUser)} и его роль в проекте: ${curUser.role}`);
+                alert(`You chose epmloyee: ${JSON.stringify(curUser)} and his role in project: ${curUser.role}`);
                 this.setState({addedUsers: [...this.state.addedUsers, curUser]});
             }
             event.preventDefault();
@@ -225,9 +225,9 @@ class ProjectsSettings extends React.Component {
                             <option value="" disabled={true}>
                                 Select role
                             </option>
-                            <option value="1">Проект манеджер</option>
-                            <option value="2">Разработчик</option>
-                            <option value="3">Тестировщик</option>
+                            <option value="1">Project manager</option>
+                            <option value="2">Developer</option>
+                            <option value="3"> QA tester</option>
                         </select>
                     </label>
                     <input className="mx-2 btn btn-dark" type="submit" value="Add"/>

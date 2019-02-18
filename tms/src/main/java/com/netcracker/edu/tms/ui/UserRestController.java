@@ -84,7 +84,6 @@ public class UserRestController {
         User userToDeleteFromTeam = deletedUserFromTeam.getUserToDeleteFromTeam();
         BigInteger projectId = deletedUserFromTeam.getProjectId();
 
-        System.out.println(userToDeleteFromTeam.toString()+projectId.toString());
         if (userToDeleteFromTeam == null || projectId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
