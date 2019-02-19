@@ -117,7 +117,7 @@ class CreateProject extends React.Component {
                 if (this.state.addedUsers[i].id === curUser.id) {
                     selectedYet = true;
                 }
-            }ds
+            }
             if (selectedYet === true) {
                 alert(`The user is selected yet: ${JSON.stringify(curUser)}`);
             } else {
