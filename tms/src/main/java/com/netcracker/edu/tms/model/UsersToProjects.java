@@ -8,8 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Id;
 import java.math.BigInteger;
 
 @Data
@@ -17,20 +17,14 @@ import java.math.BigInteger;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "users")
-
-public class User {
+@Table(name = "users_to_projects")
+public class UsersToProjects {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private BigInteger id;
-    @Column(name = "full_name")
-    String fullName;
-    @Column(name="password")
-    String password;
-    @Column(name="email")
-    String email;
-    @Column(name = "role")
-    BigInteger role;
-
+    @Column(name = "user_id", nullable = false)
+    private BigInteger userId;
+    @Column(name = "project_id", nullable = false)
+    private BigInteger projectId;
 }
