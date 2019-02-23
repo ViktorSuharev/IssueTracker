@@ -84,4 +84,10 @@ public interface ProjectService {
      */
     boolean deleteUserFromTeam(User userToDelete, BigInteger projectId);
 
+
+  /*  *//**
+     *
+     *//*
+    boolean sendMail();
+*/
 }
