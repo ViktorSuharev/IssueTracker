@@ -24,6 +24,7 @@ public class SendMail implements Runnable {
 
     @Override
     public void run() {
+
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
