@@ -26,10 +26,10 @@ public class TaskDaoJpaImpl implements TaskDao {
     }
 
     @Override
-    public List<Task> listOfTasksByName(String taskName) {
+    public List<Task> getTaskByName(String taskName) {
         Query namesQuery = entityManager.
-                createQuery(String.format(QueryBuilder.selectQuery,"Task","taskName"));
-        namesQuery.setParameter("parameter",taskName);
+                createQuery(String.format(QueryBuilder.selectQuery, "Task", "taskName"));
+        namesQuery.setParameter("parameter", taskName);
         return namesQuery.getResultList();
     }
 
@@ -41,7 +41,7 @@ public class TaskDaoJpaImpl implements TaskDao {
 
     @Override
     public boolean updateTask(Task task) {
-        if(entityManager.find(Task.class, task.getTaskId()) == null)
+        if (entityManager.find(Task.class, task.getTaskId()) == null)
             return false;
         else {
             entityManager.merge(task);
@@ -57,50 +57,50 @@ public class TaskDaoJpaImpl implements TaskDao {
     }
 
     @Override
-    public List<Task> listOfTasksByReporter(BigInteger reporterId) {
-            Query namesQuery = entityManager.
-                    createQuery(String.format(QueryBuilder.selectQuery,"Task","reporterId"));
-            namesQuery.setParameter("parameter",reporterId);
-            return namesQuery.getResultList();
-    }
-
-    @Override
-    public List<Task> listOfTasksByAssignee(BigInteger assigneeId) {
+    public List<Task> getTaskByReporter(BigInteger reporterId) {
         Query namesQuery = entityManager.
-                createQuery(String.format(QueryBuilder.selectQuery,"Task","assigneeId"));
-        namesQuery.setParameter("parameter",assigneeId);
+                createQuery(String.format(QueryBuilder.selectQuery, "Task", "reporterId"));
+        namesQuery.setParameter("parameter", reporterId);
         return namesQuery.getResultList();
     }
 
     @Override
-    public List<Task> listOfTasksByCreationDate(Date creationDate) {
+    public List<Task> getTaskByAssignee(BigInteger assigneeId) {
         Query namesQuery = entityManager.
-                createQuery(String.format(QueryBuilder.selectQuery,"Task","creationDate"));
-        namesQuery.setParameter("parameter",creationDate);
+                createQuery(String.format(QueryBuilder.selectQuery, "Task", "assigneeId"));
+        namesQuery.setParameter("parameter", assigneeId);
         return namesQuery.getResultList();
     }
 
     @Override
-    public List<Task> listOfTasksByProject(BigInteger projectId) {
+    public List<Task> getTaskByCreationDate(Date creationDate) {
         Query namesQuery = entityManager.
-                createQuery(String.format(QueryBuilder.selectQuery,"Task","projectId"));
-        namesQuery.setParameter("parameter",projectId);
+                createQuery(String.format(QueryBuilder.selectQuery, "Task", "creationDate"));
+        namesQuery.setParameter("parameter", creationDate);
         return namesQuery.getResultList();
     }
 
     @Override
-    public List<Task> listOfTasksByStatus(Status taskStatus) {
+    public List<Task> getTaskByProject(BigInteger projectId) {
         Query namesQuery = entityManager.
-                createQuery(String.format(QueryBuilder.selectQuery,"Task","status"));
-        namesQuery.setParameter("parameter",taskStatus);
+                createQuery(String.format(QueryBuilder.selectQuery, "Task", "projectId"));
+        namesQuery.setParameter("parameter", projectId);
         return namesQuery.getResultList();
     }
 
     @Override
-    public List<Task> listOfTasksByPriority(Priority taskPriority) {
+    public List<Task> getTaskByStatus(Status taskStatus) {
         Query namesQuery = entityManager.
-                createQuery(String.format(QueryBuilder.selectQuery,"Task","priority"));
-        namesQuery.setParameter("parameter",taskPriority);
+                createQuery(String.format(QueryBuilder.selectQuery, "Task", "status"));
+        namesQuery.setParameter("parameter", taskStatus);
+        return namesQuery.getResultList();
+    }
+
+    @Override
+    public List<Task> getTaskByPriority(Priority taskPriority) {
+        Query namesQuery = entityManager.
+                createQuery(String.format(QueryBuilder.selectQuery, "Task", "priority"));
+        namesQuery.setParameter("parameter", taskPriority);
         return namesQuery.getResultList();
     }
 }

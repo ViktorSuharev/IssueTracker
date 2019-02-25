@@ -22,69 +22,67 @@ public class Controller {
     @Autowired
     private TaskService taskService;
 
-    @GetMapping("/getTaskById")
-    public ResponseEntity<Task> getTaskById(@RequestParam(value = "taskId", required = true) BigInteger taskId) {
+    @GetMapping("/{taskId}")
+    public ResponseEntity getTaskById(@PathVariable BigInteger taskId) {
         return ResponseEntity.ok(taskService.getTaskById(taskId));
     }
 
-    @GetMapping("/listOfTasksByName")
-    public @ResponseBody
-    List<Task> listOfTasksByName(@RequestParam("taskName") String taskName) {
-        return taskService.listOfTasksByName(taskName);
+    @GetMapping("/getTaskByName")
+    public List<Task> listOfTasksByName(@RequestParam("taskName") String taskName) {
+        return taskService.getTaskByName(taskName);
     }
 
-    @PostMapping()
-    boolean addTask(@RequestBody Task task) {
-        return taskService.addTask(task);
+    @PostMapping
+    public ResponseEntity addTask(@RequestBody Task task) {
+        return ResponseEntity.ok(taskService.addTask(task));
     }
 
     @PutMapping
-    boolean updateTask(@RequestBody Task task) {
-        return taskService.updateTask(task);
+    public ResponseEntity updateTask(@RequestBody Task task) {
+        return ResponseEntity.ok(taskService.updateTask(task));
     }
 
-    @DeleteMapping
-    ResponseEntity deleteTask(@RequestBody Task task) {
+    @DeleteMapping("/{taskId}")
+    ResponseEntity deleteTask(@PathVariable BigInteger taskId) {
         try {
-            return new ResponseEntity(taskService.deleteTask(task), HttpStatus.OK);
+            return ResponseEntity.ok(taskService.deleteTask(taskService.getTaskById(taskId)));
         } catch (ResourceNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "task " + task.getTaskId() + " not found", ex);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "task " +
+                    taskService.getTaskById(taskId).getTaskId() +
+                    " not found", ex);
         }
 
     }
 
-    @GetMapping("/listOfTasksByReporter")
-    public @ResponseBody
-    List<Task> listOfTasksByReporter(@RequestParam("reporterId") BigInteger reporterId) { //argument should be User instance
-        return taskService.listOfTasksByReporter(reporterId);
+    @GetMapping
+    public @ResponseBody List<Task> listOfTasksByReporter(@RequestParam("reporterId") BigInteger reporterId) { //argument should be User instance
+        return taskService.getTaskByReporter(reporterId);
     }
 
-    @GetMapping("/listOfTasksByAssignee")
-    public @ResponseBody
-    List<Task> listOfTasksByAssignee(@RequestParam("assigneeId") BigInteger assigneeId) { //argument should be User instance
-        return taskService.listOfTasksByAssignee(assigneeId);
+    @GetMapping
+    public @ResponseBody List<Task> listOfTasksByAssignee(@RequestParam("assigneeId") BigInteger assigneeId) { //argument should be User instance
+        return taskService.getTaskByAssignee(assigneeId);
     }
 
-    @GetMapping("/listOfTasksByCreationDate")
-    public @ResponseBody
-    List<Task> listOfTasksByCreationDate(@RequestParam("creationDate")
+    @GetMapping
+    public @ResponseBody List<Task> listOfTasksByCreationDate(@RequestParam("creationDate")
                                          @DateTimeFormat(pattern = "dd/MM/yyyy") String creationDate) throws ParseException {
-        return taskService.listOfTasksByCreationDate(creationDate);
+        return taskService.getTaskByCreationDate(creationDate);
     }
 
-    @GetMapping("/listOfTasksByProject")
-    List<Task> listOfTasksByProject(@RequestParam("projectId") BigInteger projectId){//argument should be Project instance
-        return taskService.listOfTasksByProject(projectId);
+    @GetMapping
+    public @ResponseBody List<Task> listOfTasksByProject(@RequestParam("projectId") BigInteger projectId){//argument should be Project instance
+        return taskService.getTaskByProject(projectId);
     }
 
-    @GetMapping("/listOfTasksByStatus")
-    List<Task> listOfTasksByStatus(@RequestParam("taskStatus") Status taskStatus){
-        return taskService.listOfTasksByStatus(taskStatus);
+    @GetMapping
+    public @ResponseBody List<Task> listOfTasksByStatus(@RequestParam("taskStatus") Status taskStatus){
+        return taskService.getTaskByStatus(taskStatus);
     }
 
-    @GetMapping("/listOfTasksByPriority")
-    List<Task> listOfTasksByPriority(@RequestParam("taskPriority") Priority taskPriority){
-        return taskService.listOfTasksByPriority(taskPriority);
+    @GetMapping
+    public @ResponseBody List<Task> listOfTasksByPriority(@RequestParam("taskPriority") Priority taskPriority){
+        return taskService.getTaskByPriority(taskPriority);
     }
 
 }

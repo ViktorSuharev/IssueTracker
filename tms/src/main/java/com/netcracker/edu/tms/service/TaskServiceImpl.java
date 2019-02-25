@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.math.BigInteger;
 import java.util.Date;
 import java.text.ParseException;
@@ -23,8 +21,12 @@ import java.util.List;
 @Service
 public class TaskServiceImpl implements TaskService {
 
+    private final TaskDao taskDao;
+
     @Autowired
-    private TaskDao taskDao;
+    TaskServiceImpl(TaskDao taskDao) {
+        this.taskDao = taskDao;
+    }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -34,8 +36,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Task> listOfTasksByName(String taskName) {
-        return taskDao.listOfTasksByName(taskName);
+    public List<Task> getTaskByName(String taskName) {
+        return taskDao.getTaskByName(taskName);
     }
 
     @Override
@@ -47,56 +49,55 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional(propagation =  Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public boolean updateTask(Task task) {
         task.setModificationDate(new java.sql.Date(System.currentTimeMillis()));
         return taskDao.updateTask(task);
     }
 
     @Override
-    @Transactional(propagation =  Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public boolean deleteTask(Task task) {
-        if(taskDao.getTaskById(task.getTaskId()) == null){
-            throw new ResourceNotFoundException("task "+task.getTaskName()+" not found");
-        }
-        else return taskDao.deleteTask(task);
-}
-
-    @Override
-    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Task> listOfTasksByReporter(BigInteger reporterId) {
-            return taskDao.listOfTasksByReporter(reporterId);
+        if (taskDao.getTaskById(task.getTaskId()) == null) {
+            throw new ResourceNotFoundException("task " + task.getTaskName() + " not found");
+        } else return taskDao.deleteTask(task);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Task> listOfTasksByAssignee(BigInteger assigneeId) {
-        return taskDao.listOfTasksByAssignee(assigneeId);
+    public List<Task> getTaskByReporter(BigInteger reporterId) {
+        return taskDao.getTaskByReporter(reporterId);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Task> listOfTasksByCreationDate(String creationDate) throws ParseException {
+    public List<Task> getTaskByAssignee(BigInteger assigneeId) {
+        return taskDao.getTaskByAssignee(assigneeId);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public List<Task> getTaskByCreationDate(String creationDate) throws ParseException {
         SimpleDateFormat datePattern = new SimpleDateFormat("dd-MM-yyyy");
         Date date = datePattern.parse(creationDate);
-        return taskDao.listOfTasksByCreationDate(date);
+        return taskDao.getTaskByCreationDate(date);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Task> listOfTasksByProject(BigInteger projectId) {
-        return taskDao.listOfTasksByProject(projectId);
+    public List<Task> getTaskByProject(BigInteger projectId) {
+        return taskDao.getTaskByProject(projectId);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Task> listOfTasksByStatus(Status taskStatus) {
-        return taskDao.listOfTasksByStatus(taskStatus);
+    public List<Task> getTaskByStatus(Status taskStatus) {
+        return taskDao.getTaskByStatus(taskStatus);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Task> listOfTasksByPriority(Priority taskPriority) {
-        return taskDao.listOfTasksByPriority(taskPriority);
+    public List<Task> getTaskByPriority(Priority taskPriority) {
+        return taskDao.getTaskByPriority(taskPriority);
     }
 }
