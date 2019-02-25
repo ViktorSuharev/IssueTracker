@@ -1,7 +1,6 @@
 package com.netcracker.edu.tms.service;
 
 import com.netcracker.edu.tms.dao.ProjectDao;
-import com.netcracker.edu.tms.dao.SendMail;
 import com.netcracker.edu.tms.model.Project;
 import com.netcracker.edu.tms.model.Task;
 import com.netcracker.edu.tms.model.User;
@@ -91,8 +90,4 @@ public class ProjectServiceImpl implements ProjectService {
         return projectDao.deleteUserFromTeam(userToDelete, projectId);
     }
 
-  /*  @Override
-    public boolean sendMail() {
-        return new SendMail().send();
-    }*/
 }
