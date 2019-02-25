@@ -47,7 +47,7 @@ public class ProjectRestController {
         }
 
         //this block must be before last return line, because in case of invalid addProject function block must not be executed
-        //start of the block
+        //start of the  block
         List<String> addedUsersAddresses = new ArrayList<>();
         for (User user : addedUsers) {
             /*addedUsersAddresses.add(user.getEmail());*/
