@@ -14,8 +14,8 @@ import java.util.concurrent.Executors;
 @Service
 public class MailServiceImpl implements MailService {
 
-    private final String usernameForSession = "dmitrybobryakov@gmail.com";
-    private final String passwordForSession = "#Steam373";
+    private final String usernameForSession = "@gmail.com";
+    private final String passwordForSession = "";
 
     ExecutorService executor = Executors.newFixedThreadPool(10);
 
