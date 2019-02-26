@@ -4,8 +4,11 @@ import com.netcracker.edu.tms.dao.UserDao;
 import com.netcracker.edu.tms.model.User;
 import com.netcracker.edu.tms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.NoResultException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,7 +27,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean emailExists(String email){
-        return userDao.getUserByEmail(email) != null;
+        try {
+            userDao.getUserByEmail(email);
+            return true;
+        } catch (EmptyResultDataAccessException | NoResultException ex){
+            return false;
+        }
     }
 
     @Transactional
