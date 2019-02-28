@@ -19,6 +19,7 @@ import java.util.List;
 @RequestMapping(value = "/tasks")
 @RestController
 public class Controller {
+
     @Autowired
     private TaskService taskService;
 
@@ -28,7 +29,7 @@ public class Controller {
     }
 
     @GetMapping("/getTaskByName")
-    public List<Task> listOfTasksByName(@RequestParam("taskName") String taskName) {
+    public List<Task> getTaskByName(@RequestParam("taskName") String taskName) {
         return taskService.getTaskByName(taskName);
     }
 
@@ -54,34 +55,34 @@ public class Controller {
 
     }
 
-    @GetMapping
-    public @ResponseBody List<Task> listOfTasksByReporter(@RequestParam("reporterId") BigInteger reporterId) { //argument should be User instance
+    @GetMapping("/reporter")
+    public @ResponseBody List<Task> getTaskByReporter(@RequestParam("reporterId") BigInteger reporterId) { //argument should be User instance
         return taskService.getTaskByReporter(reporterId);
     }
 
-    @GetMapping
-    public @ResponseBody List<Task> listOfTasksByAssignee(@RequestParam("assigneeId") BigInteger assigneeId) { //argument should be User instance
+    @GetMapping("/assignee")
+    public @ResponseBody List<Task> getTaskByAssignee(@RequestParam("assigneeId") BigInteger assigneeId) { //argument should be User instance
         return taskService.getTaskByAssignee(assigneeId);
     }
 
-    @GetMapping
-    public @ResponseBody List<Task> listOfTasksByCreationDate(@RequestParam("creationDate")
+    @GetMapping("/creationDate")
+    public @ResponseBody List<Task> getTaskByCreationDate(@RequestParam("creationDate")
                                          @DateTimeFormat(pattern = "dd/MM/yyyy") String creationDate) throws ParseException {
         return taskService.getTaskByCreationDate(creationDate);
     }
 
-    @GetMapping
-    public @ResponseBody List<Task> listOfTasksByProject(@RequestParam("projectId") BigInteger projectId){//argument should be Project instance
+    @GetMapping("/project")
+    public @ResponseBody List<Task> getTaskByProject(@RequestParam("projectId") BigInteger projectId){//argument should be Project instance
         return taskService.getTaskByProject(projectId);
     }
 
-    @GetMapping
-    public @ResponseBody List<Task> listOfTasksByStatus(@RequestParam("taskStatus") Status taskStatus){
+    @GetMapping("/status")
+    public @ResponseBody List<Task> getTaskByStatus(@RequestParam("taskStatus") Status taskStatus){
         return taskService.getTaskByStatus(taskStatus);
     }
 
-    @GetMapping
-    public @ResponseBody List<Task> listOfTasksByPriority(@RequestParam("taskPriority") Priority taskPriority){
+    @GetMapping("/priority")
+    public @ResponseBody List<Task> getTaskByPriority(@RequestParam("taskPriority") Priority taskPriority){
         return taskService.getTaskByPriority(taskPriority);
     }
 
