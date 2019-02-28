@@ -3,6 +3,8 @@ package com.netcracker.edu.tms.service;
 import com.netcracker.edu.tms.model.Mail;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -18,6 +20,7 @@ public class MailSender implements Runnable {
     private String usernameForSession;
     private String address;
     private Mail mail;
+    private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
     public void run() {
@@ -31,6 +34,7 @@ public class MailSender implements Runnable {
 
             Transport.send(message);
         } catch (MessagingException e) {
+            LOGGER.warn("Message exeption in MailSender with stack trace: ", e.getStackTrace());
             e.printStackTrace();
         }
     }

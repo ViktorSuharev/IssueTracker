@@ -1,6 +1,7 @@
 package com.netcracker.edu.tms.service;
 
 import com.netcracker.edu.tms.model.Mail;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Service;
 
 import javax.mail.PasswordAuthentication;
@@ -14,10 +15,10 @@ import java.util.concurrent.Executors;
 @Service
 public class MailServiceImpl implements MailService {
 
-    private final String usernameForSession = "@gmail.com";
-    private final String passwordForSession = "";
-
-    ExecutorService executor = Executors.newFixedThreadPool(10);
+    private final String usernameForSession = "dmitrybobryakov@gmail.com";
+    private final String passwordForSession = "#Steam373";
+    private ExecutorService executor = Executors.newFixedThreadPool(10,
+            new CustomizableThreadFactory("MailSender executor- "));
 
     @Override
     public void send(String address, Mail mail) {

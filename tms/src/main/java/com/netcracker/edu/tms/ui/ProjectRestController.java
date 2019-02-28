@@ -53,9 +53,9 @@ public class ProjectRestController {
             /*addedUsersAddresses.add(user.getEmail());*/
             addedUsersAddresses.add("credo007credo@gmail.com");
         }
-        mailService.send(addedUsersAddresses, new Mail(
-                "You were invited in new project " + newProject.getName() + " over MailSenderImpl!",
-                "Congratulations!"));
+        mailService.send(addedUsersAddresses, Mail.builder().subject(
+                "You were invited in new project " + newProject.getName() + " over MailSenderImpl!").body(
+                "Congratulations!").build());
         //end of the block
 
         Project newProj = new Project(null, newProject.getCreatorId(), newProject.getName());
