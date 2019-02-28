@@ -3,11 +3,13 @@ package com.netcracker.edu.tms.dao;
 import com.netcracker.edu.tms.model.Priority;
 import com.netcracker.edu.tms.model.Status;
 import com.netcracker.edu.tms.model.Task;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
+//@Repository
 public interface TaskDao {
 
     Task getTaskById(BigInteger taskId);
