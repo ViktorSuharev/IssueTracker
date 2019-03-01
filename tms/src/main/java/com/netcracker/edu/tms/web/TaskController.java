@@ -18,7 +18,7 @@ import java.util.List;
 
 @RequestMapping(value = "/tasks")
 @RestController
-public class Controller {
+public class TaskController {
 
     @Autowired
     private TaskService taskService;
@@ -67,7 +67,7 @@ public class Controller {
 
     @GetMapping("/creationDate")
     public @ResponseBody List<Task> getTaskByCreationDate(@RequestParam("creationDate")
-                                         @DateTimeFormat(pattern = "dd/MM/yyyy") String creationDate) throws ParseException {
+                                                          @DateTimeFormat(pattern = "dd/MM/yyyy") String creationDate) throws ParseException {
         return taskService.getTaskByCreationDate(creationDate);
     }
 
