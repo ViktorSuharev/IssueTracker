@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 @Data
 @NoArgsConstructor
@@ -32,6 +33,12 @@ public class User {
     @JoinColumn(name = "roleId")
     private Role role;
 
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private ArrayList<Role> roles;
+
     public User(String fullName, String password, String email) {
         this.fullName = fullName;
         this.password = password;
@@ -44,5 +51,6 @@ public class User {
         destination.password = source.password;
         destination.email = source.email;
         destination.role = source.role;
+        destination.roles = (ArrayList<Role>) source.roles.clone();
     }
 }
