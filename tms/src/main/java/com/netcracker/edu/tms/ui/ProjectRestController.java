@@ -1,6 +1,5 @@
 package com.netcracker.edu.tms.ui;
 
-import com.netcracker.edu.tms.model.Mail;
 import com.netcracker.edu.tms.model.Project;
 
 import com.netcracker.edu.tms.model.User;
@@ -9,6 +8,7 @@ import com.netcracker.edu.tms.service.MailService;
 import com.netcracker.edu.tms.service.ProjectService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/projects")
 public class ProjectRestController {
+    @Value("${notification.enable}")
+    private String enable;
 
     @Autowired
     private ProjectService projectService;
@@ -48,14 +49,9 @@ public class ProjectRestController {
 
         //this block must be before last return line, because in case of invalid addProject function block must not be executed
         //start of the  block
-        List<String> addedUsersAddresses = new ArrayList<>();
-        for (User user : addedUsers) {
-            /*addedUsersAddresses.add(user.getEmail());*/
-            addedUsersAddresses.add("credo007credo@gmail.com");
+        if (this.enable.equals("true")) {
+            mailService.sendInvitationToNewProject(addedUsers, newProject);
         }
-        mailService.send(addedUsersAddresses, Mail.builder().subject(
-                "You were invited in new project " + newProject.getName() + " over MailSenderImpl!").body(
-                "Congratulations!").build());
         //end of the block
 
         Project newProj = new Project(null, newProject.getCreatorId(), newProject.getName());
