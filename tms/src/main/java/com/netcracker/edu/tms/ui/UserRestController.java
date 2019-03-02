@@ -25,36 +25,36 @@ public class UserRestController {
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> ret = new LinkedList<>();
 
-        ret.add(new User(
-                BigInteger.valueOf(1),
-                "stubUser11111111111111111111111111111111111111111",
-                "stubPassword1",
-                "stubEmail1",
-                BigInteger.valueOf(1)));
-        ret.add(new User(
-                BigInteger.valueOf(2),
-                "stubUser2",
-                "stubPassword2",
-                "stubEmail22222222222222222222222222222222222222222222222",
-                BigInteger.valueOf(2)));
-        ret.add(new User(
-                BigInteger.valueOf(3),
-                "stubUser3",
-                "stubPassword3",
-                "stubEmail3",
-                BigInteger.valueOf(2)));
-        ret.add(new User(
-                BigInteger.valueOf(4),
-                "stubUser4",
-                "stubPassword4",
-                "stubEmail4",
-                BigInteger.valueOf(3)));
-        ret.add(new User(
-                BigInteger.valueOf(5),
-                "stubUser5",
-                "stubPassword5",
-                "stubEmail5",
-                BigInteger.valueOf(3)));
+//        ret.add(new User(
+//                BigInteger.valueOf(1),
+//                "stubUser11111111111111111111111111111111111111111",
+//                "stubPassword1",
+//                "stubEmail1",
+//                BigInteger.valueOf(1)));
+//        ret.add(new User(
+//                BigInteger.valueOf(2),
+//                "stubUser2",
+//                "stubPassword2",
+//                "stubEmail22222222222222222222222222222222222222222222222",
+//                BigInteger.valueOf(2)));
+//        ret.add(new User(
+//                BigInteger.valueOf(3),
+//                "stubUser3",
+//                "stubPassword3",
+//                "stubEmail3",
+//                BigInteger.valueOf(2)));
+//        ret.add(new User(
+//                BigInteger.valueOf(4),
+//                "stubUser4",
+//                "stubPassword4",
+//                "stubEmail4",
+//                BigInteger.valueOf(3)));
+//        ret.add(new User(
+//                BigInteger.valueOf(5),
+//                "stubUser5",
+//                "stubPassword5",
+//                "stubEmail5",
+//                BigInteger.valueOf(3)));
 
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
@@ -71,12 +71,12 @@ public class UserRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable(name = "id", required = true) BigInteger creatorId) {
-        return new ResponseEntity<>(new User(
-                BigInteger.valueOf(1L),
-                "StubUserCreator",
-                "12345",
-                "stubUserCreator@mail.ru",
-                BigInteger.valueOf(1)), HttpStatus.OK);
+        return new ResponseEntity<>(new User(), HttpStatus.OK);
+//                BigInteger.valueOf(1L),
+//                "StubUserCreator",
+//                "12345",
+//                "stubUserCreator@mail.ru",
+//                BigInteger.valueOf(1)), HttpStatus.OK);
     }
 
     @PostMapping("/userstoprojects")
