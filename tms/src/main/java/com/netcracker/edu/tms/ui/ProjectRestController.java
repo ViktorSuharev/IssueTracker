@@ -49,6 +49,7 @@ public class ProjectRestController {
 
         //this block must be before last return line, because in case of invalid addProject function block must not be executed
         //start of the  block
+
         if (this.enable.equals("true")) {
             mailService.sendInvitationToNewProject(addedUsers, newProject);
         }
