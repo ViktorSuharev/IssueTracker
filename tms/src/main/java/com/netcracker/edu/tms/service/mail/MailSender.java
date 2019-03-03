@@ -1,4 +1,4 @@
-package com.netcracker.edu.tms.service;
+package com.netcracker.edu.tms.service.mail;
 
 import com.netcracker.edu.tms.model.Mail;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class MailSender implements Runnable {
     private String usernameForSession;
     private String address;
     private Mail mail;
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(MailSender.class);
 
     @Override
     public void run() {

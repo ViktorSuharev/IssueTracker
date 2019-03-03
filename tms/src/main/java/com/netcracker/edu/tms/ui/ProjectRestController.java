@@ -4,7 +4,6 @@ import com.netcracker.edu.tms.model.Project;
 
 import com.netcracker.edu.tms.model.User;
 import com.netcracker.edu.tms.model.ProjectInfo;
-import com.netcracker.edu.tms.service.MailService;
 import com.netcracker.edu.tms.service.ProjectService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ public class ProjectRestController {
     @Autowired
     private ProjectService projectService;
 
-    @Autowired
-    private MailService mailService;
-
     @GetMapping("/")
     public ResponseEntity<List<Project>> getAllProjects() {
         return new ResponseEntity<>(projectService.getAllProjects(), HttpStatus.OK);
@@ -49,9 +45,8 @@ public class ProjectRestController {
 
         //this block must be before last return line, because in case of invalid addProject function block must not be executed
         //start of the  block
-
         if (this.enable.equals("true")) {
-            mailService.sendInvitationToNewProject(addedUsers, newProject);
+            projectService.sendInvitationToNewProject(addedUsers, newProject);
         }
         //end of the block
 

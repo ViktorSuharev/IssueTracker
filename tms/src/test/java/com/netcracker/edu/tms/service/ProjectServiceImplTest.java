@@ -5,6 +5,7 @@ import com.netcracker.edu.tms.model.Project;
 import com.netcracker.edu.tms.model.Task;
 import com.netcracker.edu.tms.model.User;
 import com.netcracker.edu.tms.model.UsersToProjects;
+import com.netcracker.edu.tms.service.mail.MailService;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,7 +26,10 @@ public class ProjectServiceImplTest {
     @Mock
     private ProjectDao projectDao = mock(ProjectDao.class);
 
-    private ProjectService projectService = new ProjectServiceImpl(projectDao);
+    @Mock
+    private MailService mailService = mock(MailService.class);
+
+    private ProjectService projectService = new ProjectServiceImpl(projectDao, mailService);
 
     @Test
     public void getProjectById() throws Exception {
