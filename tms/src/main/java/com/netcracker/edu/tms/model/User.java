@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigInteger;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -29,15 +30,13 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "roleId")
-    private Role role;
-
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "role_user",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    private ArrayList<Role> roles;
+    private Set<Role> roles = new HashSet<Role>();
 
     public User(String fullName, String password, String email) {
         this.fullName = fullName;
@@ -50,7 +49,6 @@ public class User {
         destination.fullName = source.fullName;
         destination.password = source.password;
         destination.email = source.email;
-        destination.role = source.role;
-        destination.roles = (ArrayList<Role>) source.roles.clone();
+        destination.roles = new HashSet<>(source.roles);
     }
 }

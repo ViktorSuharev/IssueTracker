@@ -2,6 +2,9 @@ package com.netcracker.edu.tms.controller;
 
 import com.netcracker.edu.tms.model.User;
 import com.netcracker.edu.tms.service.UserService;
+import jdk.nashorn.internal.runtime.logging.Logger;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.spi.LoggerRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserController {
     private UserService userService;
     private static final String USER_ATTR = "user";
+
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
@@ -25,8 +29,11 @@ public class UserController {
 
     @PostMapping("/signup")
     public String register(Model model, User user){
-        if(userService.register(user))
+        try {
+            userService.register(user);
             return "redirect:/success.html";
-        return "redirect:/error.html";
+        } catch (IllegalArgumentException ex) {
+            return "redirect:/error.html";
+        }
     }
 }

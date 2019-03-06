@@ -1,10 +1,13 @@
 package com.netcracker.edu.tms.service;
 
 
+import com.netcracker.edu.tms.model.Role;
 import com.netcracker.edu.tms.model.User;
 
 public interface UserService {
-    boolean register(User user);
+    User register(User user);
 
-    boolean checkLogin(String email, String passsword);
+    User attachRole(User user, Role role);
+
+    User detachRole(User user, Role role);
 }
