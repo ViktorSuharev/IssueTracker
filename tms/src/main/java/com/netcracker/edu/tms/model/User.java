@@ -32,23 +32,15 @@ public class User {
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
-            name = "role_user",
+            name = "User_Role",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private Set<Role> roles = new HashSet<Role>();
 
-    public User(String fullName, String password, String email) {
+    public User(String fullName, String email, String password) {
         this.fullName = fullName;
-        this.password = password;
         this.email = email;
-    }
-
-    public static void clone(User source, User destination){
-        destination.id = source.id;
-        destination.fullName = source.fullName;
-        destination.password = source.password;
-        destination.email = source.email;
-        destination.roles = new HashSet<>(source.roles);
+        this.password = password;
     }
 }

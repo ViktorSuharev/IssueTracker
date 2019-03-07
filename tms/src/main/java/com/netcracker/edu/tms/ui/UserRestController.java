@@ -5,58 +5,32 @@ import com.netcracker.edu.tms.model.Project;
 import com.netcracker.edu.tms.model.Task;
 import com.netcracker.edu.tms.model.User;
 import com.netcracker.edu.tms.service.ProjectService;
+import com.netcracker.edu.tms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
-import java.util.LinkedList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserRestController {
-
-    @Autowired
+    UserService userService;
     private ProjectService projectService;
 
-    @GetMapping("/")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> ret = new LinkedList<>();
+    @Autowired
+    public UserRestController(UserService userService, ProjectService projectService) {
+        this.userService = userService;
+        this.projectService = projectService;
+    }
 
-//        ret.add(new User(
-//                BigInteger.valueOf(1),
-//                "stubUser11111111111111111111111111111111111111111",
-//                "stubPassword1",
-//                "stubEmail1",
-//                BigInteger.valueOf(1)));
-//        ret.add(new User(
-//                BigInteger.valueOf(2),
-//                "stubUser2",
-//                "stubPassword2",
-//                "stubEmail22222222222222222222222222222222222222222222222",
-//                BigInteger.valueOf(2)));
-//        ret.add(new User(
-//                BigInteger.valueOf(3),
-//                "stubUser3",
-//                "stubPassword3",
-//                "stubEmail3",
-//                BigInteger.valueOf(2)));
-//        ret.add(new User(
-//                BigInteger.valueOf(4),
-//                "stubUser4",
-//                "stubPassword4",
-//                "stubEmail4",
-//                BigInteger.valueOf(3)));
-//        ret.add(new User(
-//                BigInteger.valueOf(5),
-//                "stubUser5",
-//                "stubPassword5",
-//                "stubEmail5",
-//                BigInteger.valueOf(3)));
-
-        return new ResponseEntity<>(ret, HttpStatus.OK);
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/all")
+    public ResponseEntity<Iterable<User>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/tasks/{id}")

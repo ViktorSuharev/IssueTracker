@@ -26,9 +26,4 @@ public class Role {
     public Role(String name) {
         this.name = name;
     }
-
-    public static void clone(Role source, Role destination){
-        destination.id = source.id;
-        destination.name = source.name;
-    }
 }
