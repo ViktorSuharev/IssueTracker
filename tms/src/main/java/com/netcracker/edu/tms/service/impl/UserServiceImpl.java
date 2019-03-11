@@ -17,8 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
@@ -66,39 +64,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User attachRole(User user, Role role) {
-        if(role.equals(getOrCreateRole("user")))
-            throw new IllegalArgumentException("USER role isn't detachable");
-
-        user = userRepository.findById(user.getId()).get();
-        role = roleRepository.findById(role.getId()).get();
-
-        if(user == null || role == null)
-            throw new IllegalArgumentException("Role or user is null");
-
-        if(!user.getRoles().add(role))
-            throw new IllegalArgumentException(
-                    String.format("'%s' already has role '%s'", user.getEmail(), role.getName()));
-
-        user = userRepository.save(user);
-        return user;
-    }
-
-    @Override
-    public User detachRole(User user, Role role) {
-        return user;
-    }
-
-    @Override
     public Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    private Role getOrCreateRole(String name){
-        Role role = roleRepository.findByName("user");
+    private Role getOrCreateRole(String roleName){
+        Role role = roleRepository.findByName(roleName.toUpperCase());
         if(role != null)
             return role;
 
-        return roleRepository.save(new Role(name));
+        return roleRepository.save(new Role(roleName));
     }
 }

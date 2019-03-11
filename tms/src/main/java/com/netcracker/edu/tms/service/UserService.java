@@ -13,9 +13,5 @@ public interface UserService {
 
     User register(User user);
 
-    User attachRole(User user, Role role);
-
-    User detachRole(User user, Role role);
-
     Iterable<User> getAllUsers();
 }

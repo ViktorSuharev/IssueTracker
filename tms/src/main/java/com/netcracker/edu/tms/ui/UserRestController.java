@@ -46,11 +46,6 @@ public class UserRestController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable(name = "id", required = true) BigInteger creatorId) {
         return new ResponseEntity<>(new User(), HttpStatus.OK);
-//                BigInteger.valueOf(1L),
-//                "StubUserCreator",
-//                "12345",
-//                "stubUserCreator@mail.ru",
-//                BigInteger.valueOf(1)), HttpStatus.OK);
     }
 
     @PostMapping("/userstoprojects")
