@@ -16,10 +16,12 @@ import CreateProject from "./app/component/project/CreateProject";
 import Cancel from "./app/component/project/Cancel";
 import PersonalArea from "./app/component/project/PersonalArea";
 import CreatedProjects from "./app/component/project/CreatedProjects";
+import App from "./app/component/App";
 
 ReactDOM.render((
         <Router>
             <div>
+                <Route path="/" component={App}/>
                 <Route path="/cancel" component={Cancel}/>
                 <Route path="/createproject" component={CreateProject}/>
                 <Route path="/projectstasks/:id" component={ProjectsTasks}/>

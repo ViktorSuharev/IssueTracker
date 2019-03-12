@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException(warn);
         }
 
-        user.getRoles().add(getOrCreateRole("USER"));
+        user.getRoles().add(roleRepository.save(new Role("USER")));
 
         return userRepository.save(user);
     }
@@ -66,13 +66,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public Iterable<User> getAllUsers() {
         return userRepository.findAll();
-    }
-
-    private Role getOrCreateRole(String roleName){
-        Role role = roleRepository.findByName(roleName.toUpperCase());
-        if(role != null)
-            return role;
-
-        return roleRepository.save(new Role(roleName));
     }
 }
