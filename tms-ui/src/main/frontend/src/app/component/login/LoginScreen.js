@@ -72,6 +72,7 @@ class LoginScreen extends Component {
 
 const style = {
     margin: 15,
+    align: 'center'
 };
 
 export default LoginScreen;
