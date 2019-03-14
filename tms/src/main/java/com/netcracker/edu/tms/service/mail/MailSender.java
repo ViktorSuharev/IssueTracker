@@ -15,7 +15,7 @@ import javax.mail.internet.MimeMessage;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class MailSender implements Runnable {
+public class    MailSender implements Runnable {
     private Session currentSession;
     private String usernameForSession;
     private String address;

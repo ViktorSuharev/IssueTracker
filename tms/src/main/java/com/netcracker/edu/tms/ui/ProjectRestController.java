@@ -23,8 +23,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/projects")
 public class ProjectRestController {
-    @Value("${notification.enable}")
-    private String enable;
 
     @Autowired
     private ProjectService projectService;
@@ -45,9 +43,7 @@ public class ProjectRestController {
 
         //this block must be before last return line, because in case of invalid addProject function block must not be executed
         //start of the  block
-        if (this.enable.equals("true")) {
-            projectService.sendInvitationToNewProject(addedUsers, newProject);
-        }
+        projectService.sendInvitationToNewProject(addedUsers, newProject);
         //end of the block
 
         Project newProj = new Project(null, newProject.getCreatorId(), newProject.getName());

@@ -100,9 +100,9 @@ public class ProjectServiceImpl implements ProjectService {
         List<String> addedUsersAddresses = new ArrayList<>();
         for (User user : addedUsers) {
             /*addedUsersAddresses.add(user.getEmail());*/
-            addedUsersAddresses.add("credo007credo@gmail.com");
+            addedUsersAddresses.add("dmitrybobryakov@gmail.com");
         }
-        mailService.send(addedUsersAddresses, Mail.builder().subject(
+            mailService.send(addedUsersAddresses, Mail.builder().subject(
                 "You were invited in new project " + newProject.getName() + " over MailSenderImpl!").body(
                 "Congratulations!").build());
     }

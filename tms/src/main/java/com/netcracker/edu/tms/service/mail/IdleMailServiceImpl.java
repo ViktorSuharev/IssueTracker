@@ -9,7 +9,7 @@ import java.util.List;
 public class IdleMailServiceImpl implements MailService {
     @Override
     public void send(List<String> addresses, Mail mail) {
-        //does nothing, just idle stub
+        //literally does nothing, just idle stub
         //in case notification.enable in application.properties is false
     }
 }

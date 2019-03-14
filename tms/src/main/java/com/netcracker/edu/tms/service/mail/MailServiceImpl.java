@@ -1,12 +1,15 @@
 package com.netcracker.edu.tms.service.mail;
 
 import com.netcracker.edu.tms.model.Mail;
+import com.netcracker.edu.tms.service.JasyptStarter.PropertyServiceForJasyptStarter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
@@ -18,16 +21,23 @@ import java.util.concurrent.Executors;
 @Service
 public class MailServiceImpl implements MailService {
 
+    @Autowired
+    private PropertyServiceForJasyptStarter propertyServiceForJasyptStarter;
+
     private Session session = null;
     @Value("${notification.mail.host}")
     private String host;
-    @Value("${notification.mail.password}")
-    private String password;
     @Value("${notification.mail.threads}")
-    private String threads = "1";
-    private ExecutorService executor = Executors.newFixedThreadPool(Integer.valueOf(this.threads),
-            new CustomizableThreadFactory("MailSender executor- %d "));
-    private static final Logger LOGGER = LogManager.getLogger(MailServiceImpl.class);
+    private String threads;
+    private ExecutorService executor;
+
+    private static final Logger LOGGER   = LogManager.getLogger(MailServiceImpl.class);
+
+    @PostConstruct
+    private void init() {
+        executor = Executors.newFixedThreadPool(Integer.valueOf(this.threads),
+                new CustomizableThreadFactory("MailSender executor- %d "));
+    }
 
     @Override
     public void send(List<String> addresses, Mail mail) {
@@ -52,8 +62,9 @@ public class MailServiceImpl implements MailService {
         this.session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        LOGGER.debug("Host for session: " + host + " Password : " + password);
-                        return new PasswordAuthentication(host, password);
+                        LOGGER.debug("Host for session: " + host +
+                                " Password : " + propertyServiceForJasyptStarter.getProperty());
+                        return new PasswordAuthentication(host, propertyServiceForJasyptStarter.getProperty());
                     }
                 });
 
