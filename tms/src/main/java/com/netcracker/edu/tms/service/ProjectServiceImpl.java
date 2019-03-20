@@ -1,25 +1,30 @@
 package com.netcracker.edu.tms.service;
 
 import com.netcracker.edu.tms.dao.ProjectDao;
+import com.netcracker.edu.tms.model.Mail;
 import com.netcracker.edu.tms.model.Project;
 import com.netcracker.edu.tms.model.Task;
 import com.netcracker.edu.tms.model.User;
 import com.netcracker.edu.tms.model.UsersToProjects;
+import com.netcracker.edu.tms.service.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
     private ProjectDao projectDao;
+    private MailService mailService;
 
     @Autowired
-    public ProjectServiceImpl(ProjectDao projectDao) {
+    public ProjectServiceImpl(ProjectDao projectDao, MailService mailService) {
         this.projectDao = projectDao;
+        this.mailService = mailService;
     }
 
     @Override
@@ -88,5 +93,17 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public boolean deleteUserFromTeam(User userToDelete, BigInteger projectId) {
         return projectDao.deleteUserFromTeam(userToDelete, projectId);
+    }
+
+    @Override
+    public void sendInvitationToNewProject(List<User> addedUsers, Project newProject) {
+        List<String> addedUsersAddresses = new ArrayList<>();
+        for (User user : addedUsers) {
+            /*addedUsersAddresses.add(user.getEmail());*/
+            addedUsersAddresses.add("dmitrybobryakov@gmail.com");
+        }
+            mailService.send(addedUsersAddresses, Mail.builder().subject(
+                "You were invited in new project " + newProject.getName() + " over MailSenderImpl!").body(
+                "Congratulations!").build());
     }
 }

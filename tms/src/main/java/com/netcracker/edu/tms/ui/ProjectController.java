@@ -20,11 +20,8 @@ public class ProjectController {
 
     @GetMapping("/all")
     public String getAllProjects(Model model) {
-
         List<Project> allProjects = projectService.getAllProjects();
-
         model.addAttribute("projects", allProjects);
-
         return "all";
     }
 
