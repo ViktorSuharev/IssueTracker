@@ -4,13 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 @Data
 @NoArgsConstructor
@@ -18,19 +14,43 @@ import java.math.BigInteger;
 
 @Entity
 @Table(name = "users")
-
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private BigInteger id;
-    @Column(name = "full_name")
-    String fullName;
-    @Column(name="password")
-    String password;
-    @Column(name="email")
-    String email;
-    @Column(name = "role")
-    BigInteger role;
 
+    @Column(name = "fullName")
+    private String fullName;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
+    @ManyToOne
+    @JoinColumn(name = "roleId")
+    private Role role;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private ArrayList<Role> roles;
+
+    public User(String fullName, String password, String email) {
+        this.fullName = fullName;
+        this.password = password;
+        this.email = email;
+    }
+
+    public static void clone(User source, User destination){
+        destination.id = source.id;
+        destination.fullName = source.fullName;
+        destination.password = source.password;
+        destination.email = source.email;
+        destination.role = source.role;
+        destination.roles = (ArrayList<Role>) source.roles.clone();
+    }
 }
