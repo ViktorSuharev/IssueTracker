@@ -4,7 +4,7 @@ import "./app/component/project/index.css";
 import "github-fork-ribbon-css/gh-fork-ribbon.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 
 import 'bootstrap/dist/js/bootstrap.bundle.min';
@@ -16,12 +16,14 @@ import CreateProject from "./app/component/project/CreateProject";
 import Cancel from "./app/component/project/Cancel";
 import PersonalArea from "./app/component/project/PersonalArea";
 import CreatedProjects from "./app/component/project/CreatedProjects";
-import App from "./app/component/App";
+import Register from "./app/component/login/Register";
+import LoginScreen from "./app/component/login/LoginScreen";
 
 ReactDOM.render((
         <Router>
             <div>
-                <Route path="/" component={App}/>
+                <Route path="/login" component={LoginScreen}/>
+                <Route path="/register" component={Register}/>
                 <Route path="/cancel" component={Cancel}/>
                 <Route path="/createproject" component={CreateProject}/>
                 <Route path="/projectstasks/:id" component={ProjectsTasks}/>
