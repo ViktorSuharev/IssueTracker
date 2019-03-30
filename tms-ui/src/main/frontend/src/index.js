@@ -17,12 +17,12 @@ import Cancel from "./app/component/project/Cancel";
 import PersonalArea from "./app/component/project/PersonalArea";
 import CreatedProjects from "./app/component/project/CreatedProjects";
 import Register from "./app/component/login/Register";
-import LoginScreen from "./app/component/login/LoginScreen";
+import Login from "./app/component/login/Login";
 
 ReactDOM.render((
         <Router>
             <div>
-                <Route path="/login" component={LoginScreen}/>
+                <Route path="/login" component={Login}/>
                 <Route path="/register" component={Register}/>
                 <Route path="/cancel" component={Cancel}/>
                 <Route path="/createproject" component={CreateProject}/>

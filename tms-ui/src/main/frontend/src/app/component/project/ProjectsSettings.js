@@ -139,12 +139,12 @@ class ProjectsSettings extends React.Component {
 
     onSelectChange(event) {
         const sw = event.target.name;
-        if (sw == "userName") {
+        if (sw === "userName") {
             const userId = event.target.value;
             console.log("userID:", userId);
 
             const user = this.state.users.find(user => {
-                return user.id == userId;
+                return user.id === userId;
             });
             console.log("user founded:", JSON.stringify(user));
             this.setState({
@@ -153,14 +153,11 @@ class ProjectsSettings extends React.Component {
                 console.log("this.state.user:", JSON.stringify(this.state.user));
             })
         }
-        if (sw == "role") {
+        if (sw === "role") {
 
             const newRole = event.target.value;
             console.log("newRole:", newRole);
-            {
-                this.state.user.role = newRole;
-            }
-
+            this.state.user.role = newRole;
         }
 
     };

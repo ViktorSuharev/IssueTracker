@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public JwtAuthenticationResponse login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getName(),
+                        loginRequest.getEmail(),
                         loginRequest.getPassword()
                 )
         );
