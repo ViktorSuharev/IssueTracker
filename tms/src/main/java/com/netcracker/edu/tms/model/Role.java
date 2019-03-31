@@ -20,7 +20,7 @@ public class Role {
     @Column(name = "id", unique = true, nullable = false)
     private BigInteger id;
 
-    @Column(name="name", unique = true, nullable = false)
+    @Column(name="name", nullable = false)
     private String name;
 
     public Role(String name) {

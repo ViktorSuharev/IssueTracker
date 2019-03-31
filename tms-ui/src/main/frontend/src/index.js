@@ -18,10 +18,13 @@ import PersonalArea from "./app/component/project/PersonalArea";
 import CreatedProjects from "./app/component/project/CreatedProjects";
 import Register from "./app/component/login/Register";
 import Login from "./app/component/login/Login";
+import HelloWorld from "./app/component/HelloWorld";
+
 
 ReactDOM.render((
         <Router>
             <div>
+                <Route path="/hello" component={HelloWorld}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/register" component={Register}/>
                 <Route path="/cancel" component={Cancel}/>

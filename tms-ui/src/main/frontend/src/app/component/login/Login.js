@@ -31,13 +31,11 @@ export default class Login extends Component {
         axios.post(`http://localhost:8090/api/login`, this.state)
             .then(response => {
                 const jwt = response.data;
-                sessionStorage.setItem('jwt', JSON.stringify(jwt));
+                localStorage.setItem('jwt', JSON.stringify(jwt));
                 //showSuccessPage
                 // this.setState({users: users});
                 // this.setState({user: users[0]}); //userId from session soon
             });
-
-        event.preventDefault();
     }
 
     render() {
