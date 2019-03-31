@@ -1,8 +1,11 @@
 import * as axios from "axios";
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Bootstrap from "react-bootstrap";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col'
+import styles from "../styles.css";
 
 export default class Login extends Component {
     constructor(props) {
@@ -41,31 +44,44 @@ export default class Login extends Component {
         return (
             <div className="Login">
                 <Form onSubmit={this.handleSubmit}>
-                    <Form.Group controlId="email" bsSize="large">
-                        <Form.Control
-                            autoFocus
-                            type="email"
-                            value={this.state.email}
-                            onChange={this.handleChange}
-                        />
+                    <Form.Group as={Row} controlId="email" bsSize="large">
+                        <Form.Label column sm={3}>Email</Form.Label>
+                        <Col sm={7}>
+                            <Form.Control
+                                autoFocus
+                                type="email"
+                                value={this.state.email}
+                                onChange={this.handleChange}
+                            />
+                        </Col>
                     </Form.Group>
-                    <Form.Group controlId="password" bsSize="large">
-                        <Form.Control
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            type="password"
-                        />
+
+                    <Form.Group as={Row} controlId="password" bsSize="large">
+                        <Form.Label column sm={3}>Password:</Form.Label>
+                        <Col sm={7}>
+                            <Form.Control
+                                value={this.state.password}
+                                onChange={this.handleChange}
+                                type="password"
+                            />
+                        </Col>
                     </Form.Group>
-                    <Button
-                        block
-                        bsSize="large"
-                        disabled={!this.validateForm()}
-                        type="submit"
-                    >
-                        Login
-                    </Button>
+                    <Form.Group as={Row}>
+                        <Col sm={10}>
+                            <Button
+                                block
+                                variant="outline-primary"
+                                bsSize="large"
+                                disabled={!this.validateForm()}
+                                type="submit"
+                            >
+                                Login
+                            </Button>
+                        </Col>
+                    </Form.Group>
                 </Form>
             </div>
+            // </CenterView>
         );
     }
 }
