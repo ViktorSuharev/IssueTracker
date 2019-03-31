@@ -41,6 +41,7 @@ export default class Login extends Component {
     render() {
         return (
             <div className="Login">
+                <h2 className="LoginHeader">Login</h2>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group as={Row} controlId="email" bsSize="large">
                         <Form.Label column sm={3}>Email</Form.Label>

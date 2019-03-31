@@ -6,7 +6,7 @@
     bottom: 0;
     left: 0;
     width: 30%;
-    height: 20%;
+    height: 60%;
 }
 .Register{
     position: absolute;
@@ -15,5 +15,23 @@
     right: 0;
     bottom: 0;
     width: 60%;
-    height: 60%;
+    height: 70%;
+}
+
+.LoginHeader {
+    display: block;
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.7em;
+    margin-left: 30%;
+    margin-right: 0;
+}
+
+.RegisterHeader {
+    display: block;
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.7em;
+    margin-left: 12%;
+    margin-right: 0;
 }
