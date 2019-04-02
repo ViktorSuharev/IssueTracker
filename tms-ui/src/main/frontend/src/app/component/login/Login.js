@@ -15,6 +15,8 @@ export default class Login extends Component {
             email: "",
             password: ""
         };
+
+        sessionStorage.setItem('key', 'value');
     }
 
     validateForm() {
@@ -28,6 +30,8 @@ export default class Login extends Component {
     }
 
     handleSubmit = event => {
+        event.preventDefault();
+
         axios.post(`http://localhost:8090/api/login`, this.state)
             .then(response => {
                 const jwt = response.data;
@@ -35,6 +39,9 @@ export default class Login extends Component {
                 //showSuccessPage
                 // this.setState({users: users});
                 // this.setState({user: users[0]}); //userId from session soon
+            })
+            .catch(function (error) {
+                console.log(error);
             });
     }
 
@@ -43,7 +50,7 @@ export default class Login extends Component {
             <div className="Login">
                 <h2 className="LoginHeader">Login</h2>
                 <Form onSubmit={this.handleSubmit}>
-                    <Form.Group as={Row} controlId="email" bsSize="large">
+                    <Form.Group as={Row} controlId="email">
                         <Form.Label column sm={3}>Email</Form.Label>
                         <Col sm={7}>
                             <Form.Control
@@ -80,7 +87,6 @@ export default class Login extends Component {
                     </Form.Group>
                 </Form>
             </div>
-            // </CenterView>
         );
     }
 }
