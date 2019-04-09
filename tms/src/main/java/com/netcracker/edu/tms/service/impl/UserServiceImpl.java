@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException(warn);
         }
 
-        user.getRoles().add(roleRepository.save(new Role("USER")));
+        user.getRoles().add(roleRepository.save(new Role("ROLE_USER")));
 
         return userRepository.save(user);
     }

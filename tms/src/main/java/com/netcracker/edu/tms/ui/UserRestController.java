@@ -27,7 +27,7 @@ public class UserRestController {
         this.projectService = projectService;
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
     public ResponseEntity<Iterable<User>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);

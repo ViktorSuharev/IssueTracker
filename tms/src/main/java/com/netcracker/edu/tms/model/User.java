@@ -30,7 +30,7 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "User_Role",
             joinColumns = {@JoinColumn(name = "user_id")},
