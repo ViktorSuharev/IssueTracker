@@ -14,4 +14,6 @@ public interface UserService {
     User register(User user);
 
     Iterable<User> getAllUsers();
+
+    User getUserByEmail(String email);
 }

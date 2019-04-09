@@ -18,21 +18,16 @@ class HelloWorld extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
+        
+        let token = localStorage.getItem('token');
 
-        console.log("start sending");
-
-        let jwt = JSON.parse(localStorage.getItem('jwt'));
-
-        console.log(jwt);
-
-        axios.get(`http://localhost:8090/users/all`, {
+        axios.get(`http://localhost:8090/users/me`, {
             headers: {
-                jwt
+                Authorization: token
             }
         })
             .then(response => {
                 this.setState(JSON.parse(response.data));
-                console.log(JSON.stringify(this.state));
             });
     };
 

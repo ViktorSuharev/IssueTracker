@@ -67,4 +67,9 @@ public class UserServiceImpl implements UserService {
     public Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }
