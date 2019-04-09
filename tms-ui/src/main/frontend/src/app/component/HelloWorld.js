@@ -1,7 +1,8 @@
 import * as axios from "axios";
 import React, {Component} from "react";
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
 import Bootstrap from "react-bootstrap";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col'
@@ -11,7 +12,7 @@ class HelloWorld extends React.Component {
         super(props);
 
         this.state = {
-            users: []
+            user: undefined
         };
     }
 
@@ -27,14 +28,39 @@ class HelloWorld extends React.Component {
             }
         })
             .then(response => {
-                this.setState(JSON.parse(response.data));
+                let u = response.data;
+                this.setState({user: u});
             });
     };
 
+    getUserTable() {
+        let u = this.state.user;
+        let aboutUser = 
+            <Table striped bordered hover>
+                <thead>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>email</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{u.id}</td>
+                        <td>{u.fullName}</td>
+                        <td>{u.email}</td>
+                    </tr>
+                </tbody>
+            </Table>
+            
+        return aboutUser;
+    }
+
     render() {
+        console.log('rendered');
+
         return <Form onSubmit={this.handleSubmit}>
+                    {this.state.user === undefined ? null : this.getUserTable()}
                     <Button type="submit">
-                        Send request with token
+                        About me
                     </Button>
                 </Form>;
     }
