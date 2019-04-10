@@ -43,7 +43,7 @@ export default class Login extends Component {
 
     render() {
         return (
-            <Container>
+            <Container className="mt-1">
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group as={Row} controlId="email">
                         <Form.Label column sm={1}>Email:</Form.Label>

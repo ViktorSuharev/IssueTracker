@@ -2,6 +2,8 @@ import React from "react";
 import * as axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
 import {Link} from "react-router-dom";
+import { Tab, Tabs, Container } from 'react-bootstrap'
+
 import './index.css';
 
 class CreateProject extends React.Component {
@@ -147,9 +149,10 @@ class CreateProject extends React.Component {
                 {user.fullName}
             </option>);
         return (
+            <Container>
             <div id="wrapper">
                 <div className="d-flex flex-row">
-                    <div className="mt-1 py-2  flex-grow-1">
+                    <div className="mt-5 py-2  flex-grow-1">
                         <h2>
                             New Project's settings
                         </h2>
@@ -200,9 +203,9 @@ class CreateProject extends React.Component {
                             <option value="" disabled={true}>
                                 Select role
                             </option>
-                            <option value="1">Проект манеджер</option>
-                            <option value="2">Разработчик</option>
-                            <option value="3">Тестировщик</option>
+                            <option value="1">Project Manager</option>
+                            <option value="2">Developer</option>
+                            <option value="3">QA</option>
                         </select>
                     </label>
                     <input className="mx-2 btn btn-dark" type="submit" value="Add"/>
@@ -240,6 +243,7 @@ class CreateProject extends React.Component {
                     </table>
                 </div>
             </div>
+            </Container>
         );
     }
 }

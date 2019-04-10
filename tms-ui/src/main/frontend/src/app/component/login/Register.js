@@ -48,7 +48,7 @@ export default class Register extends Component {
 
     render() {
         return (
-            <Container>
+            <Container className="mt-1">
                 <Form
                     onSubmit={this.handleSubmit}>
                     <Form.Group as={Row} controlId="firstName" bsSize="large">
@@ -101,7 +101,7 @@ export default class Register extends Component {
                     </Form.Group>
 
                     <Form.Group as={Row} controlId="secondPassword" bsSize="large">
-                        <Form.Label column sm="2">Password:</Form.Label>
+                        <Form.Label column sm="2">Confirm password:</Form.Label>
                         <Col sm="3">
                             <Form.Control
                                 value={this.state.secondPassword}
