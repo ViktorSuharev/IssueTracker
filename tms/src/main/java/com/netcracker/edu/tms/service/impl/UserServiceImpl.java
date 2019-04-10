@@ -17,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
+
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
@@ -71,5 +73,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User getUserByID(BigInteger id) {
+        return userRepository.findById(id).get();
     }
 }

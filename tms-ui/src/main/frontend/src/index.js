@@ -18,16 +18,26 @@ import PersonalArea from "./app/component/project/PersonalArea";
 import CreatedProjects from "./app/component/project/CreatedProjects";
 import Register from "./app/component/login/Register";
 import Login from "./app/component/login/Login";
+import SignTabs from './app/component/login/SignTabs'
 import HelloWorld from "./app/component/HelloWorld";
+import NavigationBar from "./app/component/navigation/NavigationBar";
+import AboutUser from "./app/component/user/AboutUser";
 
 
 ReactDOM.render((
         <Router>
             <div>
                 <Route path="/hello" component={HelloWorld}/>
+                <Route path="/" component={NavigationBar}/>
+ 
+                <Route path="/auth" component={SignTabs}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/register" component={Register}/>
+
+                <Route path="/user/:id" component={AboutUser}/>
+    
                 <Route path="/cancel" component={Cancel}/>
+                
                 <Route path="/createproject" component={CreateProject}/>
                 <Route path="/projectstasks/:id" component={ProjectsTasks}/>
                 <Route path="/projectssettings/:id" component={ProjectsSettings}/>

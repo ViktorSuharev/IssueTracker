@@ -1,10 +1,6 @@
-import * as axios from "axios";
-import React, {Component} from "react";
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
-import Bootstrap from "react-bootstrap";
+import * as axios from 'axios'
+import React, { Component } from 'react'
+import Bootstrap, { Form, Button, Row, Col, Container } from 'react-bootstrap'
 
 export default class Register extends Component {
     constructor(props) {
@@ -40,7 +36,7 @@ export default class Register extends Component {
             email: this.state.email,
             password: this.state.password
         }
-        axios.post(`http://localhost:8090/api/register`, credential)
+        axios.post(`http://localhost:8090/api/auth/register`, credential)
             .then(response => {
                 //showSuccessPage
                 console.log("success");
@@ -52,85 +48,84 @@ export default class Register extends Component {
 
     render() {
         return (
-                <div className="Register">
-                    <h2 className="RegisterHeader">Register</h2>
-                    <Form
-                        onSubmit={this.handleSubmit}>
-                        <Form.Group as={Row} controlId="firstName" bsSize="large">
-                            <Form.Label column sm="2">First name:</Form.Label>
-                            <Col sm="3">
-                                <Form.Control
-                                    autoFocus
-                                    type="text"
-                                    placeholder="First name"
-                                    value={this.state.firstName}
-                                    onChange={this.handleChange}
-                                />
-                            </Col>
-                        </Form.Group>
+            <Container>
+                <Form
+                    onSubmit={this.handleSubmit}>
+                    <Form.Group as={Row} controlId="firstName" bsSize="large">
+                        <Form.Label column sm="2">First name:</Form.Label>
+                        <Col sm="3">
+                            <Form.Control
+                                autoFocus
+                                type="text"
+                                placeholder="First name"
+                                value={this.state.firstName}
+                                onChange={this.handleChange}
+                            />
+                        </Col>
+                    </Form.Group>
 
-                        <Form.Group as={Row} controlId="lastName" bsSize="large">
-                            <Form.Label column sm="2">Last name:</Form.Label>
-                            <Col sm="3">
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Last name"
-                                    value={this.state.lastName}
-                                    onChange={this.handleChange}
-                                />
-                            </Col>
-                        </Form.Group>
+                    <Form.Group as={Row} controlId="lastName" bsSize="large">
+                        <Form.Label column sm="2">Last name:</Form.Label>
+                        <Col sm="3">
+                            <Form.Control
+                                type="text"
+                                placeholder="Last name"
+                                value={this.state.lastName}
+                                onChange={this.handleChange}
+                            />
+                        </Col>
+                    </Form.Group>
 
-                        <Form.Group as={Row} controlId="email" bsSize="large">
-                            <Form.Label column sm="2">Email:</Form.Label>
-                            <Col sm="3">
-                                <Form.Control
-                                    type="email"
-                                    placeholder="Email"
-                                    value={this.state.email}
-                                    onChange={this.handleChange}
-                                />
-                            </Col>
-                        </Form.Group>
+                    <Form.Group as={Row} controlId="email" bsSize="large">
+                        <Form.Label column sm="2">Email:</Form.Label>
+                        <Col sm="3">
+                            <Form.Control
+                                type="email"
+                                placeholder="Email"
+                                value={this.state.email}
+                                onChange={this.handleChange}
+                            />
+                        </Col>
+                    </Form.Group>
 
-                        <Form.Group as={Row} controlId="password" bsSize="large">
-                            <Form.Label column sm="2">Password:</Form.Label>
-                            <Col sm="3">
-                                <Form.Control
-                                    value={this.state.password}
-                                    onChange={this.handleChange}
-                                    placeholder="Password"
-                                    type="password"
-                                />
-                            </Col>
-                        </Form.Group>
+                    <Form.Group as={Row} controlId="password" bsSize="large">
+                        <Form.Label column sm="2">Password:</Form.Label>
+                        <Col sm="3">
+                            <Form.Control
+                                value={this.state.password}
+                                onChange={this.handleChange}
+                                placeholder="Password"
+                                type="password"
+                            />
+                        </Col>
+                    </Form.Group>
 
-                        <Form.Group as={Row} controlId="secondPassword" bsSize="large">
-                            <Form.Label column sm="2">Password:</Form.Label>
-                            <Col sm="3">
-                                <Form.Control
-                                    value={this.state.secondPassword}
-                                    placeholder="Confirm passsword"
-                                    onChange={this.handleChange}
-                                    type="password"
-                                />
-                            </Col>
-                        </Form.Group>
-                        <Form.Group as={Row}>
-                            <Col sm={5}>
-                                <Button
-                                    block
-                                    variant="outline-primary"
-                                    bsSize="large"
-                                    disabled={!this.validateForm()}
-                                    type="submit"
-                                >
-                                    Register
+                    <Form.Group as={Row} controlId="secondPassword" bsSize="large">
+                        <Form.Label column sm="2">Password:</Form.Label>
+                        <Col sm="3">
+                            <Form.Control
+                                value={this.state.secondPassword}
+                                placeholder="Confirm passsword"
+                                onChange={this.handleChange}
+                                type="password"
+                            />
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row}>
+                        <Col sm={5}>
+                            <Button
+                                block
+                                variant="outline-primary"
+                                bsSize="large"
+                                disabled={!this.validateForm()}
+                                type="submit"
+                            >
+                                Register
                                 </Button>
-                            </Col>
-                        </Form.Group>
-                    </Form>
-                </div>
+                        </Col>
+                    </Form.Group>
+                </Form>
+            </Container>
         );
     }
 }

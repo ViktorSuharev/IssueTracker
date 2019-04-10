@@ -1,11 +1,6 @@
 import * as axios from "axios";
-import React, {Component} from "react";
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Table from 'react-bootstrap/Table';
-import Bootstrap from "react-bootstrap";
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
+import React, { Component } from "react";
+import Bootstrap, { Form, Button, Table, Container } from 'react-bootstrap';
 
 class HelloWorld extends React.Component {
     constructor(props) {
@@ -19,23 +14,23 @@ class HelloWorld extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        
+
         let token = localStorage.getItem('token');
 
-        axios.get(`http://localhost:8090/users/me`, {
+        axios.get(`http://localhost:8090/api/users/me`, {
             headers: {
                 Authorization: token
             }
         })
             .then(response => {
                 let u = response.data;
-                this.setState({user: u});
+                this.setState({ user: u });
             });
     };
 
     getUserTable() {
         let u = this.state.user;
-        let aboutUser = 
+        let aboutUser =
             <Table striped bordered hover>
                 <thead>
                     <th>id</th>
@@ -50,19 +45,19 @@ class HelloWorld extends React.Component {
                     </tr>
                 </tbody>
             </Table>
-            
+
         return aboutUser;
     }
 
     render() {
-        console.log('rendered');
-
-        return <Form onSubmit={this.handleSubmit}>
-                    {this.state.user === undefined ? null : this.getUserTable()}
-                    <Button type="submit">
-                        About me
+        return <Container className="justify-content-md-center">
+            <Form onSubmit={this.handleSubmit}>
+                {this.state.user === undefined ? null : this.getUserTable()}
+                <Button type="submit">
+                    About me
                     </Button>
-                </Form>;
+            </Form>
+        </Container>;
     }
 }
 

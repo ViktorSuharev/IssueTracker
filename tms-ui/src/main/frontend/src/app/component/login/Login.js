@@ -1,10 +1,6 @@
 import * as axios from "axios";
-import React, {Component} from "react";
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
-import Bootstrap from "react-bootstrap";
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
+import React, { Component } from "react";
+import Bootstrap, { Form, Button, Row, Col, Container } from 'react-bootstrap'
 import styles from "../styles.css";
 
 export default class Login extends Component {
@@ -30,7 +26,7 @@ export default class Login extends Component {
     handleSubmit = event => {
         event.preventDefault();
 
-        axios.post(`http://localhost:8090/api/login`, this.state)
+        axios.post(`http://localhost:8090/api/auth/login`, this.state)
             .then(response => {
                 const jwt = response.data;
                 var tokenType = jwt.tokenType;
@@ -47,15 +43,15 @@ export default class Login extends Component {
 
     render() {
         return (
-            <div className="Login">
-                <h2 className="LoginHeader">Login</h2>
+            <Container>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group as={Row} controlId="email">
-                        <Form.Label column sm={3}>Email</Form.Label>
-                        <Col sm={7}>
+                        <Form.Label column sm={1}>Email:</Form.Label>
+                        <Col sm={4}>
                             <Form.Control
                                 autoFocus
                                 type="email"
+                                placeholder="Email"
                                 value={this.state.email}
                                 onChange={this.handleChange}
                             />
@@ -63,17 +59,18 @@ export default class Login extends Component {
                     </Form.Group>
 
                     <Form.Group as={Row} controlId="password" bsSize="large">
-                        <Form.Label column sm={3}>Password:</Form.Label>
-                        <Col sm={7}>
+                        <Form.Label column sm={1}>Password:</Form.Label>
+                        <Col sm={4}>
                             <Form.Control
                                 value={this.state.password}
                                 onChange={this.handleChange}
+                                placeholder="Password"
                                 type="password"
                             />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}>
-                        <Col sm={10}>
+                        <Col sm={5}>
                             <Button
                                 block
                                 variant="outline-primary"
@@ -86,7 +83,7 @@ export default class Login extends Component {
                         </Col>
                     </Form.Group>
                 </Form>
-            </div>
+            </Container>
         );
     }
 }

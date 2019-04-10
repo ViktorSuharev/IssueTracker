@@ -18,7 +18,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserRestController {
     UserService userService;
     private ProjectService projectService;
@@ -37,8 +37,15 @@ public class UserRestController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/me")
-    public ResponseEntity<User> aboutUser(@AuthenticationPrincipal UserPrincipal currentUser) {
+    public ResponseEntity<User> aboutMe(@AuthenticationPrincipal UserPrincipal currentUser) {
         User user = userService.getUserByEmail(currentUser.getUsername());
+        return ResponseEntity.ok(user);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/{id}")
+    public ResponseEntity<User> aboutUser(@PathVariable(name="id") BigInteger id) {
+        User user = userService.getUserByID(id);
         return ResponseEntity.ok(user);
     }
 
@@ -50,11 +57,6 @@ public class UserRestController {
     @GetMapping("/projects/{id}")
     public ResponseEntity<List<Project>> getProjectsByCreatorId(@PathVariable(name = "id", required = true) BigInteger userId) {
         return new ResponseEntity<>(projectService.findProjectsByCreatorId(userId), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable(name = "id", required = true) BigInteger creatorId) {
-        return new ResponseEntity<>(new User(), HttpStatus.OK);
     }
 
     @PostMapping("/userstoprojects")
