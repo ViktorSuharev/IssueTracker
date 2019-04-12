@@ -2,7 +2,7 @@ import "./component/project/index.css";
 import "github-fork-ribbon-css/gh-fork-ribbon.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { BrowserRouter as Router, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import ProjectsTasks from "./component/project/ProjectsTasks";
@@ -19,6 +19,7 @@ import React, { Component } from 'react'
 import { Container } from 'react-bootstrap'
 
 import NavigationBar from './component/navigation/NavigationBar.js';
+import { AuthConsumer } from "./component/login/AuthContext";
 
 class App extends Component {
     constructor(props) {
@@ -32,25 +33,35 @@ class App extends Component {
         };
     }
 
+    guest() {
+        return null;
+    }
+
+    loggedIn() {
+        return <Router>
+            <div>
+                <Route path="/hello" component={HelloWorld} />
+
+                <Route path="/user/:id" component={AboutUser} />
+                <Route path="/createproject" component={CreateProject} />
+                <Route path="/projectstasks/:id" component={ProjectsTasks} />
+                <Route path="/projectssettings/:id" component={ProjectsSettings} />
+                <Route path="/projectinfo/:id" component={ProjectInfo} />
+                <Route path="/addTask" component={AddTask} />
+                <Route path="/personalarea" component={PersonalArea} />
+                <Route path="/createdprojects/:id" component={CreatedProjects} />
+            </div>
+        </Router>;
+    }
+
     render() {
         return <Container>
             <NavigationBar
                 user={this.state.user}
             />
-            <Router>
-                <div>
-                    <Route path="/hello" component={HelloWorld} />
-
-                    <Route path="/user/:id" component={AboutUser} />
-                    <Route path="/createproject" component={CreateProject} />
-                    <Route path="/projectstasks/:id" component={ProjectsTasks} />
-                    <Route path="/projectssettings/:id" component={ProjectsSettings} />
-                    <Route path="/projectinfo/:id" component={ProjectInfo} />
-                    <Route path="/addTask" component={AddTask} />
-                    <Route path="/personalarea" component={PersonalArea} />
-                    <Route path="/createdprojects/:id" component={CreatedProjects} />
-                </div>
-            </Router>
+            <AuthConsumer>
+                {({ isAuth }) => isAuth ? this.loggedIn() : this.guest()}
+            </AuthConsumer>
         </Container>;
     }
 }
