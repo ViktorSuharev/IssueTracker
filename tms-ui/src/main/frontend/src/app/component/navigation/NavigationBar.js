@@ -10,7 +10,7 @@ export default class NavigationBar extends Component {
         this.state = props;
     }
 
-    loggedIn(){
+    loggedIn(user){
         return <Navbar fixed="top" expand="lg" bg="dark" variant="dark">
         <Navbar.Brand>
             <img
@@ -36,20 +36,20 @@ export default class NavigationBar extends Component {
             </Nav>
 
             <Navbar.Text>
-                Signed in as: {this.state.user.user.fullName}
+                Signed in as: {user.fullName}
             </Navbar.Text>
         </Navbar.Collapse>
     </Navbar>;
     }
 
     guest(){
-        return <SignTabs/>;
+        return null;
     }
 
     render() {
         return <AuthConsumer>
             {
-                ({isAuth}) => isAuth? this.loggedIn() : this.guest()
+                ({isAuth, user}) => isAuth? this.loggedIn(user) : this.guest()
             }
         </AuthConsumer>        
     }

@@ -2,7 +2,7 @@ import "./component/project/index.css";
 import "github-fork-ribbon-css/gh-fork-ribbon.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import ProjectsTasks from "./component/project/ProjectsTasks";
@@ -20,26 +20,20 @@ import { Container } from 'react-bootstrap'
 
 import NavigationBar from './component/navigation/NavigationBar.js';
 import { AuthConsumer } from "./component/login/AuthContext";
+import SignTabs from "./component/login/SignTabs";
 
 class App extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            user: {
-                user: null,
-                logged_in: null
-            }
-        };
     }
 
     guest() {
-        return null;
+        return <SignTabs/>
     }
 
     loggedIn() {
         return <Router>
-            <div>
+            <Switch>
                 <Route path="/hello" component={HelloWorld} />
 
                 <Route path="/user/:id" component={AboutUser} />
@@ -50,15 +44,13 @@ class App extends Component {
                 <Route path="/addTask" component={AddTask} />
                 <Route path="/personalarea" component={PersonalArea} />
                 <Route path="/createdprojects/:id" component={CreatedProjects} />
-            </div>
+            </Switch>
         </Router>;
     }
 
     render() {
         return <Container>
-            <NavigationBar
-                user={this.state.user}
-            />
+            <NavigationBar/>
             <AuthConsumer>
                 {({ isAuth }) => isAuth ? this.loggedIn() : this.guest()}
             </AuthConsumer>

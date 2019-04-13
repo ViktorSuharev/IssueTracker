@@ -2,15 +2,17 @@ import * as axios from "axios";
 import React, { Component } from "react";
 import Bootstrap, { Form, Button, Row, Col, Container } from 'react-bootstrap'
 import styles from "../styles.css";
+import { AuthConsumer, AuthProvider } from "./AuthContext";
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            email: "",
-            password: ""
-        };
+        let us = JSON.parse(localStorage.getItem('userCredentrials'));
+        if (us == null)
+            us = { email: "", password: "" };
+
+        this.state = { email: us.email, password: us.password };
     }
 
     validateForm() {
@@ -23,28 +25,10 @@ export default class Login extends Component {
         });
     }
 
-    handleSubmit = event => {
-        event.preventDefault();
-
-        axios.post(`http://localhost:8090/api/auth/login`, this.state)
-            .then(response => {
-                const jwt = response.data;
-                var tokenType = jwt.tokenType;
-                var token = jwt.accessToken
-                localStorage.setItem('token', tokenType + ' ' + token);
-                //showSuccessPage
-                // this.setState({users: users});
-                // this.setState({user: users[0]}); //userId from session soon
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
     render() {
         return (
-            <Container className="mt-1">
-                <Form onSubmit={this.handleSubmit}>
+            <Container className="mt-3">
+                <Form>
                     <Form.Group as={Row} controlId="email">
                         <Form.Label column sm={1}>Email:</Form.Label>
                         <Col sm={4}>
@@ -71,15 +55,21 @@ export default class Login extends Component {
                     </Form.Group>
                     <Form.Group as={Row}>
                         <Col sm={5}>
-                            <Button
-                                block
-                                variant="outline-primary"
-                                bsSize="large"
-                                disabled={!this.validateForm()}
-                                type="submit"
-                            >
-                                Login
-                            </Button>
+                            <AuthConsumer>
+                                {({ login }) => (
+                                    <Button
+                                        block
+                                        variant="outline-primary"
+                                        bsSize="large"
+                                        disabled={!this.validateForm()}
+                                        onClick={(e) => {e.preventDefault(); login(this.state)} }
+
+                                        // onClick={this.disabled ? null : login(this.state) }
+                                    >
+                                        Login
+                                    </Button>
+                                )}
+                            </AuthConsumer>
                         </Col>
                     </Form.Group>
                 </Form>

@@ -38,8 +38,7 @@ export default class Register extends Component {
         }
         axios.post(`http://localhost:8090/api/auth/register`, credential)
             .then(response => {
-                //showSuccessPage
-                console.log("success");
+                alert('Success\Login using your email and password');
                 console.log(response);
             });
 
@@ -48,7 +47,7 @@ export default class Register extends Component {
 
     render() {
         return (
-            <Container className="mt-1">
+            <Container className="mt-3">
                 <Form
                     onSubmit={this.handleSubmit}>
                     <Form.Group as={Row} controlId="firstName" bsSize="large">
