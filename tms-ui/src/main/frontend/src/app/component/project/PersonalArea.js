@@ -141,6 +141,9 @@ class ProjectsAndTasks extends React.Component {
                                                 )
                                             }
 
+                                            else
+                                                return null
+
                                         }
                                     )}
                                 </table>
