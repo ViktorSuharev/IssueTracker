@@ -5,6 +5,7 @@
 
 # IDEA project configuration
 /.idea
+.idea
 *.iml
 
 # CMake
@@ -134,3 +135,4 @@ tms/target/
 tms-ui/src/main/frontend/package-lock.json
 .idea/libraries/Maven__junit_junit_4_13_beta_1.xml
 .idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml
+

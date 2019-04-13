@@ -1,8 +1,11 @@
 package com.netcracker.edu.tms.service;
 
 import com.netcracker.edu.tms.dao.ProjectDao;
-import com.netcracker.edu.tms.model.*;
-//import com.netcracker.edu.tms.service.mail.MailService;
+import com.netcracker.edu.tms.model.Project;
+import com.netcracker.edu.tms.model.Task;
+import com.netcracker.edu.tms.model.User;
+import com.netcracker.edu.tms.model.UsersToProjects;
+import com.netcracker.edu.tms.service.mail.MailService;
 import org.junit.Assert;
 import org.junit.Test;
 
