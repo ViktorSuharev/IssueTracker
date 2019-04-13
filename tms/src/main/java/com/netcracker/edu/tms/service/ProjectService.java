@@ -84,4 +84,10 @@ public interface ProjectService {
      */
     boolean deleteUserFromTeam(User userToDelete, BigInteger projectId);
 
+
+    /**
+     *
+     */
+    void sendInvitationToNewProject(List<User> addedUsers, Project newProject);
+
 }

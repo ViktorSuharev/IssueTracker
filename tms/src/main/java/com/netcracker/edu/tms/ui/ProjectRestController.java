@@ -1,12 +1,13 @@
 package com.netcracker.edu.tms.ui;
 
 import com.netcracker.edu.tms.model.Project;
-import com.netcracker.edu.tms.model.Task;
+
 import com.netcracker.edu.tms.model.User;
 import com.netcracker.edu.tms.model.ProjectInfo;
 import com.netcracker.edu.tms.service.ProjectService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +41,11 @@ public class ProjectRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+        //this block must be before last return line, because in case of invalid addProject function block must not be executed
+        //start of the  block
+        projectService.sendInvitationToNewProject(addedUsers, newProject);
+        //end of the block
+
         Project newProj = new Project(null, newProject.getCreatorId(), newProject.getName());
         boolean retAddedUsers = projectService.setProjectsTeam(addedUsers, newProj.getId());
 
@@ -47,6 +53,7 @@ public class ProjectRestController {
         if (!operationResult) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity<>(newProject, HttpStatus.OK);
     }
 
@@ -71,8 +78,6 @@ public class ProjectRestController {
     public ResponseEntity<List<Project>> getAllProjects(@PathVariable(name = "id", required = true) BigInteger userId) {
         return new ResponseEntity<>(projectService.getProjectsByUserId(userId), HttpStatus.OK);
     }
-
-
 
     @GetMapping("/users/{id}")
     public ResponseEntity<List<User>> getTeamfromProjectId(@PathVariable(name = "id", required = true) BigInteger projectId) {
