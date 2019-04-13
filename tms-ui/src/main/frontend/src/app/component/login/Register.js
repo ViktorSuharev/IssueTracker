@@ -1,6 +1,8 @@
 import * as axios from 'axios'
 import React, { Component } from 'react'
 import Bootstrap, { Form, Button, Row, Col, Container } from 'react-bootstrap'
+// import bcrypt from 'bcryptjs';
+
 
 export default class Register extends Component {
     constructor(props) {
@@ -31,11 +33,14 @@ export default class Register extends Component {
     }
 
     handleSubmit = event => {
+        // let hash = bcrypt.hashSync(this.state.password, 10);
+
         let credential = {
             fullName: this.state.firstName + ' ' + this.state.lastName,
             email: this.state.email,
-            password: this.state.password
-        }
+            password: this.state.password //hash
+        };
+
         axios.post(`http://localhost:8090/api/auth/register`, credential)
             .then(response => {
                 alert('Success\Login using your email and password');

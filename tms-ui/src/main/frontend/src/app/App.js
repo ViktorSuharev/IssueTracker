@@ -16,45 +16,36 @@ import HelloWorld from "./component/HelloWorld";
 import AboutUser from "./component/user/AboutUser";
 
 import React, { Component } from 'react'
-import { Container } from 'react-bootstrap'
 
 import NavigationBar from './component/navigation/NavigationBar.js';
-import { AuthConsumer } from "./component/login/AuthContext";
+import { AuthProvider } from "./component/login/AuthContext";
 import SignTabs from "./component/login/SignTabs";
+import ProtectedRoute from "./component/ProtectedRoute";
 
 class App extends Component {
     constructor(props) {
         super(props);
     }
 
-    guest() {
-        return <SignTabs/>
-    }
-
-    loggedIn() {
-        return <Router>
-            <Switch>
-                <Route path="/hello" component={HelloWorld} />
-
-                <Route path="/user/:id" component={AboutUser} />
-                <Route path="/createproject" component={CreateProject} />
-                <Route path="/projectstasks/:id" component={ProjectsTasks} />
-                <Route path="/projectssettings/:id" component={ProjectsSettings} />
-                <Route path="/projectinfo/:id" component={ProjectInfo} />
-                <Route path="/addTask" component={AddTask} />
-                <Route path="/personalarea" component={PersonalArea} />
-                <Route path="/createdprojects/:id" component={CreatedProjects} />
-            </Switch>
-        </Router>;
-    }
-
     render() {
-        return <Container>
-            <NavigationBar/>
-            <AuthConsumer>
-                {({ isAuth }) => isAuth ? this.loggedIn() : this.guest()}
-            </AuthConsumer>
-        </Container>;
+        return <Router>
+                <AuthProvider>
+                    <NavigationBar/>
+                    <Switch>
+                        <ProtectedRoute path="/hello" component={HelloWorld} />
+
+                        <ProtectedRoute exact path="/user/:id" component={AboutUser} />
+                        <ProtectedRoute path="/createproject" component={CreateProject} />
+                        <Route path="/projectstasks/:id" component={ProjectsTasks} />
+                        <Route path="/projectssettings/:id" component={ProjectsSettings} />
+                        <Route path="/projectinfo/:id" component={ProjectInfo} />
+                        <Route path="/addTask" component={AddTask} />
+                        <Route path="/personalarea" component={PersonalArea} />
+                        <Route path="/createdprojects/:id" component={CreatedProjects} />
+                        <Route path="/auth" component={SignTabs}/>
+                    </Switch>
+                </AuthProvider>
+        </Router>;
     }
 }
 
