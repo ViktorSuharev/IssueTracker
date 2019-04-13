@@ -3,6 +3,7 @@ package com.netcracker.edu.tms.repository;
 import com.netcracker.edu.tms.model.Role;
 import com.netcracker.edu.tms.model.User;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class UserRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
+    @Ignore
     @Test
     public void testGetUserById() {
         User persisted = new User();

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { AuthConsumer } from '../login/AuthContext';
-import SignTabs from '../login/SignTabs';
 
 export default class NavigationBar extends Component {
     constructor(props) {
@@ -14,8 +13,8 @@ export default class NavigationBar extends Component {
         return <Navbar fixed="top" expand="lg" bg="dark" variant="dark">
         <Navbar.Brand>
             <img
+                src={require("./nc.ico")}
                 alt=""
-                src="nc.ico"
                 className="d-inline-block align-top"
                 width="30"
                 height="30"
