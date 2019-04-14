@@ -18,15 +18,11 @@ import AboutUser from "./component/user/AboutUser";
 import React, { Component } from 'react'
 
 import NavigationBar from './component/navigation/NavigationBar.js';
-import { AuthProvider } from "./component/login/AuthContext";
+import { AuthProvider, AuthConsumer } from "./component/login/AuthContext";
 import SignTabs from "./component/login/SignTabs";
 import ProtectedRoute from "./component/ProtectedRoute";
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return <Router>
                 <AuthProvider>
@@ -34,16 +30,21 @@ class App extends Component {
                     <Switch>
                         <ProtectedRoute path="/hello" component={HelloWorld} />
 
-                        <ProtectedRoute exact path="/" component={Component}/>
+                        <ProtectedRoute exact path="/" component={SignTabs}/>
 
                         <ProtectedRoute exact path="/user/:id" component={AboutUser} />
-                        <ProtectedRoute path="/createproject" component={CreateProject} />
-                        <Route path="/projectstasks/:id" component={ProjectsTasks} />
-                        <Route path="/projectssettings/:id" component={ProjectsSettings} />
-                        <Route path="/projectinfo/:id" component={ProjectInfo} />
+                        
+                        <AuthConsumer>
+                            {({user}) => <ProtectedRoute path="/createproject" component={() => <CreateProject creator={user}/>}/>}
+                        </AuthConsumer>
+
+                        <ProtectedRoute path="/projectstasks/:id" component={ProjectsTasks} />
+                        <ProtectedRoute path="/projectssettings/:id" component={ProjectsSettings} />
+                        <ProtectedRoute path="/projectinfo/:id" component={ProjectInfo} />
                         <ProtectedRoute path="/addTask" component={AddTask} />
-                        <Route path="/personalarea" component={PersonalArea} />
-                        <Route path="/createdprojects/:id" component={CreatedProjects} />
+                        <ProtectedRoute path="/personalarea" component={PersonalArea} />
+                        <ProtectedRoute path="/createdprojects/:id" component={CreatedProjects} />
+
                         <Route path="/auth" component={SignTabs}/>
                     </Switch>
                 </AuthProvider>

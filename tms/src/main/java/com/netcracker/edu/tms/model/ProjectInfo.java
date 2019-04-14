@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 
 public class ProjectInfo {
-    Project newProject;
-    List<User> addedUsers;
+    Project project;
+    List<User> users;
 }

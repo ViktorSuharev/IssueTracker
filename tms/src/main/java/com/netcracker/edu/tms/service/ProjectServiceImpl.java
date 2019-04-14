@@ -99,8 +99,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void sendInvitationToNewProject(List<User> addedUsers, Project newProject) {
         List<String> addedUsersAddresses = new ArrayList<>();
         for (User user : addedUsers) {
-            /*addedUsersAddresses.add(user.getEmail());*/
-            addedUsersAddresses.add("dmitrybobryakov@gmail.com");
+            addedUsersAddresses.add(user.getEmail());
         }
             mailService.send(addedUsersAddresses, Mail.builder().subject(
                 "You were invited in new project " + newProject.getName() + " over MailSenderImpl!").body(

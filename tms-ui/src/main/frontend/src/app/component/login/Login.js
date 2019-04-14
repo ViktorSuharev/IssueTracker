@@ -1,8 +1,6 @@
-import * as axios from "axios";
 import React, { Component } from "react";
-import Bootstrap, { Form, Button, Row, Col, Container } from 'react-bootstrap'
-import styles from "../styles.css";
-import { AuthConsumer, AuthProvider } from "./AuthContext";
+import { Form, Button, Row, Col, Container } from 'react-bootstrap'
+import { AuthConsumer } from "./AuthContext";
 
 export default class Login extends Component {
     constructor(props) {

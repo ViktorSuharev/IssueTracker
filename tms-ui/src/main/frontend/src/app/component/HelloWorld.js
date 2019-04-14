@@ -1,6 +1,6 @@
 import * as axios from "axios";
-import React, { Component } from "react";
-import Bootstrap, { Form, Button, Table, Container } from 'react-bootstrap';
+import React from "react";
+import { Form, Button, Table, Container } from 'react-bootstrap';
 
 class HelloWorld extends React.Component {
     constructor(props) {

@@ -21,7 +21,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 @RestController
-@RequestMapping("/projects")
+@RequestMapping("/api/projects")
 public class ProjectRestController {
 
     @Autowired
@@ -34,22 +34,25 @@ public class ProjectRestController {
 
     @PostMapping("/")
     public ResponseEntity<Project> addNewProject(@RequestBody ProjectInfo projectInfo) {
-        Project newProject = projectInfo.getNewProject();
-        List<User> addedUsers = projectInfo.getAddedUsers();
+        Project newProject = projectInfo.getProject();
+        List<User> addedUsers = projectInfo.getUsers();
 
         if (addedUsers == null || addedUsers.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        //this block must be before last return line, because in case of invalid addProject function block must not be executed
-        //start of the  block
+        /*  this block must be before last return line,
+            because in case of invalid addProject()
+            function block must not be executed     */
+        //BLOCK_START
         projectService.sendInvitationToNewProject(addedUsers, newProject);
-        //end of the block
+        //BLOCK_END
 
-        Project newProj = new Project(null, newProject.getCreatorId(), newProject.getName());
-        boolean retAddedUsers = projectService.setProjectsTeam(addedUsers, newProj.getId());
+//        Project newProj = new Project(newProject.getCreatorId(), newProject.getName());
+        projectService.setProjectsTeam(addedUsers, newProject.getId());
 
-        boolean operationResult = projectService.addProject(newProj);
+        boolean operationResult = true;//projectService.addProject(newProject);
+
         if (!operationResult) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -59,8 +62,8 @@ public class ProjectRestController {
 
     @PostMapping("/{id}")
     public ResponseEntity<Project> updateProject(@RequestBody ProjectInfo projectInfo, @PathVariable BigInteger projectId) {
-        Project projectToUpdate = projectInfo.getNewProject();
-        List<User> addedUsers = projectInfo.getAddedUsers();
+        Project projectToUpdate = projectInfo.getProject();
+        List<User> addedUsers = projectInfo.getUsers();
         if (addedUsers == null || addedUsers.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

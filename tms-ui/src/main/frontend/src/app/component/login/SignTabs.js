@@ -3,6 +3,7 @@ import { Tab, Tabs, Container } from 'react-bootstrap'
 import Login from './Login'
 import Register from './Register'
 import { AuthConsumer } from './AuthContext';
+import '../styles.css';
 
 export default class SignTabs extends Component {
     loggedIn() {

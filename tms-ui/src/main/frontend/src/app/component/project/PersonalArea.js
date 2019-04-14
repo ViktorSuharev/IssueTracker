@@ -17,19 +17,19 @@ class ProjectsAndTasks extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:8090/users/`)
+        axios.get(`http://localhost:8090/api/users/`)
             .then(res => {
                 const users = res.data;
                 this.setState({users: users});
                 this.setState({user: users[0]});//from session soon
             });
-        axios.get(`http://localhost:8090/projects/1`) //from session soon
+        axios.get(`http://localhost:8090/api/projects/1`) //from session soon
             .then(res => {
                 const projects = res.data;
                 this.setState({projects});
                 console.log(this.state.projects);
             });
-        axios.get(`http://localhost:8090/users/tasks/1`) //from session soon
+        axios.get(`http://localhost:8090/api/users/tasks/1`) //from session soon
             .then(res => {
                 const tasks = res.data;
                 this.setState({tasks: tasks});

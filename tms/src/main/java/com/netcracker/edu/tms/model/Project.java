@@ -29,6 +29,11 @@ public class Project {
     @Column(name = "name")
     private String name;
 
+    public Project(BigInteger creatorId, String name) {
+        this.creatorId = creatorId;
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

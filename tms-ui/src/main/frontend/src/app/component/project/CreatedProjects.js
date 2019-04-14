@@ -17,13 +17,13 @@ class CreatedProjects extends React.Component {
     };
 
     componentDidMount() {
-        axios.get(`http://localhost:8090/users/`)
+        axios.get(`http://localhost:8090/api/users/`)
             .then(res => {
                 const users = res.data;
                 this.setState({users: users});
                 this.setState({user: users[0]}); //userId from session soon
             });
-        axios.get(`http://localhost:8090/users/projects/4`) //userId from session soon
+        axios.get(`http://localhost:8090/api/users/projects/4`) //userId from session soon
             .then(res => {
                 const projects = res.data;
                 this.setState({projects});
