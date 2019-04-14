@@ -34,12 +34,14 @@ class App extends Component {
                     <Switch>
                         <ProtectedRoute path="/hello" component={HelloWorld} />
 
+                        <ProtectedRoute exact path="/" component={Component}/>
+
                         <ProtectedRoute exact path="/user/:id" component={AboutUser} />
                         <ProtectedRoute path="/createproject" component={CreateProject} />
                         <Route path="/projectstasks/:id" component={ProjectsTasks} />
                         <Route path="/projectssettings/:id" component={ProjectsSettings} />
                         <Route path="/projectinfo/:id" component={ProjectInfo} />
-                        <Route path="/addTask" component={AddTask} />
+                        <ProtectedRoute path="/addTask" component={AddTask} />
                         <Route path="/personalarea" component={PersonalArea} />
                         <Route path="/createdprojects/:id" component={CreatedProjects} />
                         <Route path="/auth" component={SignTabs}/>
