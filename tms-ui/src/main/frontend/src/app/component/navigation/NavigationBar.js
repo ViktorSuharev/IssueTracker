@@ -10,6 +10,8 @@ export default class NavigationBar extends Component {
     }
 
     loggedIn(user){
+        let signedAsLabel = "Signed in as: " + user.fullName;
+
         return <Navbar fixed="top" expand="lg" bg="dark" variant="dark">
         <Navbar.Brand>
             <img
@@ -34,9 +36,11 @@ export default class NavigationBar extends Component {
                 </NavDropdown>
             </Nav>
 
-            <Navbar.Text>
-                Signed in as: {user.fullName}
-            </Navbar.Text>
+            <NavDropdown title={signedAsLabel} id="collasible-nav-dropdown">
+                    <AuthConsumer>
+                        {({logout}) => <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>}
+                    </AuthConsumer>
+                </NavDropdown>
         </Navbar.Collapse>
     </Navbar>;
     }
