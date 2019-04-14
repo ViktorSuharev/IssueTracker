@@ -2,7 +2,7 @@ import "./component/project/index.css";
 import "github-fork-ribbon-css/gh-fork-ribbon.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import ProjectsTasks from "./component/project/ProjectsTasks";
@@ -33,10 +33,8 @@ class App extends Component {
                         <ProtectedRoute exact path="/" component={SignTabs}/>
 
                         <ProtectedRoute exact path="/user/:id" component={AboutUser} />
-                        
-                        <AuthConsumer>
-                            {({user}) => <ProtectedRoute path="/createproject" component={() => <CreateProject creator={user}/>}/>}
-                        </AuthConsumer>
+
+                        <ProtectedRoute path="/createproject" component={Wrapper}/>}
 
                         <ProtectedRoute path="/projectstasks/:id" component={ProjectsTasks} />
                         <ProtectedRoute path="/projectssettings/:id" component={ProjectsSettings} />
@@ -51,5 +49,12 @@ class App extends Component {
         </Router>;
     }
 }
+
+const Wrapper = ({ component: Component, ...rest }) => (
+    <AuthConsumer>
+        {({user}) => <ProtectedRoute path="/createproject" component={() => <CreateProject creator={user}/>}/>}
+    </AuthConsumer>
+);
+
 
 export default App;

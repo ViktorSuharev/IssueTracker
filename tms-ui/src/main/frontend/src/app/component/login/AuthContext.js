@@ -1,6 +1,5 @@
 import * as axios from "axios";
 import React from 'react';
-// import bcrypt from 'bcryptjs';
 
 const AuthContext = React.createContext();
 
@@ -25,9 +24,6 @@ class AuthProvider extends React.Component {
     }
 
     login(user) {
-        // const hash = bcrypt.hashSync(user.password, 10);
-        // user.password = hash;
-
         axios.post(`http://localhost:8090/api/auth/login`, user)
             .then(response => {
                 var tokenType = response.data.tokenType;
@@ -50,10 +46,6 @@ class AuthProvider extends React.Component {
             });
 
     }
-
-    // componentWillReceiveProps(props) {
-        // localStorage.setItem('auth', JSON.stringify(this.state));
-    // }
 
     logout() {
         this.setState({ isAuth: false, user: null });
