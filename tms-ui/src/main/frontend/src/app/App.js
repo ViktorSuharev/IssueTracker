@@ -34,14 +34,14 @@ class App extends Component {
 
                         <ProtectedRoute exact path="/user/:id" component={AboutUser} />
 
-                        <ProtectedRoute path="/createproject" component={Wrapper}/>}
+                        <ProtectedRoute path="/projects/create" component={Wrapper}/>}
 
-                        <ProtectedRoute path="/projectstasks/:id" component={ProjectsTasks} />
-                        <ProtectedRoute path="/projectssettings/:id" component={ProjectsSettings} />
-                        <ProtectedRoute path="/projectinfo/:id" component={ProjectInfo} />
-                        <ProtectedRoute path="/addTask" component={AddTask} />
+                        <ProtectedRoute path="/projects/tasks/:id" component={ProjectsTasks} />
+                        <ProtectedRoute path="/projects/settings/:id" component={ProjectsSettings} />
+                        <ProtectedRoute path="/projects/info/:id" component={ProjectInfo} />
+                        <ProtectedRoute path="/tasks/add" component={AddTask} />
                         <ProtectedRoute path="/personalarea" component={PersonalArea} />
-                        <ProtectedRoute path="/createdprojects/:id" component={CreatedProjects} />
+                        <ProtectedRoute path="/projects/:id" component={CreatedProjects} />
 
                         <Route path="/auth" component={SignTabs}/>
                     </Switch>
@@ -52,7 +52,7 @@ class App extends Component {
 
 const Wrapper = ({ component: Component, ...rest }) => (
     <AuthConsumer>
-        {({user}) => <ProtectedRoute path="/createproject" component={() => <CreateProject creator={user}/>}/>}
+        {({user}) => <ProtectedRoute path="/projects/create" component={() => <CreateProject creator={user}/>}/>}
     </AuthConsumer>
 );
 

@@ -30,7 +30,8 @@ export default class NavigationBar extends Component {
         <Navbar.Collapse className="justify-content-end">
             <Nav className="mr-auto">
                 <NavDropdown title="Project" id="collasible-nav-dropdown">
-                    <NavDropdown.Item href="/createproject">Create</NavDropdown.Item>
+                    <NavDropdown.Item href="/projects">Projects</NavDropdown.Item>
+                    <NavDropdown.Item href="/projects/create">Create</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown title="Task" id="collasible-nav-dropdown">
                     <NavDropdown.Item href="/addTask">Add</NavDropdown.Item>

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { Container, Modal, Button } from 'react-bootstrap';
 import '../styles.css';
 import './index.css';

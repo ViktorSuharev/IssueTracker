@@ -30,6 +30,7 @@ public class ProjectRestController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/")
     public ResponseEntity<List<Project>> getAllProjects() {
         return new ResponseEntity<>(projectService.getAllProjects(), HttpStatus.OK);

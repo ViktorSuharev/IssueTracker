@@ -16,9 +16,8 @@ class AuthProvider extends React.Component {
             state = { isAuth: false, user: null };
             localStorage.setItem('auth', JSON.stringify(state));
         }
+
         this.state = state;
-
-
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
     }
@@ -35,16 +34,15 @@ class AuthProvider extends React.Component {
                 })
                 .then(res => {
                     let u = res.data;
-                    this.setState({ isAuth: true, user: u });
+                    this.setState({ isAuth: true, user: u, status: response.status });
+                    console.log('LOGGED_IN:\t', JSON.stringify(response.status));
+                    console.log('\tas\t', user.email);
                 });
                 })
-            .catch(function (error) {
-                if (error.response.status === 401)
-                    alert('Wrong login or password');
-                else
-                    console.log(error);
+            .catch((error) => {
+                this.setState({status: error.response.status});
+                console.log('ERROR WHILE LOGIN: ', this.state.status);
             });
-
     }
 
     logout() {
