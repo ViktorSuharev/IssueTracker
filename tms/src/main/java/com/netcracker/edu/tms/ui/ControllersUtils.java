@@ -30,8 +30,8 @@ public class ControllersUtils {
     public static List<Project> getStubProjectList() {
         List<Project> projectList = new ArrayList<>();
 
-        Project Project1 = new Project(BigInteger.valueOf(1),BigInteger.valueOf(1),"stub1");
-        Project Project2 = new Project(BigInteger.valueOf(2),BigInteger.valueOf(2),"stub2");
+        Project Project1 = new Project(BigInteger.valueOf(1),BigInteger.valueOf(1),"stub1", "desc");
+        Project Project2 = new Project(BigInteger.valueOf(2),BigInteger.valueOf(2),"stub2", "desc2");
 
 
         projectList.add(Project1);

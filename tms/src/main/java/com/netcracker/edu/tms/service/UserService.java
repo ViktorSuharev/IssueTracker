@@ -18,5 +18,7 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
+    boolean existsByEmail(String email);
+
     User getUserByID(BigInteger id);
 }

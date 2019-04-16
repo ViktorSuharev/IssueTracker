@@ -1,11 +1,13 @@
 package com.netcracker.edu.tms.service;
 
 import com.netcracker.edu.tms.model.Project;
+import com.netcracker.edu.tms.model.ProjectMember;
 import com.netcracker.edu.tms.model.Task;
 import com.netcracker.edu.tms.model.User;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 public interface ProjectService {
 
@@ -67,7 +69,7 @@ public interface ProjectService {
     /**
      *
      */
-    boolean setProjectsTeam(List<User> addedUsers, BigInteger id);
+    boolean setProjectsTeam(BigInteger projectId, List<ProjectMember> team);
 
     /**
      *
@@ -88,6 +90,5 @@ public interface ProjectService {
     /**
      *
      */
-    void sendInvitationToNewProject(List<User> addedUsers, Project newProject);
-
+    void sendInvitationToNewProject(Project project, List<ProjectMember> team);
 }

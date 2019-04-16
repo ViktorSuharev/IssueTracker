@@ -1,1 +1,7 @@
 body { padding-top: 70px;}
+
+#collasible-nav-dropdown{
+    color: darkgray;
+    /* font-weight: bold; */
+    /* background-color: ; */
+}

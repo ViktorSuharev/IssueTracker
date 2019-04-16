@@ -1,249 +1,294 @@
-import React from "react";
-import * as axios from "axios";
+import React from 'react';
+import * as axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-import {Link} from "react-router-dom";
-import { Tab, Tabs, Container } from 'react-bootstrap'
-
+// import { Link } from 'react-router-dom';
+import { Container, Modal, Button } from 'react-bootstrap';
+import '../styles.css';
 import './index.css';
+import TextEditor from '../TextEditor';
 
 class CreateProject extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            name: '',
+            name: null,
+            description: null,
             users: [],
-            user: [],
-            addedUsers: []
+            team: [],
+            user: null,
+            role: null,
+            show: false,
+
+            editor: {
+                placeholder: 'Enter description...'
+            }
         };
+
+        this.handleDescriptionBoxChange = this.handleDescriptionBoxChange.bind(this);
 
         this.onNameChange = this.onNameChange.bind(this);
         this.onSelectChange = this.onSelectChange.bind(this);
         this.onAddUser = this.onAddUser.bind(this);
         this.onSubmitProject = this.onSubmitProject.bind(this);
+
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleShow = this.handleShow.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+    }
+
+    handleDescriptionBoxChange(description) {
+        this.setState( {description: description });
+    }
+
+    handleCancel(event) {
+        event.preventDefault();
+    }
+
+    handleClose() {
+        this.setState({ show: false });
+    }
+
+    handleShow(event) {
+        event.preventDefault();
+
+        this.setState({ show: true });
     }
 
 
     onNameChange(event) {
         const newName = event.target.value;
 
-        this.setState({name: newName}, function () {
-            console.log("onNameChange: ", newName);
-        });
-        console.log("this.name: ", this.state.name);
-
+        this.setState({ name: newName });
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:8090/users/`)
+        let token = localStorage.getItem('token');
+
+        axios.get('http://localhost:8090/api/users/all', {
+            headers: {
+                Authorization: token
+            }
+        })
             .then(res => {
                 const users = res.data;
-                this.setState({users: users});
+                this.setState({ users: users });
             })
     };
 
     onSubmitProject(event) {
         event.preventDefault();
-        console.log("onSubmitProject with creatorId: 34 and name: ", this.state.name);
 
-        const newProject = {
-            id: null,      //always
-            creator_id: 4, //from Session soon
-            name: this.state.name
+        const project = {
+            name: this.state.name,
+            description: this.state.description
         };
 
+        console.log('DESCRIPTION: ', JSON.stringify(project.description));
+
         if (!this.state.name) {
-            alert("Create project: Here are no project's name!");
-        } else {
-            axios(`http://localhost:8090/projects/`, {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
-                data: {newProject: newProject,
-                    addedUsers: this.state.addedUsers}
-            })
-                .then(res => {
-                    console.log(res.status);
-                    console.log(res.data);
-                    alert(`New project with name: "${this.state.name}" and creator's id: "4" was created!`);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            alert('Create project: name your project!');
+            this.handleClose();
+            return;
         }
+        let token = localStorage.getItem('token');
 
+        axios('http://localhost:8090/api/projects/', {
+            method: 'POST',
+            headers: {
+                Authorization: token,
+                'content-type': 'application/json',
+                },
+            data: {
+                project: project,
+                team: this.state.team
+            }
+        })
+            .then(res => {
+                console.log(res.status);
+                console.log(res.data);
+                alert('Success!');
+            })
+            .catch(error => {
+                console.log(error.response);
+                alert(JSON.stringify(error.response.status))
+            });
 
-    };
+        this.handleClose();
+    }
 
     onSelectChange(event) {
-        const sw = event.target.name;
-        if (sw == "userName") {
-            const userId = event.target.value;
-            console.log("userID:", userId);
+        const eventName = event.target.name;
 
-            const user = this.state.users.find(user => {
-                return user.id == userId;
-            });
-            console.log("user founded:", JSON.stringify(user));
-            this.setState({
-                user: Object.assign({}, user)
-            }, function () {
-                console.log("this.state.user:", JSON.stringify(this.state.user));
-            })
+        switch(eventName) {
+            case 'userName':
+                var email = event.target.value;
+                var user = this.state.users.find(user => user.email === email);
+
+                console.log('Found user:', JSON.stringify(user));
+
+                this.setState({ user: user },  () => console.log('this.state.user:', JSON.stringify(this.state.user)) )
+                break;
+
+            case 'role':
+                const role = event.target.value;
+                this.setState({ role: role })
+                break;
         }
-        if (sw == "role") {
-
-            const newRole = event.target.value;
-            console.log("newRole:", newRole);
-            {
-                this.state.user.role = newRole;
-            }
-
-        }
-
-    };
+    }
 
     onAddUser(event) {
+        event.preventDefault();
 
-        if (!this.state.user.fullName) {
-            alert(`Employee was not selected!`);
-
-        } else {
-            var curUser = new User(this.state.user.id, this.state.user.fullName, this.state.user.email, this.state.user.role);
-            console.log("OnSubmit:", JSON.stringify(curUser));
-            const len = this.state.addedUsers.length;
-
-            var selectedYet = false;
-            var i;
-            for (i = 0; i < len; ++i) {
-                if (this.state.addedUsers[i].id === curUser.id) {
-                    selectedYet = true;
-                }
-            }
-            if (selectedYet === true) {
-                alert(`The user is selected yet: ${JSON.stringify(curUser)}`);
-            } else {
-                alert(`You chose employee: ${JSON.stringify(curUser)} and his role in project: ${curUser.role}`);
-                this.setState({addedUsers: [...this.state.addedUsers, curUser]});
-            }
-            event.preventDefault();
+        if (!this.state.user || !this.state.role) {
+            alert('Employee was not selected!');
+            return;
         }
-    };
+        
+        var curUser = new User(this.state.user.fullName, this.state.user.email, this.state.role);
+        console.log('OnSubmit:', JSON.stringify(curUser));
+            
+        var alreadySelected = this.state.team.some(e => e.email === curUser.email);
+
+        alreadySelected ? alert(JSON.stringify(curUser.fullName) + ' has been already added') 
+                        : this.setState({ team: [...this.state.team, curUser] });
+    }
 
     onDeleteClick = (userToDelete) => {
-
-        const addedUsersNew = this.state.addedUsers.filter((user) => {
-            return user.id !== userToDelete.id;
-        });
-        console.log("addedUsersNew: ", JSON.stringify(addedUsersNew));
-        this.setState({addedUsers: addedUsersNew}, function () {
-            console.log("delete user with id:", userToDelete.id);
-        });
-
+        const teamNew = this.state.team.filter(u => u.email !== userToDelete.email );
+        
+        console.log('Team: ', JSON.stringify(teamNew));
+        
+        this.setState({ team: teamNew }, () =>
+            console.log('delete user: ', userToDelete.email));
     };
 
 
     render() {
         const options = this.state.users.map(user =>
-            <option value={user.id || ''} key={user.id || ''}>
+            <option value={user.email || ''} key={user.email || ''}>
                 {user.fullName}
             </option>);
         return (
-            <Container>
-            <div id="wrapper">
-                <div className="d-flex flex-row">
-                    <div className="mt-5 py-2  flex-grow-1">
-                        <h2>
-                            New Project's settings
-                        </h2>
-                    </div>
-                    <div className="d-flex mr-4 justify-content-end align-self-end mt-2">
-                        <button type="button" className="btn btn-outline-danger  btn-sm">
-                            <Link to="/cancel">
+            <div>
+                {/* SAVE PROJECT DIALOG */}
+                <Modal show={this.state.show} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Save new project</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Are you sure you want to save new project?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant='secondary' onClick={this.handleClose}>
+                            Cancel
+                        </Button>
+                        <Button variant='primary' onClick={this.onSubmitProject}>
+                            Save
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
+                <Container>
+                    <div id='wrapper'>
+
+                        <div className='d-flex flex-row'>
+                            <div className='mt-5 py-2  flex-grow-1'>
+                                <br/>
+                                <h2>Create project</h2>
+                            </div>
+                            <Button className='d-flex mr-4 justify-content-end align-self-end mt-2' variant='danger' onClick={this.handleCancel}>
                                 Cancel
-                            </Link>
-                        </button>
-                    </div>
+                            </Button>
+                            <Button 
+                                className='d-flex mr-4 justify-content-end align-self-end mt-2'
+                                variant='success' 
+                                onClick={this.handleShow}>
+                                    Create project
+                            </Button>
 
-                    <div className="d-flex mr-4 justify-content-end align-self-end mt-2">
-                        <form onSubmit={this.onSubmitProject}>
-                            <button type="submit" className="btn btn-outline-success   btn-sm">
-                                Create project
-                            </button>
+                        </div>
+                        <hr />
+
+                        <form>
+                            <div className='d-flex flex-row mx-1'>
+                                <div className=' d-flex mr-4 justify-content-end align-self-end mt-2'>
+                                    <h4> Name: <input type='text' value={this.state.name} className='form-control'
+                                        onChange={this.onNameChange} />
+                                    </h4>
+                                </div>
+                            </div>
                         </form>
-                    </div>
-                </div>
-                <hr/>
 
-                <form>
-                    <div className="d-flex flex-row mx-1">
-                        <div className=" d-flex mr-4 justify-content-end align-self-end mt-2">
-                            <label> Name: <input type="text" value={this.state.name} className="form-control"
-                                                 onChange={this.onNameChange}/>
+
+                        <br/>
+                        <h4>Description:</h4>
+                        <TextEditor 
+                            placeholder={this.state.editor.placeholder}
+                            onSave={this.handleDescriptionBoxChange}
+                        />
+                        <br/>
+
+                        <br/>                        
+                        <div className=' d-flex flex-row align-items-center'>
+                            <h4>Project team:</h4>
+                        </div>
+                        <br/>
+                        <form onSubmit={this.onAddUser}>
+                            <h6>Add memebers</h6>
+                            <label className='mx-1'>
+                                <select defaultValue={''} name='userName' className='form-control'
+                                    onChange={this.onSelectChange}>
+                                    <option value='' disabled={true}>
+                                        Select user
+                                    </option>
+                                    {options}
+                                    )}
+                                </select>
                             </label>
+                            <label className='mx-2'>
+                                <select defaultValue={''} name='role' className='form-control'
+                                    onChange={this.onSelectChange}>
+                                    <option value='' disabled={true}>
+                                        Select role
+                                    </option>
+                                    <option value='Project Manager'>Project Manager</option>
+                                    <option value='Developer'>Developer</option>
+                                    <option value='QA'>QA</option>
+                                </select>
+                            </label>
+                            <input className='mx-2 btn btn-dark' type='submit' value='Add' />
+                        </form>
+
+                        <div className='table-responsive'>
+                            <table className='table table-light table-striped table-bordered table-hover table-sm  '>
+                                <thead className='thead-dark'>
+                                    <tr>
+                                        <th style={{ 'width': '20%' }} scope='col'>Full Name</th>
+                                        <th style={{ 'width': '10%' }} scope='col'>Email</th>
+                                        <th style={{ 'width': '10%' }} scope='col'>Role</th>
+                                        <th style={{ 'width': '4%' }} scope='col'>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {this.state.team.map(user =>
+                                        <tr key={user.email + user.role}>
+                                            <td> {user.fullName}</td>
+                                            <td> {user.email}</td>
+                                            <td> {user.role}</td>
+                                            <th scope='row'>
+                                                <Button variant='danger' onClick={this.onDeleteClick.bind(this, user)}>
+                                                    X
+                                                </Button>
+                                            </th>
+                                        </tr>
+                                    )
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </form>
-
-
-                <form onSubmit={this.onAddUser}>
-                    <label className="mx-1"> Select employees to team
-                        <select defaultValue={""} name="userName" className="form-control"
-                                onChange={this.onSelectChange}>
-                            <option value="" disabled={true}>
-                                Select user
-                            </option>
-                            {options}
-                            )}
-                        </select>
-                    </label>
-                    <label className="mx-2"> Select role in project
-                        <select defaultValue={""} name="role" className="form-control"
-                                onChange={this.onSelectChange}>
-                            <option value="" disabled={true}>
-                                Select role
-                            </option>
-                            <option value="1">Project Manager</option>
-                            <option value="2">Developer</option>
-                            <option value="3">QA</option>
-                        </select>
-                    </label>
-                    <input className="mx-2 btn btn-dark" type="submit" value="Add"/>
-                </form>
-
-                <div className=" d-flex flex-row justify-content-center align-items-center">
-                    Added Users
-                </div>
-                <div className="table-responsive">
-                    <table className="table table-light table-striped table-bordered table-hover table-sm  ">
-                        <thead className="thead-dark">
-                        <tr>
-                            <th style={{"width": "7%"}} scope="col">Delete</th>
-                            <th style={{"width": "43%"}} scope="col">Full Name</th>
-                            <th style={{"width": "43%"}} scope="col">EMail</th>
-                            <th style={{"width": "7%"}} scope="col">Role</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {this.state.addedUsers.map(user =>
-                            <tr key={user.id + user.role}>
-                                <th scope="row" className="text-center">
-                                    <button onClick={this.onDeleteClick.bind(this, user)}>
-                                        Delete
-                                    </button>
-                                </th>
-                                <td> {user.fullName}</td>
-                                <td> {user.email}</td>
-                                <td> {user.role}</td>
-                            </tr>
-                        )
-                        }
-                        </tbody>
-                    </table>
-                </div>
+                </Container >
             </div>
-            </Container>
         );
     }
 }
@@ -251,8 +296,7 @@ class CreateProject extends React.Component {
 export default CreateProject;
 
 class User {
-    constructor(id, fullName, email, role) {
-        this.id = id;
+    constructor(fullName, email, role) {
         this.fullName = fullName;
         this.email = email;
         this.role = role;
