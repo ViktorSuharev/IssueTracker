@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider tokenProvider;
 
+    private static final String USER_ROLE_NAME = "ROLE_USER";
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
@@ -34,6 +35,18 @@ public class UserServiceImpl implements UserService {
         this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
+
+        createRoleIfNotExist(USER_ROLE_NAME);
+    }
+
+    private void createRoleIfNotExist(String roleName){
+        Role role = roleRepository.findByName(roleName);
+
+        if (role != null)
+            return;
+
+        role = new Role(roleName);
+        roleRepository.save(role);
     }
 
     @Override
@@ -60,7 +73,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException(warn);
         }
 
-        user.getRoles().add(roleRepository.save(new Role("ROLE_USER")));
+        user.getRoles().add(roleRepository.findByName(USER_ROLE_NAME));
 
         return userRepository.save(user);
     }
