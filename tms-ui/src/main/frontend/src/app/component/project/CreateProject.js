@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import * as axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Link } from 'react-router-dom';
 import { Container, Modal, Button } from 'react-bootstrap';
 import '../styles.css';
-
 import './index.css';
+import TextEditor from '../TextEditor';
 
 class CreateProject extends React.Component {
     constructor(props) {
@@ -13,13 +13,19 @@ class CreateProject extends React.Component {
 
         this.state = {
             name: null,
+            description: null,
             users: [],
+            team: [],
             user: null,
             role: null,
-            team: [],
-            creator: props.creator,
-            show: false
+            show: false,
+
+            editor: {
+                placeholder: 'Enter description...'
+            }
         };
+
+        this.handleDescriptionBoxChange = this.handleDescriptionBoxChange.bind(this);
 
         this.onNameChange = this.onNameChange.bind(this);
         this.onSelectChange = this.onSelectChange.bind(this);
@@ -29,6 +35,10 @@ class CreateProject extends React.Component {
         this.handleCancel = this.handleCancel.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
+    }
+
+    handleDescriptionBoxChange(description) {
+        this.setState( {description: description });
     }
 
     handleCancel(event) {
@@ -69,12 +79,12 @@ class CreateProject extends React.Component {
     onSubmitProject(event) {
         event.preventDefault();
 
-        console.log('onSubmitProject with creator: ', JSON.stringify(this.state.creator));
-
         const project = {
-            creatorId: this.state.creator.id,
-            name: this.state.name
+            name: this.state.name,
+            description: this.state.description
         };
+
+        console.log('DESCRIPTION: ', JSON.stringify(project.description));
 
         if (!this.state.name) {
             alert('Create project: name your project!');
@@ -201,16 +211,30 @@ class CreateProject extends React.Component {
                         <form>
                             <div className='d-flex flex-row mx-1'>
                                 <div className=' d-flex mr-4 justify-content-end align-self-end mt-2'>
-                                    <label> Name: <input type='text' value={this.state.name} className='form-control'
+                                    <h4> Name: <input type='text' value={this.state.name} className='form-control'
                                         onChange={this.onNameChange} />
-                                    </label>
+                                    </h4>
                                 </div>
                             </div>
                         </form>
 
 
+                        <br/>
+                        <h4>Description:</h4>
+                        <TextEditor 
+                            placeholder={this.state.editor.placeholder}
+                            onSave={this.handleDescriptionBoxChange}
+                        />
+                        <br/>
+
+                        <br/>                        
+                        <div className=' d-flex flex-row align-items-center'>
+                            <h4>Project team:</h4>
+                        </div>
+                        <br/>
                         <form onSubmit={this.onAddUser}>
-                            <label className='mx-1'> Select employees to team
+                            <h6>Add memebers</h6>
+                            <label className='mx-1'>
                                 <select defaultValue={''} name='userName' className='form-control'
                                     onChange={this.onSelectChange}>
                                     <option value='' disabled={true}>
@@ -220,7 +244,7 @@ class CreateProject extends React.Component {
                                     )}
                                 </select>
                             </label>
-                            <label className='mx-2'> Select role in project
+                            <label className='mx-2'>
                                 <select defaultValue={''} name='role' className='form-control'
                                     onChange={this.onSelectChange}>
                                     <option value='' disabled={true}>
@@ -233,11 +257,6 @@ class CreateProject extends React.Component {
                             </label>
                             <input className='mx-2 btn btn-dark' type='submit' value='Add' />
                         </form>
-
-                        <br/>
-                        <div className=' d-flex flex-row align-items-center'>
-                            <h3>Project team</h3>
-                        </div>
 
                         <div className='table-responsive'>
                             <table className='table table-light table-striped table-bordered table-hover table-sm  '>

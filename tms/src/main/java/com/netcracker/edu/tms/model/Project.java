@@ -25,10 +25,26 @@ public class Project {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
     //List<Pair<User, Role>> team
+
+
+    public Project(BigInteger id, BigInteger creatorId, String name) {
+        this.id = id;
+        this.creatorId = creatorId;
+        this.name = name;
+    }
 
     public Project(BigInteger creatorId, String name) {
         this.creatorId = creatorId;
         this.name = name;
+    }
+
+    public Project(BigInteger creatorId, String name, String description) {
+        this.creatorId = creatorId;
+        this.name = name;
+        this.description = description;
     }
 }

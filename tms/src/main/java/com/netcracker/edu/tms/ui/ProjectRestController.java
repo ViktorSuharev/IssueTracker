@@ -4,11 +4,14 @@ import com.netcracker.edu.tms.model.Project;
 import com.netcracker.edu.tms.model.ProjectInfo;
 import com.netcracker.edu.tms.model.ProjectMember;
 import com.netcracker.edu.tms.model.User;
+import com.netcracker.edu.tms.security.UserPrincipal;
 import com.netcracker.edu.tms.service.ProjectService;
+import com.netcracker.edu.tms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -18,8 +21,14 @@ import java.util.List;
 @RequestMapping("/api/projects")
 public class ProjectRestController {
 
-    @Autowired
     private ProjectService projectService;
+    private UserService userService;
+
+    @Autowired
+    public ProjectRestController(ProjectService projectService, UserService userService) {
+        this.projectService = projectService;
+        this.userService = userService;
+    }
 
     @GetMapping("/")
     public ResponseEntity<List<Project>> getAllProjects() {
@@ -28,8 +37,10 @@ public class ProjectRestController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/")
-    public ResponseEntity<Project> addNewProject(@RequestBody ProjectInfo projectInfo) {
+    public ResponseEntity<Project> addNewProject(@AuthenticationPrincipal UserPrincipal currentUser,
+                                                 @RequestBody ProjectInfo projectInfo) {
         Project project = projectInfo.getProject();
+        project.setCreatorId(userService.getUserByEmail(currentUser.getUsername()).getId());
         List<ProjectMember> team = projectInfo.getTeam();
 
         if (project == null || team == null || team.isEmpty())
