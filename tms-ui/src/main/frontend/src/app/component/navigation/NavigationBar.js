@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { AuthConsumer } from '../login/AuthContext';
+import '../styles.css';
 
 export default class NavigationBar extends Component {
     constructor(props) {
         super(props);
-
+        
         this.state = props;
     }
 

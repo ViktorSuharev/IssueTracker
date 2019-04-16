@@ -12,10 +12,11 @@ class CreateProject extends React.Component {
         super(props);
 
         this.state = {
-            name: '',
+            name: null,
             users: [],
-            user: [],
-            addedUsers: [],
+            user: null,
+            role: null,
+            team: [],
             creator: props.creator,
             show: false
         };
@@ -25,8 +26,13 @@ class CreateProject extends React.Component {
         this.onAddUser = this.onAddUser.bind(this);
         this.onSubmitProject = this.onSubmitProject.bind(this);
 
+        this.handleCancel = this.handleCancel.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
+    }
+
+    handleCancel(event) {
+        event.preventDefault();
     }
 
     handleClose() {
@@ -65,110 +71,92 @@ class CreateProject extends React.Component {
 
         console.log('onSubmitProject with creator: ', JSON.stringify(this.state.creator));
 
-        const newProject = {
-            creator_id: this.state.creator.id,
+        const project = {
+            creatorId: this.state.creator.id,
             name: this.state.name
         };
 
         if (!this.state.name) {
             alert('Create project: name your project!');
-        } else {
-            let token = localStorage.getItem('token');
-
-            axios('http://localhost:8090/api/projects/', {
-                method: 'POST',
-                headers: {
-                    Authorization: token,
-                    'content-type': 'application/json',
-                },
-                data: {
-                    newProject: newProject,
-                    addedUsers: this.state.addedUsers
-                }
-            })
-                .then(res => {
-                    console.log(res.status);
-                    console.log(res.data);
-                    alert('Success!');
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            this.handleClose();
+            return;
         }
-        this.handleClose();
-    };
+        let token = localStorage.getItem('token');
 
-    onSelectChange(event) {
-        const sw = event.target.name;
-        if (sw === 'userName') {
-            const userId = parseInt(event.target.value);
-            console.log('userID:', userId);
-
-            const user = this.state.users.find(user => {
-                return user.id === userId;
+        axios('http://localhost:8090/api/projects/', {
+            method: 'POST',
+            headers: {
+                Authorization: token,
+                'content-type': 'application/json',
+                },
+            data: {
+                project: project,
+                team: this.state.team
+            }
+        })
+            .then(res => {
+                console.log(res.status);
+                console.log(res.data);
+                alert('Success!');
+            })
+            .catch(error => {
+                console.log(error.response);
+                alert(JSON.stringify(error.response.status))
             });
 
-            console.log('user founded:', JSON.stringify(user));
+        this.handleClose();
+    }
 
-            this.setState({
-                user: Object.assign({}, user)
-            }, function () {
-                console.log('this.state.user:', JSON.stringify(this.state.user));
-            })
+    onSelectChange(event) {
+        const eventName = event.target.name;
+
+        switch(eventName) {
+            case 'userName':
+                var email = event.target.value;
+                var user = this.state.users.find(user => user.email === email);
+
+                console.log('Found user:', JSON.stringify(user));
+
+                this.setState({ user: user },  () => console.log('this.state.user:', JSON.stringify(this.state.user)) )
+                break;
+
+            case 'role':
+                const role = event.target.value;
+                this.setState({ role: role })
+                break;
         }
-        if (sw === 'role') {
-
-            const newRole = event.target.value;
-            console.log('newRole:', newRole);
-
-            //update nested prop in state 
-            var user = {...this.state.user };
-            user.role = newRole;
-            this.setState( { user } )
-        }
-
-    };
+    }
 
     onAddUser(event) {
         event.preventDefault();
 
-        if (!this.state.user.fullName) {
+        if (!this.state.user || !this.state.role) {
             alert('Employee was not selected!');
-        } else {
-            var curUser = new User(this.state.user.id, this.state.user.fullName, this.state.user.email, this.state.user.role);
-            console.log('OnSubmit:', JSON.stringify(curUser));
-            const len = this.state.addedUsers.length;
-
-            //todo refactor
-            var alreadySelected = false;
-            for (let i = 0; i < len; ++i) {
-                if (this.state.addedUsers[i].id === curUser.id) {
-                    alreadySelected = true;
-                    break;
-                }
-            }
-
-            alreadySelected ? alert(JSON.stringify(curUser.fullName) + ' has been already added') 
-                            : this.setState({ addedUsers: [...this.state.addedUsers, curUser] });
+            return;
         }
-    };
+        
+        var curUser = new User(this.state.user.fullName, this.state.user.email, this.state.role);
+        console.log('OnSubmit:', JSON.stringify(curUser));
+            
+        var alreadySelected = this.state.team.some(e => e.email === curUser.email);
+
+        alreadySelected ? alert(JSON.stringify(curUser.fullName) + ' has been already added') 
+                        : this.setState({ team: [...this.state.team, curUser] });
+    }
 
     onDeleteClick = (userToDelete) => {
-
-        const addedUsersNew = this.state.addedUsers.filter((user) => {
-            return user.id !== userToDelete.id;
-        });
-        console.log('addedUsersNew: ', JSON.stringify(addedUsersNew));
-        this.setState({ addedUsers: addedUsersNew }, function () {
-            console.log('delete user with id:', userToDelete.id);
-        });
-
+        const teamNew = this.state.team.filter(u => u.email !== userToDelete.email );
+        
+        console.log('Team: ', JSON.stringify(teamNew));
+        
+        this.setState({ team: teamNew }, () =>
+            console.log('delete user: ', userToDelete.email));
     };
 
 
     render() {
         const options = this.state.users.map(user =>
-            <option value={user.id || ''} key={user.id || ''}>
+            <option value={user.email || ''} key={user.email || ''}>
                 {user.fullName}
             </option>);
         return (
@@ -181,7 +169,7 @@ class CreateProject extends React.Component {
                     <Modal.Body>Are you sure you want to save new project?</Modal.Body>
                     <Modal.Footer>
                         <Button variant='secondary' onClick={this.handleClose}>
-                            Close
+                            Cancel
                         </Button>
                         <Button variant='primary' onClick={this.onSubmitProject}>
                             Save
@@ -197,21 +185,16 @@ class CreateProject extends React.Component {
                                 <br/>
                                 <h2>Create project</h2>
                             </div>
-                            <div className='d-flex mr-4 justify-content-end align-self-end mt-2'>
-                                <button type='button' className='btn btn-outline-danger  btn-sm'>
-                                    <Link to='/cancel'>
-                                        Cancel
-                            </Link>
-                                </button>
-                            </div>
+                            <Button className='d-flex mr-4 justify-content-end align-self-end mt-2' variant='danger' onClick={this.handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button 
+                                className='d-flex mr-4 justify-content-end align-self-end mt-2'
+                                variant='success' 
+                                onClick={this.handleShow}>
+                                    Create project
+                            </Button>
 
-                            <div className='d-flex mr-4 justify-content-end align-self-end mt-2'>
-                                <form onSubmit={this.handleShow}>
-                                    <button type='submit' className='btn btn-outline-success   btn-sm'>
-                                        Create project
-                            </button>
-                                </form>
-                            </div>
                         </div>
                         <hr />
 
@@ -268,15 +251,15 @@ class CreateProject extends React.Component {
                                 </thead>
                                 <tbody>
 
-                                    {this.state.addedUsers.map(user =>
-                                        <tr key={user.id + user.role}>
+                                    {this.state.team.map(user =>
+                                        <tr key={user.email + user.role}>
                                             <td> {user.fullName}</td>
                                             <td> {user.email}</td>
                                             <td> {user.role}</td>
-                                            <th scope='row' className='text-center'>
-                                                <button onClick={this.onDeleteClick.bind(this, user)}>
-                                                    Delete
-                                                </button>
+                                            <th scope='row'>
+                                                <Button variant='danger' onClick={this.onDeleteClick.bind(this, user)}>
+                                                    X
+                                                </Button>
                                             </th>
                                         </tr>
                                     )
@@ -294,8 +277,7 @@ class CreateProject extends React.Component {
 export default CreateProject;
 
 class User {
-    constructor(id, fullName, email, role) {
-        this.id = id;
+    constructor(fullName, email, role) {
         this.fullName = fullName;
         this.email = email;
         this.role = role;

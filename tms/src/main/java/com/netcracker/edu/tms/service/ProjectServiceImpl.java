@@ -1,11 +1,7 @@
 package com.netcracker.edu.tms.service;
 
 import com.netcracker.edu.tms.dao.ProjectDao;
-import com.netcracker.edu.tms.model.Mail;
-import com.netcracker.edu.tms.model.Project;
-import com.netcracker.edu.tms.model.Task;
-import com.netcracker.edu.tms.model.User;
-import com.netcracker.edu.tms.model.UsersToProjects;
+import com.netcracker.edu.tms.model.*;
 import com.netcracker.edu.tms.service.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,17 +10,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
-
+    private UserService userService;
     private ProjectDao projectDao;
     private MailService mailService;
 
     @Autowired
-    public ProjectServiceImpl(ProjectDao projectDao, MailService mailService) {
+    public ProjectServiceImpl(ProjectDao projectDao, MailService mailService, UserService userService) {
         this.projectDao = projectDao;
         this.mailService = mailService;
+        this.userService = userService;
     }
 
     @Override
@@ -72,10 +70,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public boolean setProjectsTeam(List<User> addedUsers, BigInteger id) {
-        for (User toAdd : addedUsers) {
-            projectDao.addUsersToProjects(new UsersToProjects(null, toAdd.getId(), id));
+    public boolean setProjectsTeam(BigInteger projectId, List<ProjectMember> team) {
+
+        for (ProjectMember member: team){
+            User user = userService.getUserByEmail(member.getEmail());
+
+            projectDao.addUsersToProjects(
+                    new UsersToProjects(
+                            projectId,
+                            user.getId(),
+                            member.getRole()));
         }
+
         return true;
     }
 
@@ -96,13 +102,18 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void sendInvitationToNewProject(List<User> addedUsers, Project newProject) {
+    public void sendInvitationToNewProject(Project project, List<ProjectMember> team) {
         List<String> addedUsersAddresses = new ArrayList<>();
-        for (User user : addedUsers) {
-            addedUsersAddresses.add(user.getEmail());
+
+        for (ProjectMember member: team) {
+            if (!userService.existsByEmail(member.getEmail()))
+                throw new IllegalArgumentException(
+                        String.format("Member with email %s doesn't exists", member.getEmail()));
+            addedUsersAddresses.add(member.getEmail());
         }
-            mailService.send(addedUsersAddresses, Mail.builder().subject(
-                "You were invited in new project " + newProject.getName() + " over MailSenderImpl!").body(
+
+        mailService.send(addedUsersAddresses, Mail.builder().subject(
+                "You were invited in new project " + project.getName() + " over MailSenderImpl!").body(
                 "Congratulations!").build());
     }
 }

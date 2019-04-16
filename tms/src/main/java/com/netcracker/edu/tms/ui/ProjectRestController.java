@@ -1,21 +1,15 @@
 package com.netcracker.edu.tms.ui;
 
 import com.netcracker.edu.tms.model.Project;
-
-import com.netcracker.edu.tms.model.User;
 import com.netcracker.edu.tms.model.ProjectInfo;
+import com.netcracker.edu.tms.model.ProjectMember;
+import com.netcracker.edu.tms.model.User;
 import com.netcracker.edu.tms.service.ProjectService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -32,47 +26,45 @@ public class ProjectRestController {
         return new ResponseEntity<>(projectService.getAllProjects(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/")
     public ResponseEntity<Project> addNewProject(@RequestBody ProjectInfo projectInfo) {
-        Project newProject = projectInfo.getProject();
-        List<User> addedUsers = projectInfo.getUsers();
+        Project project = projectInfo.getProject();
+        List<ProjectMember> team = projectInfo.getTeam();
 
-        if (addedUsers == null || addedUsers.isEmpty()) {
+        if (project == null || team == null || team.isEmpty())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
-        /*  this block must be before last return line,
-            because in case of invalid addProject()
-            function block must not be executed     */
-        //BLOCK_START
-        projectService.sendInvitationToNewProject(addedUsers, newProject);
-        //BLOCK_END
-
-//        Project newProj = new Project(newProject.getCreatorId(), newProject.getName());
-        projectService.setProjectsTeam(addedUsers, newProject.getId());
-
-        boolean operationResult = true;//projectService.addProject(newProject);
-
-        if (!operationResult) {
+        //save project
+        if(! projectService.addProject(project))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
-        return new ResponseEntity<>(newProject, HttpStatus.OK);
+        //getId
+        project = projectService.getProjectByName(project.getName());
+
+        //add team
+        projectService.setProjectsTeam(project.getId(), team);
+
+        //notify team
+        projectService.sendInvitationToNewProject(project, team);
+
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<Project> updateProject(@RequestBody ProjectInfo projectInfo, @PathVariable BigInteger projectId) {
         Project projectToUpdate = projectInfo.getProject();
-        List<User> addedUsers = projectInfo.getUsers();
-        if (addedUsers == null || addedUsers.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        List<ProjectMember> team = projectInfo.getTeam();
 
-        boolean retAddedUsers = projectService.setProjectsTeam(addedUsers, projectToUpdate.getId());
-        boolean operationResult = projectService.updateProject(projectToUpdate, projectId);
-        if (!operationResult) {
+        if (team == null || team.isEmpty())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+
+        boolean retAddedUsers = projectService.setProjectsTeam(projectToUpdate.getId(), team);
+        boolean operationResult = projectService.updateProject(projectToUpdate, projectId);
+
+        if (!operationResult || !retAddedUsers)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         return new ResponseEntity<>(projectToUpdate, HttpStatus.OK);
 
     }
