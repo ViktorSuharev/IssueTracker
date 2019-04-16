@@ -3,20 +3,21 @@ import { Tab, Tabs, Container } from 'react-bootstrap'
 import Login from './Login'
 import Register from './Register'
 import { AuthConsumer } from './AuthContext';
+import '../styles.css';
 
 export default class SignTabs extends Component {
     loggedIn() {
         return null;
     }
 
-    auth() {
+    auth(login) {
         return <Container>
-        <Tabs defaultActiveKey="login">
-            <Tab eventKey="login" title="Login">
-                <Login/>
+        <Tabs defaultActiveKey='login'>
+            <Tab eventKey='login' title='Login'>
+                <Login onLogin={login}/>
             </Tab>
-            <Tab eventKey="register" title="Register">
-                <Register />
+            <Tab eventKey='register' title='Register'>
+                <Register/>
             </Tab>
         </Tabs>
     </Container>;
@@ -24,8 +25,7 @@ export default class SignTabs extends Component {
 
     render() {
         return <AuthConsumer>
-            {({isAuth}) => isAuth? this.loggedIn() : this.auth() }
+            {({isAuth, login}) => isAuth? this.loggedIn() : this.auth(login) }
         </AuthConsumer>
-        
     }
 }

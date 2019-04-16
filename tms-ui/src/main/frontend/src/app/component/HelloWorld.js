@@ -1,6 +1,6 @@
 import * as axios from "axios";
-import React, { Component } from "react";
-import Bootstrap, { Form, Button, Table, Container } from 'react-bootstrap';
+import React from "react";
+import { Form, Button, Table, Container } from 'react-bootstrap';
 
 class HelloWorld extends React.Component {
     constructor(props) {
@@ -50,7 +50,7 @@ class HelloWorld extends React.Component {
     }
 
     render() {
-        return <Container className="justify-content-md-center">
+        return <Container>
             <Form onSubmit={this.handleSubmit}>
                 {this.state.user === undefined ? null : this.getUserTable()}
                 <Button type="submit">

@@ -4,12 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigInteger;
 
 @Data
@@ -18,47 +13,38 @@ import java.math.BigInteger;
 
 @Entity
 @Table(name = "projects")
-
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private BigInteger id;
-    @Column(name = "creator_id")
+
+    @Column(name = "creator_id", nullable = false)
     private BigInteger creatorId;
-    @Column(name = "name")
+
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if(obj==this){
-            return true;
-        }
-        if(getClass()!=obj.getClass()){
-            return false;
-        }
-        Project toCompare=(Project) obj;
-        if(!id.equals(toCompare.getId())){
-            return false;
-        }
-        if(!creatorId.equals(toCompare.getCreatorId())){
-            return false;
-        }
-        if(!name.equals(toCompare.getName())){
-            return false;
-        }
-        return true;
+    @Column(name = "description")
+    private String description;
+
+    //List<Pair<User, Role>> team
+
+
+    public Project(BigInteger id, BigInteger creatorId, String name) {
+        this.id = id;
+        this.creatorId = creatorId;
+        this.name = name;
     }
 
-    @Override
-    public int hashCode(){
-        int hash = 7;
-        hash = 31 * hash + id.intValue();
-        hash = 31 * hash + (name == null ? 0 : name.hashCode());
-        hash = 31 * hash + (creatorId == null ? 0 : creatorId.hashCode());
-        return hash;
+    public Project(BigInteger creatorId, String name) {
+        this.creatorId = creatorId;
+        this.name = name;
+    }
+
+    public Project(BigInteger creatorId, String name, String description) {
+        this.creatorId = creatorId;
+        this.name = name;
+        this.description = description;
     }
 }

@@ -7,4 +7,6 @@ import java.math.BigInteger;
 
 public interface UserRepository extends CrudRepository<User, BigInteger>{
     User findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }
