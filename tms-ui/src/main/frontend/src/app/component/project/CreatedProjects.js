@@ -12,7 +12,7 @@ class CreatedProjects extends React.Component {
             users: [],
             projects: [],
             user: [],
-            userId: this.props.match.params.id,
+            userId: this.props.match.params.id
         };
     };
 
