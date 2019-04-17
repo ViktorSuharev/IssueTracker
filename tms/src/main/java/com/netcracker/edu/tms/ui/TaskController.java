@@ -1,4 +1,4 @@
-package com.netcracker.edu.tms.web;
+package com.netcracker.edu.tms.ui;
 
 import com.netcracker.edu.tms.model.Priority;
 import com.netcracker.edu.tms.model.Status;
@@ -16,7 +16,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.List;
 
-@RequestMapping(value = "/tasks")
+@RequestMapping(value = "/api/tasks")
 @RestController
 public class TaskController {
 

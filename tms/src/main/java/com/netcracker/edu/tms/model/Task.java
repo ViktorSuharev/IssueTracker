@@ -68,4 +68,6 @@ public class Task {
     @Enumerated(EnumType.STRING)
     @Column(name = "task_priority")
     private Priority priority;
+
+
 }
