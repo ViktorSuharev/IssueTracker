@@ -30,7 +30,6 @@ public class Project {
 
     //List<Pair<User, Role>> team
 
-
     public Project(BigInteger id, BigInteger creatorId, String name) {
         this.id = id;
         this.creatorId = creatorId;

@@ -54,6 +54,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<ProjectWithCreator> getAllProjectsWithCreators() {
+        List<Project> projects = projectDao.getAllProjects();
+        List<User> creators = new ArrayList<>();
+
+        for(Project project: projects)
+            creators.add(userService.getUserByID(project.getCreatorId()));
+
+        List<ProjectWithCreator> result = new ArrayList<>();
+        for(int i = 0; i < projects.size(); i++)
+            result.add(new ProjectWithCreator(
+                    projects.get(i),
+                    UserDTO.of(creators.get(i))));
+        return result;
+    }
+
+    @Override
     public List<Project> getAllProjects() {
         return projectDao.getAllProjects();
     }
