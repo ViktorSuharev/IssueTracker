@@ -6,6 +6,7 @@ import { Container, Modal, Button } from 'react-bootstrap';
 import '../styles.css';
 import './index.css';
 import TextEditor from '../TextEditor';
+import { authorizationHeader } from '../../actions';
 
 class CreateProject extends React.Component {
     constructor(props) {
@@ -14,8 +15,7 @@ class CreateProject extends React.Component {
         this.state = {
             name: null,
             description: null,
-            brief: null,
-            users: [],
+            users: [{}],
             team: [],
             user: null,
             role: null,
@@ -67,19 +67,17 @@ class CreateProject extends React.Component {
         this.setState({ name: newName });
     }
 
-    onBriefChange(event) {
-        const brief = event.target.value;
-
-        this.setState({ brief: brief });
-    }
-
     componentDidMount() {
+        // getAllUsers().then( (users) => {
+        //     if(!users)
+        //         console.log('UNDEF');
+        //     this.setState({ users: users })
+        //     console.log(JSON.stringify(this.state.users));
+        // })
         let token = localStorage.getItem('token');
 
         axios.get('http://localhost:8090/api/users/all', {
-            headers: {
-                Authorization: token
-            }
+            headers: authorizationHeader()
         })
             .then(res => {
                 const users = res.data;
@@ -183,10 +181,10 @@ class CreateProject extends React.Component {
 
 
     render() {
-        const options = this.state.users.map(user =>
-            <option value={user.email || ''} key={user.email || ''}>
-                {user.name}
-            </option>);
+        // const options = this.state.users.map(user =>
+        //     <option value={user.email || ''} key={user.email || ''}>
+        //         {user.name}
+        //     </option>);
         return (
             <div>
                 {/* SAVE PROJECT DIALOG */}
@@ -235,17 +233,6 @@ class CreateProject extends React.Component {
                             </div>
                         </form>
 
-                        {/* <form>
-                            <div className='d-flex flex-row mx-1'>
-                                <div className=' d-flex mr-4 justify-content-end align-self-end mt-2'>
-                                    <h4> Brief: <input type='text' value={this.state.brief} className='form-control'
-                                        onChange={this.onBriefChange} />
-                                    </h4>
-                                </div>
-                            </div>
-                        </form> */}
-
-
                         <br />
                         <h4>Description:</h4>
                         <TextEditor
@@ -268,7 +255,10 @@ class CreateProject extends React.Component {
                                     <option value='' disabled={true}>
                                         Select user
                                     </option>
-                                    {options}
+                                    {this.state.users.map(user =>
+                                        <option value={user.email || ''} key={user.email || ''}>
+                                            {user.name}
+                                        </option>)}
                                     )}
                                 </select>
                             </label>

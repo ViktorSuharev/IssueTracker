@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Form, Button, Row, Col, Container, Card, CardDeck, CardGroup } from 'react-bootstrap'
-import TextEditor from '../TextEditor';
+import { Container, Card, CardDeck } from 'react-bootstrap'
+// import TextEditor from '../TextEditor';
 import { AuthConsumer } from '../login/AuthContext';
 
 export default class ProjectContainer extends Component {
@@ -38,7 +38,7 @@ export default class ProjectContainer extends Component {
                 {row.map(
                     (project) => <Card>
                         <Card.Body>
-                            <Card.Title><a href='#'>{project.name}</a></Card.Title>
+                            <Card.Title><a href={'/projects/'+project.id}>{project.name}</a></Card.Title>
                             <Card.Subtitle className='mb-2 text-muted'>{project.owner.name}</Card.Subtitle>
                             {this.controlIfCreator(project)}
                             {/* <TextEditor value={project.description} readOnly={true} /> */}

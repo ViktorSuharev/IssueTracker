@@ -39,7 +39,7 @@ class ProjectInfo extends React.Component {
                 console.log("creatorId: ", this.state.creatorId);
             })
             .then(res => {
-                const url = `http://localhost:8090/users/${this.state.creatorId}`;
+                const url = `http://localhost:8090/api/users/${this.state.creatorId}`;
                 axios.get(url)
                     .then(res => {
                         console.log("url: ", url);
@@ -55,13 +55,10 @@ class ProjectInfo extends React.Component {
     render() {
 
         return (
-            <Container>
+            <Container className='mt-5'>
                 <div id="wrapper">
-
-                    <div className=" d-flex flex-row justify-content-center align-items-center">
-                        <h1>
-                            Team
-                    </h1>
+                    <div className=" d-flex flex-row">
+                        <h1>Team</h1>
                     </div>
                     <div className="pl-sm-2 mr-4 bd-highlights align-self-end" style={{ "fontSize": "30px" }}>
                         Project's creator: {this.state.creator.fullName}

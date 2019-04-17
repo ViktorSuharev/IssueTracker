@@ -71,7 +71,7 @@ export default class Register extends Component {
             password: this.state.password
         };
 
-        axios.post(backurl + 'auth/register', credential)
+        axios.post(backurl + '/auth/register', credential)
             .then(response => {
                 this.handleShow('Congratulations!', 'Registration was successful. Please, login', this.handleReload);
                 console.log(response);

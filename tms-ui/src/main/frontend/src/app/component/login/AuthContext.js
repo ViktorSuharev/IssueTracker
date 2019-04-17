@@ -15,7 +15,7 @@ class AuthProvider extends React.Component {
         let state = JSON.parse(localStorage.getItem('auth'));
 
         if (state == null) {
-            state = { isAuth: false, user: null, status: 0 };
+            state = { isAuth: false, user: null, status: 0, creds: null};
             localStorage.setItem('auth', JSON.stringify(state));
         }
 
@@ -26,7 +26,6 @@ class AuthProvider extends React.Component {
 
     async login(user) {
         let status = await login(user);
-        console.log('STATUS HERE IS', status);
         this.setState({ status: status });
         console.log(JSON.stringify(this.state));
 
@@ -34,9 +33,11 @@ class AuthProvider extends React.Component {
             axios.get(backurl + 'users/me', { headers: authorizationHeader() })
                 .then(response => {
                     var u = response.data;
-                    this.setState({ isAuth: true, user: u });
+                    this.setState({ isAuth: true, user: u, creds: user });
                     localStorage.setItem('auth', JSON.stringify(this.state));
                 });
+                
+        return status;
     }
 
     logout() {

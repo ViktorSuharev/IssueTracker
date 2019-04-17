@@ -2,7 +2,7 @@ import './component/project/index.css';
 import 'github-fork-ribbon-css/gh-fork-ribbon.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import ProjectsTasks from './component/project/ProjectsTasks';
@@ -42,7 +42,7 @@ class App extends Component {
                         <ProtectedRoute path='/tasks/add' component={AddTask} />
                         <ProtectedRoute path='/personalarea' component={PersonalArea} />
                         <ProtectedRoute path='/projects/:id' component={CreatedProjects} />
-                        <ProtectedRoute path='/projects' component={ProjectDashboard} />
+                        <ProtectedRoute exact path='/projects' component={ProjectDashboard} />
 
                         <Route path='/auth' component={SignTabs}/>
                     </Switch>

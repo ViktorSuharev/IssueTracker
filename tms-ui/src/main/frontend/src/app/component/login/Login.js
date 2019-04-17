@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Modal, Form, Button, Row, Col, Container } from 'react-bootstrap'
-import { AuthConsumer } from './AuthContext';
 
 export default class Login extends Component {
     constructor(props) {
@@ -38,7 +37,7 @@ export default class Login extends Component {
         this.setState({ show: false });
     }
 
-    handleLogin(event) {
+    async handleLogin(event) {
         event.preventDefault();
 
         let creds = {
@@ -46,11 +45,23 @@ export default class Login extends Component {
             password: this.state.password
         }
 
-        this.props.onLogin(creds);
+        let status = await this.props.onLogin(creds);
 
-        if (this.state.status !== 200) {
-            this.setState({ errorMessage: 'Wrong email or password' });
-            this.handleShow();
+        switch (status) {
+            case 200:
+                break;
+            case 401:
+                this.setState({ errorMessage: 'Wrong email or password' });
+                this.handleShow();
+                break;
+            case 0:
+                this.setState({ errorMessage: 'Server is unavailable. Please, try again later'});
+                this.handleShow();
+                break;                
+            default:
+                this.setState({ errorMessage: 'Contact administrator. Error code: ' + status });
+                this.handleShow();
+            
         }
 
     }
@@ -67,31 +78,21 @@ export default class Login extends Component {
         });
     }
 
-    check() {
-        return <AuthConsumer>
-            {({status}) => { console.log('STATUS', status); return status === 401 ? this.modal() : null}}
-        </AuthConsumer>
-    }
-
-    modal() {
-        return <Modal show={this.state.show} onHide={this.handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>Error!</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>{this.state.errorMessage}</Modal.Body>
-            <Modal.Footer>
-                <Button variant='primary' onClick={this.handleOk}>
-                    Ok
-            </Button>
-            </Modal.Footer>
-        </Modal>
-    }
-
     render() {
         var disabled = !this.validateForm();
         return (
             <div>
-                {this.check()}
+                <Modal show={this.state.show} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Error!</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>{this.state.errorMessage}</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant='primary' onClick={this.handleOk}>
+                            Ok
+            </Button>
+                    </Modal.Footer>
+                </Modal>
                 <Container className='mt-3'>
                     <Form>
                         <Form.Group as={Row} controlId='email'>
