@@ -29,7 +29,7 @@ export default class ProjectContainer extends Component {
         console.log('RESULT', JSON.stringify(rawProjects));
 
         while(rawProjects.length % colNum)
-            rawProjects.push({name: '', description: '', owner: null});
+            rawProjects.push({name: '', description: '', owner: {name: null}});
 
         var matrix = reshape(rawProjects, colNum);
 
