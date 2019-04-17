@@ -1,18 +1,20 @@
 import * as axios from 'axios';
 import React, { Component } from 'react';
 import { Form, Modal, Button, Row, Col, Container } from 'react-bootstrap';
+import { backurl } from '../../properties';
 
 export default class Register extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            secondPassword: "",
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            secondPassword: '',
             show: false,
+            modal: { header: '', content: '', action: null }
         };
 
         this.handleOk = this.handleOk.bind(this);
@@ -24,15 +26,25 @@ export default class Register extends Component {
         this.setState({ show: false });
     }
 
-    handleShow() {
-        this.setState({ show: true });
+    handleShow(type, message, action) {
+        var modal = {
+            header: type,
+            content: message,
+            action: action
+        };
+
+        this.setState({ show: true, modal: modal });
     }
 
     handleOk(event) {
         event.preventDefault();
-        this.setState( { success: true } );
+        this.handleClose();
     }
 
+    handleReload(event) {
+        event.preventDefault();
+        window.location.reload();
+    }
 
     validateForm() {
         return this.state.email.length > 0
@@ -41,9 +53,7 @@ export default class Register extends Component {
             && this.state.password === this.state.secondPassword
             && this.state.firstName.length > 0
             && this.state.lastName.length > 0
-            && this.state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
-            && this.state.firstName.match(/^(([A-Za-z]+[\-\']?)*([A-Za-z]+)?\s)+([A-Za-z]+[\-\']?)*([A-Za-z]+)?$/)
-            && this.state.lastName.match(/^(([A-Za-z]+[\-\']?)*([A-Za-z]+)?\s)+([A-Za-z]+[\-\']?)*([A-Za-z]+)?$/);
+            && this.state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
     }
 
     handleChange = event => {
@@ -61,106 +71,115 @@ export default class Register extends Component {
             password: this.state.password
         };
 
-        axios.post(`http://localhost:8090/api/auth/register`, credential)
+        axios.post(backurl + 'auth/register', credential)
             .then(response => {
-                this.handleShow();
+                this.handleShow('Congratulations!', 'Registration was successful. Please, login', this.handleReload);
                 console.log(response);
+            })
+            .catch(error => {
+                switch (error.response.status) {
+                    case 406:
+                        this.handleShow('Error', 'User with email ' + credential.email + ' is already registered', this.handleOk);
+                        break;
+                    default:
+                        console.log('ERROR while registration: ', JSON.stringify(error.response));
+                        this.handleShow('Error', 'Please, contact administrators. Error type: ' + error.response.status, this.handleOk);
+                }
             });
     }
 
     render() {
-        return (
-            <div>
-                <Modal show={this.state.show} onHide={this.handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Congratulations!</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>You are registered! Now login using your email and password</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant='primary' onClick={this.handleOk}>
-                            Ok
+        let disabled = !this.validateForm();
+        return <div>
+            <Modal show={this.state.show} onHide={this.handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{this.state.modal.header}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{this.state.modal.content}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant='primary' onClick={this.state.modal.action}>
+                        Ok
                         </Button>
-                    </Modal.Footer>
-                </Modal>
-                <Container className="mt-3">
-                    <Form
-                        onSubmit={this.handleSubmit}>
-                        <Form.Group as={Row} controlId="firstName" bsSize="large">
-                            <Form.Label column sm="2">First name:</Form.Label>
-                            <Col sm="3">
-                                <Form.Control
-                                    autoFocus
-                                    type="text"
-                                    placeholder="First name"
-                                    value={this.state.firstName}
-                                    onChange={this.handleChange}
-                                />
-                            </Col>
-                        </Form.Group>
+                </Modal.Footer>
+            </Modal>
 
-                        <Form.Group as={Row} controlId="lastName" bsSize="large">
-                            <Form.Label column sm="2">Last name:</Form.Label>
-                            <Col sm="3">
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Last name"
-                                    value={this.state.lastName}
-                                    onChange={this.handleChange}
-                                />
-                            </Col>
-                        </Form.Group>
+            <Container className='mt-3'>
+                <Form
+                    onSubmit={this.handleSubmit}>
+                    <Form.Group as={Row} controlId='firstName' >
+                        <Form.Label column sm='2'>First name:</Form.Label>
+                        <Col sm='3'>
+                            <Form.Control
+                                autoFocus
+                                type='text'
+                                placeholder='First name'
+                                value={this.state.firstName}
+                                onChange={this.handleChange}
+                            />
+                        </Col>
+                    </Form.Group>
 
-                        <Form.Group as={Row} controlId="email" bsSize="large">
-                            <Form.Label column sm="2">Email:</Form.Label>
-                            <Col sm="3">
-                                <Form.Control
-                                    type="email"
-                                    placeholder="Email"
-                                    value={this.state.email}
-                                    onChange={this.handleChange}
-                                />
-                            </Col>
-                        </Form.Group>
+                    <Form.Group as={Row} controlId='lastName' >
+                        <Form.Label column sm='2'>Last name:</Form.Label>
+                        <Col sm='3'>
+                            <Form.Control
+                                type='text'
+                                placeholder='Last name'
+                                value={this.state.lastName}
+                                onChange={this.handleChange}
+                            />
+                        </Col>
+                    </Form.Group>
 
-                        <Form.Group as={Row} controlId="password" bsSize="large">
-                            <Form.Label column sm="2">Password:</Form.Label>
-                            <Col sm="3">
-                                <Form.Control
-                                    value={this.state.password}
-                                    onChange={this.handleChange}
-                                    placeholder="Password"
-                                    type="password"
-                                />
-                            </Col>
-                        </Form.Group>
+                    <Form.Group as={Row} controlId='email' >
+                        <Form.Label column sm='2'>Email:</Form.Label>
+                        <Col sm='3'>
+                            <Form.Control
+                                type='email'
+                                placeholder='Email'
+                                value={this.state.email}
+                                onChange={this.handleChange}
+                            />
+                        </Col>
+                    </Form.Group>
 
-                        <Form.Group as={Row} controlId="secondPassword" bsSize="large">
-                            <Form.Label column sm="2">Confirm password:</Form.Label>
-                            <Col sm="3">
-                                <Form.Control
-                                    value={this.state.secondPassword}
-                                    placeholder="Confirm passsword"
-                                    onChange={this.handleChange}
-                                    type="password"
-                                />
-                            </Col>
-                        </Form.Group>
-                        <Form.Group as={Row}>
-                            <Col sm={5}>
-                                <Button
-                                    block
-                                    variant="outline-primary"
-                                    bsSize="large"
-                                    disabled={!this.validateForm()}
-                                    type="submit"
-                                >
-                                    Register
+                    <Form.Group as={Row} controlId='password' >
+                        <Form.Label column sm='2'>Password:</Form.Label>
+                        <Col sm='3'>
+                            <Form.Control
+                                value={this.state.password}
+                                onChange={this.handleChange}
+                                placeholder='Password'
+                                type='password'
+                            />
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} controlId='secondPassword' >
+                        <Form.Label column sm='2'>Confirm password:</Form.Label>
+                        <Col sm='3'>
+                            <Form.Control
+                                value={this.state.secondPassword}
+                                placeholder='Confirm passsword'
+                                onChange={this.handleChange}
+                                type='password'
+                            />
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row}>
+                        <Col sm={5}>
+                            <Button
+                                block
+                                variant={disabled ? 'outline-primary' : 'primary'}
+                                disabled={disabled}
+                                type='submit'
+                            >
+                                Register
                                 </Button>
-                            </Col>
-                        </Form.Group>
-                    </Form>
-                </Container>
-            </div>
-        );
+                        </Col>
+                    </Form.Group>
+                </Form>
+            </Container>
+        </div>
     }
 }

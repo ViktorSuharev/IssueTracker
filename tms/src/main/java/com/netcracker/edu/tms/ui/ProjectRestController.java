@@ -1,9 +1,6 @@
 package com.netcracker.edu.tms.ui;
 
-import com.netcracker.edu.tms.model.Project;
-import com.netcracker.edu.tms.model.ProjectInfo;
-import com.netcracker.edu.tms.model.ProjectMember;
-import com.netcracker.edu.tms.model.User;
+import com.netcracker.edu.tms.model.*;
 import com.netcracker.edu.tms.security.UserPrincipal;
 import com.netcracker.edu.tms.service.ProjectService;
 import com.netcracker.edu.tms.service.UserService;
@@ -32,8 +29,8 @@ public class ProjectRestController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/")
-    public ResponseEntity<List<Project>> getAllProjects() {
-        return new ResponseEntity<>(projectService.getAllProjects(), HttpStatus.OK);
+    public ResponseEntity<List<ProjectWithCreator>> getAllProjects() {
+        return new ResponseEntity<>(projectService.getAllProjectsWithCreators(), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('USER')")

@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { Modal, Form, Button, Row, Col, Container } from 'react-bootstrap'
-import { AuthConsumer } from "./AuthContext";
+import { AuthConsumer } from './AuthContext';
 
 export default class Login extends Component {
     constructor(props) {
@@ -8,7 +8,7 @@ export default class Login extends Component {
 
         let us = JSON.parse(localStorage.getItem('userCredentrials'));
         if (!us)
-            us = { email: "", password: "" };
+            us = { email: '', password: '' };
 
         this.state = {
             email: us.email,
@@ -67,43 +67,54 @@ export default class Login extends Component {
         });
     }
 
+    check() {
+        return <AuthConsumer>
+            {({status}) => { console.log('STATUS', status); return status === 401 ? this.modal() : null}}
+        </AuthConsumer>
+    }
+
+    modal() {
+        return <Modal show={this.state.show} onHide={this.handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Error!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{this.state.errorMessage}</Modal.Body>
+            <Modal.Footer>
+                <Button variant='primary' onClick={this.handleOk}>
+                    Ok
+            </Button>
+            </Modal.Footer>
+        </Modal>
+    }
+
     render() {
+        var disabled = !this.validateForm();
         return (
             <div>
-                <Modal show={this.state.show} onHide={this.handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Error!</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>{this.state.errorMessage}</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant='primary' onClick={this.handleOk}>
-                            Ok
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-                <Container className="mt-3">
+                {this.check()}
+                <Container className='mt-3'>
                     <Form>
-                        <Form.Group as={Row} controlId="email">
+                        <Form.Group as={Row} controlId='email'>
                             <Form.Label column sm={1}>Email:</Form.Label>
                             <Col sm={4}>
                                 <Form.Control
                                     autoFocus
-                                    type="email"
-                                    placeholder="Email"
+                                    type='email'
+                                    placeholder='Email'
                                     value={this.state.email}
                                     onChange={this.handleChange}
                                 />
                             </Col>
                         </Form.Group>
 
-                        <Form.Group as={Row} controlId="password" bsSize="large">
+                        <Form.Group as={Row} controlId='password'>
                             <Form.Label column sm={1}>Password:</Form.Label>
                             <Col sm={4}>
                                 <Form.Control
                                     value={this.state.password}
                                     onChange={this.handleChange}
-                                    placeholder="Password"
-                                    type="password"
+                                    placeholder='Password'
+                                    type='password'
                                 />
                             </Col>
                         </Form.Group>
@@ -111,9 +122,8 @@ export default class Login extends Component {
                             <Col sm={5}>
                                 <Button
                                     block
-                                    variant="outline-primary"
-                                    bsSize="large"
-                                    disabled={!this.validateForm()}
+                                    variant={disabled ? 'outline-primary' : 'primary'}
+                                    disabled={disabled}
                                     onClick={this.handleLogin}
                                 >
                                     Login

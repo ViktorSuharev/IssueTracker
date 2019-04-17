@@ -1,8 +1,9 @@
 import React from 'react';
 import * as axios from "axios";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
+import { Container, Modal, Button } from 'react-bootstrap';
 
 class ProjectsSettings extends React.Component {
     constructor(props) {
@@ -21,22 +22,36 @@ class ProjectsSettings extends React.Component {
     };
 
     componentDidMount() {
-        axios.get(`http://localhost:8090/projects/users/${this.state.projectId}`)
+        let token = localStorage.getItem('token');
+
+        axios.get(`http://localhost:8090/api/projects/users/${this.state.projectId}`, {
+            headers: {
+                Authorization: token
+            }
+        })
             .then(res => {
                 const addedUsers = res.data;
-                this.setState({addedUsers: addedUsers});
+                this.setState({ addedUsers: addedUsers });
                 console.log(JSON.stringify(this.state.addedUsers));
             });
-        axios.get(`http://localhost:8090/projects/${this.state.projectId}/name`) //here will be projectId
+        axios.get(`http://localhost:8090/api/projects/${this.state.projectId}/name`, {
+            headers: {
+                Authorization: token
+            }
+        }) //here will be projectId
             .then(res => {
                 const name = res.data;
-                this.setState({name: name});
+                this.setState({ name: name });
                 console.log(JSON.stringify(this.state.name));
             });
-        axios.get(`http://localhost:8090/users/`)
+        axios.get(`http://localhost:8090/api/users/all`, {
+            headers: {
+                Authorization: token
+            }
+        })
             .then(res => {
                 const users = res.data;
-                this.setState({users: users});
+                this.setState({ users: users });
                 console.log(JSON.stringify(this.state.users));
             });
 
@@ -45,7 +60,7 @@ class ProjectsSettings extends React.Component {
     onNameChange(event) {
         const newName = event.target.value;
 
-        this.setState({name: newName}, function () {
+        this.setState({ name: newName }, function () {
             console.log("onNameChange: ", newName);
         });
         console.log("this.name: ", this.state.name);
@@ -92,31 +107,31 @@ class ProjectsSettings extends React.Component {
             return user.id !== userToDelete.id;
         });
         console.log("addedUsersNew: ", JSON.stringify(addedUsersNew));
-        this.setState({addedUsers: addedUsersNew}, function () {
+        this.setState({ addedUsers: addedUsersNew }, function () {
             console.log("delete user with id:", userToDelete.id);
         });
 
         axios(`http://localhost:8090/users/userstoprojects`, {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
-                data: {
-                    userToDeleteFromTeam: userToDelete,
-                    projectId: this.state.projectId
-                }
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            data: {
+                userToDeleteFromTeam: userToDelete,
+                projectId: this.state.projectId
             }
+        }
         );
 
     };
 
     onAddUser(event) {
 
-        if (!this.state.user.fullName) {
+        if (!this.state.user.name) {
             alert(`Employee was not selected!`);
 
         } else {
-            var curUser = new User(this.state.user.id, this.state.user.fullName, this.state.user.email, this.state.user.role);
+            var curUser = new User(this.state.user.id, this.state.user.name, this.state.user.email, this.state.user.role);
             console.log("OnSubmit:", JSON.stringify(curUser));
             const len = this.state.addedUsers.length;
 
@@ -131,7 +146,7 @@ class ProjectsSettings extends React.Component {
                 alert(`The user is selected yet: ${JSON.stringify(curUser)}`);
             } else {
                 alert(`You chose epmloyee: ${JSON.stringify(curUser)} and his role in project: ${curUser.role}`);
-                this.setState({addedUsers: [...this.state.addedUsers, curUser]});
+                this.setState({ addedUsers: [...this.state.addedUsers, curUser] });
             }
             event.preventDefault();
         }
@@ -165,12 +180,12 @@ class ProjectsSettings extends React.Component {
     render() {
         const options = this.state.users.map(user =>
             <option value={user.id || ''} key={user.id || ''}>
-                {user.fullName}
+                {user.name}
             </option>);
-        return (
+        return <Container>
             <div id="wrapper">
                 <div className="d-flex flex-row ">
-                    <div className="mt-1 py-2  flex-grow-1 ">
+                    <div className="mt-5 py-2  flex-grow-1 ">
                         <h2>
                             Project {this.state.name} settings
                         </h2>
@@ -193,13 +208,13 @@ class ProjectsSettings extends React.Component {
                     </div>
                 </div>
 
-                <hr/>
+                <hr />
 
                 <form onSubmit={this.onSubmitName}>
                     <div className="d-flex flex-row mx-1">
                         <div className=" d-flex mr-4 justify-content-end align-self-end mt-2">
                             <label> Name: <input type="text" value={this.state.name} className="form-control"
-                                                 onChange={this.onNameChange}/>
+                                onChange={this.onNameChange} />
                             </label>
                         </div>
                     </div>
@@ -208,7 +223,7 @@ class ProjectsSettings extends React.Component {
                 <form onSubmit={this.onAddUser}>
                     <label className="mx-1"> Select employees to team
                         <select defaultValue={""} name="userName" className="form-control"
-                                onChange={this.onSelectChange}>
+                            onChange={this.onSelectChange}>
                             <option value="" disabled={true}>
                                 Select user
                             </option>
@@ -218,7 +233,7 @@ class ProjectsSettings extends React.Component {
                     </label>
                     <label className="mx-2"> Select role in project
                         <select defaultValue={""} name="role" className="form-control"
-                                onChange={this.onSelectChange}>
+                            onChange={this.onSelectChange}>
                             <option value="" disabled={true}>
                                 Select role
                             </option>
@@ -227,50 +242,47 @@ class ProjectsSettings extends React.Component {
                             <option value="3"> QA tester</option>
                         </select>
                     </label>
-                    <input className="mx-2 btn btn-dark" type="submit" value="Add"/>
+                    <input className="mx-2 btn btn-dark" type="submit" value="Add" />
                 </form>
 
                 <div className="table-responsive">
                     <table className="table table-light table-striped table-bordered table-hover table-sm  ">
                         <thead className="thead-dark">
-                        <tr>
-                            <th style={{"width": "7%"}} scope="col">Delete</th>
-                            <th style={{"width": "43%"}} scope="col">Full Name</th>
-                            <th style={{"width": "43%"}} scope="col">EMail</th>
-                            <th style={{"width": "7%"}} scope="col">Role</th>
-                        </tr>
+                            <tr>
+                                <th style={{ 'width': '20%' }} scope='col'>Full Name</th>
+                                <th style={{ 'width': '10%' }} scope='col'>Email</th>
+                                <th style={{ 'width': '10%' }} scope='col'>Role</th>
+                                <th style={{ 'width': '4%' }} scope='col'>Delete</th>
+                            </tr>
                         </thead>
                         <tbody>
-
-                        {this.state.addedUsers.map(user =>
-                            <tr key={user.id + user.role}>
-                                <th scope="row" className="text-center">
-                                    <button onClick={this.onDeleteClick.bind(this, user)}>
-                                        Delete
-                                    </button>
-                                </th>
-                                <td> {user.fullName}</td>
-                                <td> {user.email}</td>
-                                <td> {user.role}</td>
-                            </tr>
-                        )
-                        }
+                            {this.state.addedUsers.map(user =>
+                                <tr key={user.email + user.role}>
+                                    <td> {user.name}</td>
+                                    <td> {user.email}</td>
+                                    <td> {user.role}</td>
+                                    <th scope='row'>
+                                        <Button variant='danger' onClick={this.onDeleteClick.bind(this, user)}>
+                                            X
+                                                </Button>
+                                    </th>
+                                </tr>
+                            )
+                            }
                         </tbody>
                     </table>
                 </div>
-
-
             </div>
-        )
+        </Container>
     }
 }
 
 export default ProjectsSettings;
 
 class User {
-    constructor(id, fullName, email, role) {
+    constructor(id, name, email, role) {
         this.id = id;
-        this.fullName = fullName;
+        this.name = name;
         this.email = email;
         this.role = role;
     }

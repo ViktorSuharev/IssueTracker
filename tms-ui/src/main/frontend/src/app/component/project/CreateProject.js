@@ -14,6 +14,7 @@ class CreateProject extends React.Component {
         this.state = {
             name: null,
             description: null,
+            brief: null,
             users: [],
             team: [],
             user: null,
@@ -25,7 +26,7 @@ class CreateProject extends React.Component {
             }
         };
 
-        this.handleDescriptionBoxChange = this.handleDescriptionBoxChange.bind(this);
+        this.saveDescription = this.saveDescription.bind(this);
 
         this.onNameChange = this.onNameChange.bind(this);
         this.onSelectChange = this.onSelectChange.bind(this);
@@ -37,8 +38,12 @@ class CreateProject extends React.Component {
         this.handleClose = this.handleClose.bind(this);
     }
 
-    handleDescriptionBoxChange(description) {
-        this.setState( {description: description });
+
+    saveDescription(description) {
+        if (description.length > 300)
+            alert('no way! too long!');
+        else
+            this.setState({ description: description });
     }
 
     handleCancel(event) {
@@ -60,6 +65,12 @@ class CreateProject extends React.Component {
         const newName = event.target.value;
 
         this.setState({ name: newName });
+    }
+
+    onBriefChange(event) {
+        const brief = event.target.value;
+
+        this.setState({ brief: brief });
     }
 
     componentDidMount() {
@@ -91,6 +102,13 @@ class CreateProject extends React.Component {
             this.handleClose();
             return;
         }
+
+        if (!this.state.description) {
+            alert('Create project: describe your project!');
+            this.handleClose();
+            return;
+        }
+
         let token = localStorage.getItem('token');
 
         axios('http://localhost:8090/api/projects/', {
@@ -98,7 +116,7 @@ class CreateProject extends React.Component {
             headers: {
                 Authorization: token,
                 'content-type': 'application/json',
-                },
+            },
             data: {
                 project: project,
                 team: this.state.team
@@ -120,14 +138,14 @@ class CreateProject extends React.Component {
     onSelectChange(event) {
         const eventName = event.target.name;
 
-        switch(eventName) {
+        switch (eventName) {
             case 'userName':
                 var email = event.target.value;
                 var user = this.state.users.find(user => user.email === email);
 
                 console.log('Found user:', JSON.stringify(user));
 
-                this.setState({ user: user },  () => console.log('this.state.user:', JSON.stringify(this.state.user)) )
+                this.setState({ user: user }, () => console.log('this.state.user:', JSON.stringify(this.state.user)))
                 break;
 
             case 'role':
@@ -144,21 +162,21 @@ class CreateProject extends React.Component {
             alert('Employee was not selected!');
             return;
         }
-        
-        var curUser = new User(this.state.user.fullName, this.state.user.email, this.state.role);
+
+        var curUser = new User(this.state.user.name, this.state.user.email, this.state.role);
         console.log('OnSubmit:', JSON.stringify(curUser));
-            
+
         var alreadySelected = this.state.team.some(e => e.email === curUser.email);
 
-        alreadySelected ? alert(JSON.stringify(curUser.fullName) + ' has been already added') 
-                        : this.setState({ team: [...this.state.team, curUser] });
+        alreadySelected ? alert(JSON.stringify(curUser.name) + ' has been already added')
+            : this.setState({ team: [...this.state.team, curUser] });
     }
 
     onDeleteClick = (userToDelete) => {
-        const teamNew = this.state.team.filter(u => u.email !== userToDelete.email );
-        
+        const teamNew = this.state.team.filter(u => u.email !== userToDelete.email);
+
         console.log('Team: ', JSON.stringify(teamNew));
-        
+
         this.setState({ team: teamNew }, () =>
             console.log('delete user: ', userToDelete.email));
     };
@@ -167,7 +185,7 @@ class CreateProject extends React.Component {
     render() {
         const options = this.state.users.map(user =>
             <option value={user.email || ''} key={user.email || ''}>
-                {user.fullName}
+                {user.name}
             </option>);
         return (
             <div>
@@ -189,20 +207,19 @@ class CreateProject extends React.Component {
 
                 <Container>
                     <div id='wrapper'>
-
                         <div className='d-flex flex-row'>
                             <div className='mt-5 py-2  flex-grow-1'>
-                                <br/>
+                                <br />
                                 <h2>Create project</h2>
                             </div>
                             <Button className='d-flex mr-4 justify-content-end align-self-end mt-2' variant='danger' onClick={this.handleCancel}>
                                 Cancel
                             </Button>
-                            <Button 
+                            <Button
                                 className='d-flex mr-4 justify-content-end align-self-end mt-2'
-                                variant='success' 
+                                variant='success'
                                 onClick={this.handleShow}>
-                                    Create project
+                                Create project
                             </Button>
 
                         </div>
@@ -218,20 +235,31 @@ class CreateProject extends React.Component {
                             </div>
                         </form>
 
+                        {/* <form>
+                            <div className='d-flex flex-row mx-1'>
+                                <div className=' d-flex mr-4 justify-content-end align-self-end mt-2'>
+                                    <h4> Brief: <input type='text' value={this.state.brief} className='form-control'
+                                        onChange={this.onBriefChange} />
+                                    </h4>
+                                </div>
+                            </div>
+                        </form> */}
 
-                        <br/>
+
+                        <br />
                         <h4>Description:</h4>
-                        <TextEditor 
+                        <TextEditor
                             placeholder={this.state.editor.placeholder}
-                            onSave={this.handleDescriptionBoxChange}
+                            onSave={this.saveDescription}
+                            maxLength={300}
                         />
-                        <br/>
+                        <br />
 
-                        <br/>                        
+                        <br />
                         <div className=' d-flex flex-row align-items-center'>
                             <h4>Project team:</h4>
                         </div>
-                        <br/>
+                        <br />
                         <form onSubmit={this.onAddUser}>
                             <h6>Add memebers</h6>
                             <label className='mx-1'>
@@ -272,7 +300,7 @@ class CreateProject extends React.Component {
 
                                     {this.state.team.map(user =>
                                         <tr key={user.email + user.role}>
-                                            <td> {user.fullName}</td>
+                                            <td> {user.name}</td>
                                             <td> {user.email}</td>
                                             <td> {user.role}</td>
                                             <th scope='row'>
@@ -288,6 +316,9 @@ class CreateProject extends React.Component {
                         </div>
                     </div>
                 </Container >
+                <br />
+                <br />
+                <br />
             </div>
         );
     }
@@ -296,8 +327,8 @@ class CreateProject extends React.Component {
 export default CreateProject;
 
 class User {
-    constructor(fullName, email, role) {
-        this.fullName = fullName;
+    constructor(name, email, role) {
+        this.name = name;
         this.email = email;
         this.role = role;
     }

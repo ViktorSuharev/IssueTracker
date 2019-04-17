@@ -1,9 +1,6 @@
 package com.netcracker.edu.tms.service;
 
-import com.netcracker.edu.tms.model.Project;
-import com.netcracker.edu.tms.model.ProjectMember;
-import com.netcracker.edu.tms.model.Task;
-import com.netcracker.edu.tms.model.User;
+import com.netcracker.edu.tms.model.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -48,6 +45,13 @@ public interface ProjectService {
      *
      */
     List<Project> findProjectsByCreatorId(BigInteger creatorId);
+
+    /**
+     * Select all projects from DB
+     *
+     * @return list of {@link Project} or empty list
+     */
+    List<ProjectWithCreator> getAllProjectsWithCreators();
 
     /**
      * Select all projects from DB
