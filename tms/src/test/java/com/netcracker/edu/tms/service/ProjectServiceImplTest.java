@@ -75,7 +75,7 @@ public class ProjectServiceImplTest {
         expected.add(new Project(BigInteger.valueOf(2), BigInteger.ONE, "test4"));
 
         Mockito.when(projectDao.getAllProjects()).thenReturn(expected);
-//        List<Project> actual = projectService.getAllProjects();
+//        List<Project> actual = projectService.getAllProjectsWithCreators();
 //        Assert.assertEquals(expected, actual);
     }
 

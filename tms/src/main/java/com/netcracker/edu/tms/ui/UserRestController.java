@@ -1,9 +1,6 @@
 package com.netcracker.edu.tms.ui;
 
-import com.netcracker.edu.tms.model.DeletedUserFromTeam;
-import com.netcracker.edu.tms.model.Project;
-import com.netcracker.edu.tms.model.Task;
-import com.netcracker.edu.tms.model.User;
+import com.netcracker.edu.tms.model.*;
 import com.netcracker.edu.tms.security.UserPrincipal;
 import com.netcracker.edu.tms.service.ProjectService;
 import com.netcracker.edu.tms.service.UserService;
@@ -15,7 +12,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/users")
@@ -31,22 +31,23 @@ public class UserRestController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/all")
-    public ResponseEntity<Iterable<User>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    public ResponseEntity<Iterable<UserDTO>> getAllUsers() {
+        List users = StreamSupport.stream(userService.getAllUsers().spliterator(), false).collect(Collectors.toList());
+        return new ResponseEntity<>(convertUsersToUsersDTO(users), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/me")
-    public ResponseEntity<User> aboutMe(@AuthenticationPrincipal UserPrincipal currentUser) {
+    public ResponseEntity<UserDTO> aboutMe(@AuthenticationPrincipal UserPrincipal currentUser) {
         User user = userService.getUserByEmail(currentUser.getUsername());
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(UserDTO.of(user));
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
-    public ResponseEntity<User> aboutUser(@PathVariable(name="id") BigInteger id) {
+    public ResponseEntity<UserDTO> aboutUser(@PathVariable(name="id") BigInteger id) {
         User user = userService.getUserByID(id);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(UserDTO.of(user));
     }
 
     @GetMapping("/tasks/{id}")
@@ -75,5 +76,9 @@ public class UserRestController {
         }
         return new ResponseEntity<>(userToDeleteFromTeam, HttpStatus.OK);
 
+    }
+
+    public static Iterable<UserDTO> convertUsersToUsersDTO(List<User> users){
+        return users.stream().map(user -> UserDTO.of(user)).collect(Collectors.toList());
     }
 }

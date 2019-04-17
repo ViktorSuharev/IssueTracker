@@ -126,7 +126,7 @@
 //            entityManager.persist(in);
 //        }
 //
-//        List<Project> actual = projectDao.getAllProjects();
+//        List<Project> actual = projectDao.getAllProjectsWithCreators();
 //
 //        Assert.assertEquals(expected, actual);
 //

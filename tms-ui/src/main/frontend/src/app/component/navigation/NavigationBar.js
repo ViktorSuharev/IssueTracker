@@ -4,41 +4,35 @@ import { AuthConsumer } from '../login/AuthContext';
 import '../styles.css';
 
 export default class NavigationBar extends Component {
-    constructor(props) {
-        super(props);
-        
-        this.state = props;
-    }
-
     loggedIn(user){
-        let signedAsLabel = "Signed in as: " + user.fullName;
+        let signedAsLabel = 'Signed in as: ' + user.name;
 
-        return <Navbar fixed="top" expand="lg" bg="dark" variant="dark">
+        return <Navbar fixed='top' expand='lg' bg='dark' variant='dark'>
         <Navbar.Brand>
             <img
-                src={require("./nc.ico")}
-                alt=""
-                className="d-inline-block align-top"
-                width="30"
-                height="30"
+                src={require('./nc.ico')}
+                alt=''
+                className='d-inline-block align-top'
+                width='30'
+                height='30'
             />
             {' '}Issue Tracker
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
 
-        <Navbar.Collapse className="justify-content-end">
-            <Nav className="mr-auto">
-                <NavDropdown title="Project" id="collasible-nav-dropdown">
-                    <NavDropdown.Item href="/projects">Projects</NavDropdown.Item>
-                    <NavDropdown.Item href="/projects/create">Create</NavDropdown.Item>
+        <Navbar.Collapse className='justify-content-end'>
+            <Nav className='mr-auto'>
+                <NavDropdown title='Project' id='collasible-nav-dropdown'>
+                    <NavDropdown.Item href='/projects/create'>Create</NavDropdown.Item>
+                    <NavDropdown.Item href='/projects'>Projects</NavDropdown.Item>
                 </NavDropdown>
-                <NavDropdown title="Task" id="collasible-nav-dropdown">
-                    <NavDropdown.Item href="/addTask">Add</NavDropdown.Item>
+                <NavDropdown title='Task' id='collasible-nav-dropdown'>
+                    <NavDropdown.Item href='/addTask'>Add</NavDropdown.Item>
                 </NavDropdown>
             </Nav>
 
-            <NavDropdown title={signedAsLabel} id="collasible-nav-dropdown">
+            <NavDropdown title={signedAsLabel} id='collasible-nav-dropdown'>
                     <AuthConsumer>
                         {({logout}) => <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>}
                     </AuthConsumer>

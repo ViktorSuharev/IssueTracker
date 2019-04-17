@@ -1,5 +1,7 @@
-import * as axios from "axios";
+import * as axios from 'axios';
 import React from 'react';
+import { login, authorizationHeader } from '../../actions';
+import { backurl } from '../../properties';
 
 const AuthContext = React.createContext();
 
@@ -12,8 +14,8 @@ class AuthProvider extends React.Component {
 
         let state = JSON.parse(localStorage.getItem('auth'));
 
-        if(state == null){
-            state = { isAuth: false, user: null };
+        if (state == null) {
+            state = { isAuth: false, user: null, status: 0, creds: null};
             localStorage.setItem('auth', JSON.stringify(state));
         }
 
@@ -22,31 +24,24 @@ class AuthProvider extends React.Component {
         this.logout = this.logout.bind(this);
     }
 
-    login(user) {
-        axios.post(`http://localhost:8090/api/auth/login`, user)
-            .then(response => {
-                var tokenType = response.data.tokenType;
-                var token = response.data.accessToken
-                localStorage.setItem('token', tokenType + ' ' + token);
+    async login(user) {
+        let status = await login(user);
+        this.setState({ status: status });
+        console.log(JSON.stringify(this.state));
 
-                axios.get(`http://localhost:8090/api/users/me`, {
-                    headers: { Authorization: tokenType + ' ' + token }
-                })
-                .then(res => {
-                    let u = res.data;
-                    this.setState({ isAuth: true, user: u, status: response.status });
-                    console.log('LOGGED_IN:\t', JSON.stringify(response.status));
-                    console.log('\tas\t', user.email);
+        if (status === 200)
+            axios.get(backurl + 'users/me', { headers: authorizationHeader() })
+                .then(response => {
+                    var u = response.data;
+                    this.setState({ isAuth: true, user: u, creds: user });
+                    localStorage.setItem('auth', JSON.stringify(this.state));
                 });
-                })
-            .catch((error) => {
-                this.setState({status: error.response.status});
-                console.log('ERROR WHILE LOGIN: ', this.state.status);
-            });
+                
+        return status;
     }
 
     logout() {
-        this.setState({ isAuth: false, user: null });
+        this.setState({ isAuth: false, user: null, status: 0 });
         localStorage.removeItem('token');
         localStorage.removeItem('auth');
     }

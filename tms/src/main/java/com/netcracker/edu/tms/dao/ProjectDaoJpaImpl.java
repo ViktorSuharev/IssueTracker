@@ -91,7 +91,7 @@ public class ProjectDaoJpaImpl implements ProjectDao {
     public List<Project> getAllProjects() {
         Query query = entityManager.createQuery(QueryConsts.SELECT_ALL);
         List<Project> ret = query.getResultList();
-        LOGGER.debug("getAllProjects called");
+        LOGGER.debug("getAllProjectsWithCreators called");
         return ret;
     }
 
