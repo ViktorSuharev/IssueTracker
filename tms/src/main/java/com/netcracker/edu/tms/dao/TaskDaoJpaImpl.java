@@ -36,12 +36,12 @@ public class TaskDaoJpaImpl implements TaskDao {
     @Override
     public boolean addTask(Task task) {
         entityManager.persist(task);
-        return entityManager.find(Task.class, task.getTaskId()) != null;
+        return entityManager.find(Task.class, task.getId()) != null;
     }
 
     @Override
     public boolean updateTask(Task task) {
-        if (entityManager.find(Task.class, task.getTaskId()) == null)
+        if (entityManager.find(Task.class, task.getId()) == null)
             return false;
         else {
             entityManager.merge(task);
@@ -51,9 +51,9 @@ public class TaskDaoJpaImpl implements TaskDao {
 
     @Override
     public boolean deleteTask(Task task) {
-        Task deletedTask = entityManager.find(Task.class, task.getTaskId());
+        Task deletedTask = entityManager.find(Task.class, task.getId());
         entityManager.remove(deletedTask);
-        return entityManager.find(Task.class, task.getTaskId()) == null;
+        return entityManager.find(Task.class, task.getId()) == null;
     }
 
     @Override

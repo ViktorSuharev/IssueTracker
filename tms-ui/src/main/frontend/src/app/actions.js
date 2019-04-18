@@ -4,7 +4,7 @@ import { backurl } from './properties';
 //STORAGE
 export function authorizationHeader() {
     let token = localStorage.getItem('token');
-    return {Authorization: token};
+    return {headers: {Authorization: token}};
 }
 
 export function getUser() {

@@ -1,25 +1,24 @@
-import * as axios from "axios";
-import React from "react";
-import {Table} from 'react-bootstrap';
+import * as axios from 'axios';
+import React from 'react';
+import {Table, Container} from 'react-bootstrap';
+import { backurl } from '../../properties';
 
 export default class AboutUser extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            id: -1,
-            user: undefined
+            id: props.match.params.id,
+            user: []
         };
     }
 
     componentDidMount() {
-        if (this.state.id === -1) return;
-        
         let id = this.state.id;
         
         let token = localStorage.getItem('token');
 
-        axios.get(`http://localhost:8090/api/users/` + id, {
+        axios.get(backurl + '/users/' + id, {
             headers: {
                 Authorization: token
             }
@@ -32,20 +31,19 @@ export default class AboutUser extends React.Component {
 
     render() {
         let u = this.state.user;
-        let aboutUser = 
-            <Table striped bordered hover>
+        let aboutUser = <Table striped bordered hover>
                 <thead>
                     <th>name</th>
                     <th>email</th>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{u.fullName}</td>
+                        <td>{u.name}</td>
                         <td>{u.email}</td>
                     </tr>
                 </tbody>
             </Table>
             
-        return aboutUser;
+        return <Container>{aboutUser}</Container>;
     }
 }

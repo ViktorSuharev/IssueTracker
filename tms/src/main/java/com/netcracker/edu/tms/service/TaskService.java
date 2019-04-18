@@ -21,6 +21,8 @@ public interface TaskService {
 
     boolean deleteTask(Task task);
 
+    Iterable<Task> getAll();
+
     List<Task> getTaskByReporter(BigInteger reporterId);//argument should be User instance
 
     List<Task> getTaskByAssignee(BigInteger assigneeId);//argument should be User instance

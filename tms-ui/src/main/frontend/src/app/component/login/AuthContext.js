@@ -30,7 +30,7 @@ class AuthProvider extends React.Component {
         console.log(JSON.stringify(this.state));
 
         if (status === 200)
-            axios.get(backurl + '/users/me', { headers: authorizationHeader() })
+            axios.get(backurl + '/users/me', authorizationHeader())
                 .then(response => {
                     var u = response.data;
                     this.setState({ isAuth: true, user: u, creds: user });

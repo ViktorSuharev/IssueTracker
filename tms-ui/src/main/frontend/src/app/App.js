@@ -22,6 +22,9 @@ import { AuthProvider, AuthConsumer } from './component/login/AuthContext';
 import SignTabs from './component/login/SignTabs';
 import ProtectedRoute from './component/ProtectedRoute';
 import ProjectDashboard from './component/project/ProjectDashboard';
+import { Container } from 'react-bootstrap';
+import CreateTask from './component/task/CreateTask';
+import AllTasks from './component/task/AllTasks';
 
 class App extends Component {
     render() {
@@ -31,18 +34,20 @@ class App extends Component {
                     <Switch>
                         <ProtectedRoute path='/hello' component={HelloWorld} />
 
-                        <ProtectedRoute exact path='/' component={SignTabs}/>
+                        <ProtectedRoute exact path='/' component={Container}/>
 
                         <ProtectedRoute exact path='/user/:id' component={AboutUser} />
 
-                        <ProtectedRoute path='/projects/create' component={Wrapper}/>
+                        <ProtectedRoute path='/projects/new' component={Wrapper}/>
                         <ProtectedRoute path='/projects/tasks/:id' component={ProjectsTasks} />
                         <ProtectedRoute path='/projects/edit/:id' component={ProjectsSettings} />
                         <ProtectedRoute path='/projects/info/:id' component={ProjectInfo} />
-                        <ProtectedRoute path='/tasks/add' component={AddTask} />
-                        <ProtectedRoute path='/personalarea' component={PersonalArea} />
                         <ProtectedRoute path='/projects/:id' component={CreatedProjects} />
                         <ProtectedRoute exact path='/projects' component={ProjectDashboard} />
+                        
+                        <ProtectedRoute path='/tasks/new' component={CreateTask} />
+                        <ProtectedRoute path='/tasks' component={AllTasks} />
+                        {/* <ProtectedRoute path='/personalarea' component={PersonalArea} /> */}
 
                         <Route path='/auth' component={SignTabs}/>
                     </Switch>
@@ -53,7 +58,7 @@ class App extends Component {
 
 const Wrapper = ({ component: Component, ...rest }) => (
     <AuthConsumer>
-        {({user}) => <ProtectedRoute path='/projects/create' component={() => <CreateProject creator={user}/>}/>}
+        {({user}) => <ProtectedRoute path='/projects/new' component={() => <CreateProject creator={user}/>}/>}
     </AuthConsumer>
 );
 

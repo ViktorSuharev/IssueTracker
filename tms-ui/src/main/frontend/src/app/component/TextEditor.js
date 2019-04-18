@@ -9,7 +9,7 @@ export default class TextEditor extends Component {
         let onSave = null;
         let readOnly = false;
         let placeholder = '';
-        let maxLength = 2000;
+        let maxLength = 3000;
         if(props){
             if(props.onSave)
                 onSave = props.onSave;

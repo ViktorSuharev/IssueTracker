@@ -26,7 +26,6 @@ export default class ProjectContainer extends Component {
             project.owner = owner;
             return project;
         } );
-        console.log('RESULT', JSON.stringify(rawProjects));
 
         while(rawProjects.length % colNum)
             rawProjects.push({name: '', description: '', owner: {name: null}});
