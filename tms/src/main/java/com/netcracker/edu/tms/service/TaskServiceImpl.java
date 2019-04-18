@@ -1,9 +1,7 @@
 package com.netcracker.edu.tms.service;
 
 import com.netcracker.edu.tms.dao.TaskDao;
-import com.netcracker.edu.tms.model.Priority;
-import com.netcracker.edu.tms.model.Status;
-import com.netcracker.edu.tms.model.Task;
+import com.netcracker.edu.tms.model.*;
 import com.netcracker.edu.tms.repository.TaskRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,14 +73,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Task> getTaskByReporter(BigInteger reporterId) {
-        return taskDao.getTaskByReporter(reporterId);
+    public Iterable<Task> getTaskByReporter(User reporter) {
+        return taskRepository.getAllByReporter(reporter);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Task> getTaskByAssignee(BigInteger assigneeId) {
-        return taskDao.getTaskByAssignee(assigneeId);
+    public Iterable<Task> getTaskByAssignee(User assignee) {
+        return taskRepository.getAllByAssignee(assignee);
     }
 
     @Override
@@ -95,8 +93,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Task> getTaskByProject(BigInteger projectId) {
-        return taskDao.getTaskByProject(projectId);
+    public Iterable<Task> getTaskByProject(Project project) {
+        return taskRepository.getAllByProject(project);
     }
 
     @Override

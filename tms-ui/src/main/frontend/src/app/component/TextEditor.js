@@ -10,6 +10,7 @@ export default class TextEditor extends Component {
         let readOnly = false;
         let placeholder = '';
         let maxLength = 3000;
+
         if(props){
             if(props.onSave)
                 onSave = props.onSave;
@@ -30,7 +31,7 @@ export default class TextEditor extends Component {
             placeholder: placeholder,
             onSave: onSave,
             readOnly: readOnly,
-            maxLength: maxLength
+            maxLength: maxLength,
         }
 
         this.onSave = this.onSave.bind(this);
@@ -43,32 +44,6 @@ export default class TextEditor extends Component {
     onSave(event) {
         event.preventDefault();
         this.state.onSave(this.state.value.toString('markdown'));
-    }
-
-    _handleBeforeInput = () => {
-        const currentContent = this.state.editorState.getCurrentContent();
-      const currentContentLength = currentContent.getPlainText('').length
-  
-        if (currentContentLength > this.state.maxLength - 1) {
-          console.log('you can type max ten characters');
-  
-          return 'handled';
-      }
-    }
-    
-    _handlePastedText = (pastedText) => {
-        const currentContent = this.state.editorState.getCurrentContent();
-        const currentContentLength = currentContent.getPlainText('').length
-  
-        if (currentContentLength + pastedText.length > this.state.maxLength) {
-          console.log('you can type max ten characters');
-  
-          return 'handled';
-      }
-    }
-    
-    _handleChange = (editorState) => {
-      this.setState({ editorState });
     }
 
     render() {

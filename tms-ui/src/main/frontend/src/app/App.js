@@ -5,13 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import ProjectsTasks from './component/project/ProjectsTasks';
 import ProjectInfo from './component/project/ProjectInfo';
-import AddTask from './component/project/AddTask';
 import ProjectsSettings from './component/project/ProjectsSettings';
 import CreateProject from './component/project/CreateProject';
-import PersonalArea from './component/project/PersonalArea';
-import CreatedProjects from './component/project/CreatedProjects';
 import HelloWorld from './component/HelloWorld';
 import AboutUser from './component/user/AboutUser';
 
@@ -25,6 +21,9 @@ import ProjectDashboard from './component/project/ProjectDashboard';
 import { Container } from 'react-bootstrap';
 import CreateTask from './component/task/CreateTask';
 import AllTasks from './component/task/AllTasks';
+import MyTasks from './component/task/MyTasks';
+import ProjectView from './component/project/ProjectView';
+import TaskView from './component/task/TaskView';
 
 class App extends Component {
     render() {
@@ -39,14 +38,16 @@ class App extends Component {
                         <ProtectedRoute exact path='/user/:id' component={AboutUser} />
 
                         <ProtectedRoute path='/projects/new' component={Wrapper}/>
-                        <ProtectedRoute path='/projects/tasks/:id' component={ProjectsTasks} />
+                        {/* <ProtectedRoute path='/projects/tasks/:id' component={ProjectsTasks} /> */}
                         <ProtectedRoute path='/projects/edit/:id' component={ProjectsSettings} />
                         <ProtectedRoute path='/projects/info/:id' component={ProjectInfo} />
-                        <ProtectedRoute path='/projects/:id' component={CreatedProjects} />
+                        <ProtectedRoute path='/projects/:id' component={ProjectView} />
                         <ProtectedRoute exact path='/projects' component={ProjectDashboard} />
                         
+                        <ProtectedRoute exact path='/tasks' component={AllTasks} />
                         <ProtectedRoute path='/tasks/new' component={CreateTask} />
-                        <ProtectedRoute path='/tasks' component={AllTasks} />
+                        <ProtectedRoute path='/tasks/my' component={MyTasks} />
+                        <ProtectedRoute path='/tasks/:id' component={TaskView} />
                         {/* <ProtectedRoute path='/personalarea' component={PersonalArea} /> */}
 
                         <Route path='/auth' component={SignTabs}/>

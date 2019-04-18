@@ -1,18 +1,19 @@
 package com.netcracker.edu.tms.ui;
 
-import com.netcracker.edu.tms.model.Priority;
-import com.netcracker.edu.tms.model.Status;
-import com.netcracker.edu.tms.model.Task;
-import com.netcracker.edu.tms.model.TaskDTO;
+import com.netcracker.edu.tms.model.*;
+import com.netcracker.edu.tms.security.UserPrincipal;
 import com.netcracker.edu.tms.service.ProjectService;
 import com.netcracker.edu.tms.service.TaskService;
 import com.netcracker.edu.tms.service.UserService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,20 +35,8 @@ public class TaskController {
     ProjectService projectService;
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/{taskId}")
-    public ResponseEntity getTaskById(@PathVariable BigInteger taskId) {
-        return ResponseEntity.ok(taskService.getTaskById(taskId));
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/getTaskByName")
-    public List<Task> getTaskByName(@RequestParam("taskName") String taskName) {
-        return taskService.getTaskByName(taskName);
-    }
-
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/")
-    public Iterable<Task> getTaskByName() {
+    public Iterable<Task> getAllTasks() {
         return taskService.getAll();
     }
 
@@ -58,6 +47,37 @@ public class TaskController {
             return ResponseEntity.ok().build();
         else
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/my")
+    public ReporterOrAssigneeTasks getMyTasks(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        User user = userService.getUserByEmail(userPrincipal.getUsername());
+
+        Iterable<Task> asAssignee = taskService.getTaskByAssignee(user);
+        Iterable<Task> asReporter = taskService.getTaskByReporter(user);
+
+        ReporterOrAssigneeTasks tasks = new ReporterOrAssigneeTasks(asAssignee, asReporter);
+        return tasks;
+    }
+
+    @GetMapping("/project/{id}")
+    public @ResponseBody Iterable<Task> getTaskByProject(@PathVariable("id") BigInteger projectId){//argument should be Project instance
+        Project project = projectService.getProjectById(projectId);
+        return taskService.getTaskByProject(project);
+    }
+
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/{taskId}")
+    public ResponseEntity getTaskById(@PathVariable BigInteger taskId) {
+        return ResponseEntity.ok(taskService.getTaskById(taskId));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/getTaskByName")
+    public List<Task> getTaskByName(@RequestParam("taskName") String taskName) {
+        return taskService.getTaskByName(taskName);
     }
 
     @PutMapping
@@ -74,28 +94,24 @@ public class TaskController {
                     taskService.getTaskById(taskId).getId() +
                     " not found", ex);
         }
-
     }
 
     @GetMapping("/reporter")
-    public @ResponseBody List<Task> getTaskByReporter(@RequestParam("reporterId") BigInteger reporterId) { //argument should be User instance
-        return taskService.getTaskByReporter(reporterId);
+    public @ResponseBody Iterable<Task> getTaskByReporter(@RequestParam("reporterId") BigInteger reporterId) { //argument should be User instance
+        User reporter = userService.getUserByID(reporterId);
+        return taskService.getTaskByReporter(reporter);
     }
 
     @GetMapping("/assignee")
-    public @ResponseBody List<Task> getTaskByAssignee(@RequestParam("assigneeId") BigInteger assigneeId) { //argument should be User instance
-        return taskService.getTaskByAssignee(assigneeId);
+    public @ResponseBody Iterable<Task> getTaskByAssignee(@RequestParam("assigneeId") BigInteger assigneeId) { //argument should be User instance
+        User assignee = userService.getUserByID(assigneeId);
+        return taskService.getTaskByAssignee(assignee);
     }
 
     @GetMapping("/creationDate")
     public @ResponseBody List<Task> getTaskByCreationDate(@RequestParam("creationDate")
                                                           @DateTimeFormat(pattern = "dd/MM/yyyy") String creationDate) throws ParseException {
         return taskService.getTaskByCreationDate(creationDate);
-    }
-
-    @GetMapping("/project")
-    public @ResponseBody List<Task> getTaskByProject(@RequestParam("projectId") BigInteger projectId){//argument should be Project instance
-        return taskService.getTaskByProject(projectId);
     }
 
     @GetMapping("/status")
@@ -108,4 +124,10 @@ public class TaskController {
         return taskService.getTaskByPriority(taskPriority);
     }
 
+    @AllArgsConstructor
+    @Data
+    private class ReporterOrAssigneeTasks{
+        private Iterable<Task> toDo;
+        private Iterable<Task> toReport;
+    }
 }

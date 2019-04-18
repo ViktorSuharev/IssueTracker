@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -79,8 +80,8 @@ public class ProjectRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<Project>> getAllProjects(@PathVariable(name = "id", required = true) BigInteger userId) {
-        return new ResponseEntity<>(projectService.getProjectsByUserId(userId), HttpStatus.OK);
+    public ResponseEntity<Project> getAllProjects(@PathVariable(name = "id") BigInteger userId) {
+        return new ResponseEntity<>(projectService.getProjectById(userId), HttpStatus.OK);
     }
 
     @GetMapping("/users/{id}")
@@ -91,5 +92,22 @@ public class ProjectRestController {
     @GetMapping("/{id}/name")
     public ResponseEntity<String> getNamefromProjectId(@PathVariable(name = "id", required = true) BigInteger projectId) {
         return new ResponseEntity<>(projectService.getProjectById(projectId).getName(), HttpStatus.OK);
+    }
+
+    @GetMapping("/team/{id}")
+    public ResponseEntity<Iterable<UserDTO>> getProjectTeam(@PathVariable(name = "id") BigInteger projectId){
+        Project project = projectService.getProjectById(projectId);
+        List<User> users = projectService.getTeamByProjectId(project.getId());
+        List<UserDTO> response = users.stream().map((user) -> UserDTO.of(user)).collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<HttpStatus> deleteProject(@PathVariable(name="id") BigInteger id) {
+        if(projectService.deleteProject(id))
+            return ResponseEntity.ok().build();
+
+        return ResponseEntity.badRequest().build();
     }
 }

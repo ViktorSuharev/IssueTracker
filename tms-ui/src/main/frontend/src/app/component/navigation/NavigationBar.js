@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Spinner, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { AuthConsumer } from '../login/AuthContext';
 import '../styles.css';
 
@@ -29,7 +29,8 @@ export default class NavigationBar extends Component {
                 </NavDropdown>
                 <NavDropdown title='Task' id='collasible-nav-dropdown'>
                     <NavDropdown.Item href='/tasks/new'>Add</NavDropdown.Item>
-                    <NavDropdown.Item href='/tasks'>Tasks</NavDropdown.Item>
+                    <NavDropdown.Item href='/tasks/my'>My tasks</NavDropdown.Item>
+                    <NavDropdown.Item href='/tasks'>All tasks</NavDropdown.Item>
                 </NavDropdown>
             </Nav>
 
@@ -38,6 +39,8 @@ export default class NavigationBar extends Component {
                         {({logout}) => <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>}
                     </AuthConsumer>
                 </NavDropdown>
+                <Spinner animation='border' size='sm' variant='info' />
+
         </Navbar.Collapse>
     </Navbar>;
     }

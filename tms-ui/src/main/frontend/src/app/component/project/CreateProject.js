@@ -41,7 +41,7 @@ class CreateProject extends React.Component {
 
 
     saveDescription(description) {
-        if (description.length > 300)
+        if (description.length >= 3000)
             alert('no way! too long!');
         else
             this.setState({ description: description });
@@ -138,6 +138,8 @@ class CreateProject extends React.Component {
             case 'role':
                 const role = event.target.value;
                 this.setState({ role: role })
+                break;
+            default:
                 break;
         }
     }

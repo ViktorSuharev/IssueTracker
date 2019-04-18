@@ -1,8 +1,6 @@
 package com.netcracker.edu.tms.service;
 
-import com.netcracker.edu.tms.model.Priority;
-import com.netcracker.edu.tms.model.Status;
-import com.netcracker.edu.tms.model.Task;
+import com.netcracker.edu.tms.model.*;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -23,13 +21,13 @@ public interface TaskService {
 
     Iterable<Task> getAll();
 
-    List<Task> getTaskByReporter(BigInteger reporterId);//argument should be User instance
+    Iterable<Task> getTaskByReporter(User reporter);//argument should be User instance
 
-    List<Task> getTaskByAssignee(BigInteger assigneeId);//argument should be User instance
+    Iterable<Task> getTaskByAssignee(User assignee);//argument should be User instance
 
     List<Task> getTaskByCreationDate(String creationDate) throws ParseException;
 
-    List<Task> getTaskByProject(BigInteger projectId);//argument should be Project instance
+    Iterable<Task> getTaskByProject(Project project);
 
     List<Task> getTaskByStatus(Status taskStatus);
 

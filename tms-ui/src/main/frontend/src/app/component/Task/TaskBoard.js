@@ -1,9 +1,68 @@
 import React, { Component } from 'react';
-import { Badge, Container, Card, CardDeck, Button } from 'react-bootstrap'
-// import TextEditor from '../TextEditor';
-import { AuthConsumer } from '../login/AuthContext';
+import { Modal, Badge, Container, Card, CardDeck, Button } from 'react-bootstrap'
+import { shortenIfLong } from '../../actions';
+import axios from 'axios';
+import {backurl} from '../../properties';
+import {authorizationHeader} from '../../actions';
 
 export default class TaskBoard extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            deleteTask: -1,
+            show: false
+        }
+
+        this.onDelete = this.onDelete.bind(this);
+        this.deleteTask = this.deleteTask.bind(this);
+
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleShow = this.handleShow.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+    }
+
+    handleCancel(event) {
+        event.preventDefault();
+    }
+
+    handleClose() {
+        this.setState({ show: false });
+    }
+
+    handleShow(event) {
+        event.preventDefault();
+
+        this.setState({ show: true });
+    }
+
+    onDelete(event) {
+        const taskId = event.target.value;
+
+        const task = this.props.tasks
+            .find((p) => p.id == taskId);
+
+        this.setState({ deleteTask: task });
+        this.handleShow(event);
+    }
+
+    deleteTask(event) {
+        event.preventDefault();
+
+        const task = this.state.deleteTask;
+        axios.delete(backurl + '/tasks/' + task.id, authorizationHeader())
+            .then(response => {
+                alert(task.name + ' deleted');
+                window.location.reload(false);
+            })
+            .catch(error => {
+                alert(error.response.status);
+            })
+
+        this.handleClose();
+    }
+
+
     makeControlLinks(task) {
         if (task === stubTask)
             return;
@@ -12,8 +71,9 @@ export default class TaskBoard extends Component {
         let remove = 'tasks/delete/' + task.id;
 
         return <div>
-            <Card.Link style={{ color: 'green' }} href={edit}>Edit</Card.Link>
-            <Card.Link style={{ color: 'red' }} href={remove}>Delete</Card.Link>
+            <Button size='sm' variant='outline-success' value={task.id} href={edit}>&nbsp; Edit &nbsp;</Button>
+            &nbsp; &nbsp;
+            <Button size='sm' variant='outline-danger' value={task.id} onClick={this.onDelete}>Delete</Button>
         </div>
     }
 
@@ -23,14 +83,14 @@ export default class TaskBoard extends Component {
                 <Card.Header><h4>Add new</h4></Card.Header>
                 <Card.Body align='center'>
                     <Button className='rounded' variant='outline-secondary' href='/tasks/new'>
-                        <h1><br/> &nbsp; &nbsp; &nbsp; +  &nbsp; &nbsp; &nbsp;</h1><br/><br/>
+                        <h1><br /> &nbsp; &nbsp; &nbsp; +  &nbsp; &nbsp; &nbsp;</h1><br /><br />
                     </Button>
                 </Card.Body>
             </Card>
 
         return <Card>
             <Card.Header>
-                <Card.Link style={{ color: 'black' }} href={'/tasks/' + task.id}> <h4>{task.name}</h4> </Card.Link>
+                <Card.Link style={{ color: 'black' }} href={'/tasks/' + task.id}> <h4>{shortenIfLong(task.name, 25)}</h4> </Card.Link>
             </Card.Header>
             <Card.Body>
                 {this.getTaskInfo(task)}
@@ -51,7 +111,7 @@ export default class TaskBoard extends Component {
             <Badge variant={priorities[task.priority].color}>{task.priority}</Badge>
             &nbsp;
             <Badge variant={statuses[task.status].color}>{statuses[task.status].name}</Badge>
-            <br/>
+            <br />
             Deadline: &nbsp; {task.dueDate}
         </Card.Subtitle>
     }
@@ -70,14 +130,29 @@ export default class TaskBoard extends Component {
 
         var matrix = reshape(tasks, colNum);
 
-        return <Container>
-            {matrix.map((row) => <div><CardDeck>
-                {row.map(task => this.processTaskElement(task))}
-            </CardDeck>
-                <br />
-            </div>
-            )}
-        </Container>
+        return <div><Modal show={this.state.show} onHide={this.handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Delete task</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Are you sure you want to delete task '{this.state.deleteTask.name}'?</Modal.Body>
+            <Modal.Footer>
+                <Button variant='secondary' onClick={this.handleClose}>
+                    Cancel
+                </Button>
+                <Button variant='danger' onClick={this.deleteTask}>
+                    Delete
+                </Button>
+            </Modal.Footer>
+            </Modal>
+            <Container>
+                {matrix.map((row) => <div><CardDeck>
+                    {row.map(task => this.processTaskElement(task))}
+                </CardDeck>
+                    <br />
+                </div>
+                )}
+            </Container>
+        </div>
     }
 }
 

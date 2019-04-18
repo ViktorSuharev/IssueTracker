@@ -29,7 +29,9 @@ export default class ProjectDashboard extends Component {
 
     render() {
         return <Container>
-            <ProjectContainer projects={this.state.projects}/>
+            <h3> All projects</h3>
+            <hr />
+            <ProjectContainer projects={this.state.projects} />
         </Container>;
     }
 }

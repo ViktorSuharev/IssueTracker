@@ -4,6 +4,7 @@ import com.netcracker.edu.tms.dao.ProjectDao;
 import com.netcracker.edu.tms.model.*;
 import com.netcracker.edu.tms.service.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
