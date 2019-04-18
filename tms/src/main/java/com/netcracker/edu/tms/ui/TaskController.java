@@ -3,7 +3,10 @@ package com.netcracker.edu.tms.ui;
 import com.netcracker.edu.tms.model.Priority;
 import com.netcracker.edu.tms.model.Status;
 import com.netcracker.edu.tms.model.Task;
+import com.netcracker.edu.tms.model.TaskDTO;
+import com.netcracker.edu.tms.service.ProjectService;
 import com.netcracker.edu.tms.service.TaskService;
+import com.netcracker.edu.tms.service.UserService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,6 +26,12 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    ProjectService projectService;
+
     @GetMapping("/{taskId}")
     public ResponseEntity getTaskById(@PathVariable BigInteger taskId) {
         return ResponseEntity.ok(taskService.getTaskById(taskId));
@@ -33,9 +42,13 @@ public class TaskController {
         return taskService.getTaskByName(taskName);
     }
 
-    @PostMapping
-    public ResponseEntity addTask(@RequestBody Task task) {
-        return ResponseEntity.ok(taskService.addTask(task));
+    @PostMapping("/")
+    public ResponseEntity addTask(@RequestBody TaskDTO task) {
+        Task t = task.convert(userService, projectService);
+        if(taskService.addTask(t))
+            return ResponseEntity.ok().build();
+        else
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
     }
 
     @PutMapping
@@ -49,7 +62,7 @@ public class TaskController {
             return ResponseEntity.ok(taskService.deleteTask(taskService.getTaskById(taskId)));
         } catch (ResourceNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "task " +
-                    taskService.getTaskById(taskId).getTaskId() +
+                    taskService.getTaskById(taskId).getId() +
                     " not found", ex);
         }
 

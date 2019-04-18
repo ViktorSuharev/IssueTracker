@@ -1,9 +1,10 @@
-import React from 'react';
-import * as axios from 'axios';
+import React from './node_modules/react';
+import * as axios from './node_modules/axios';
+import backurl from '../../properties';
 //import './index.css';
 
 
-class TaskInfo extends React.Component {
+export default class TaskInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,33 +19,33 @@ class TaskInfo extends React.Component {
     componentDidMount() {
         const taskId = null;
 
-        // axios.get(`http://localhost:8090/tasks/5`)
+        // axios.get('http://localhost:8090/tasks/5')
         //     .then(res => {
         //         const task = res.data;
         //         this.setState({task: task});
         //         console.log(this.state.task);
         //         console.log(this.state.task.taskName);
         //     });
-        axios.get(`http://localhost:8090/tasks/`+ taskId)
+        axios.get(backurl + '/tasks/'+ taskId)
             .then(res => {
                 const task = res.data;
-                console.log("Current task: ", task[this.state.taskId]);
+                console.log('Current task: ', task[this.state.taskId]);
                // const task = tasks[this.state.taskId];
 
               //  this.setState({tasks});
                 this.setState({task});
 
                 // this.setState({creatorId: task.creatorId});
-                // console.log("creatorId: ", this.state.creatorId);
+                // console.log('creatorId: ', this.state.creatorId);
             })
             // .then(res => {
-            //     const url = `http://localhost:8090/users/${this.state.creatorId}`;
+            //     const url = 'http://localhost:8090/users/${this.state.creatorId}';
             //     axios.get(url)
             //         .then(res => {
-            //             console.log("url: ", url);
+            //             console.log('url: ', url);
             //             const creator = res.data;
             //             this.setState({creator});
-            //             console.log("creator's full name: ", this.state.creator.fullName);
+            //             console.log('creator's full name: ', this.state.creator.fullName);
             //         });
             // });
 
@@ -58,17 +59,17 @@ class TaskInfo extends React.Component {
                 <h1>
                     {this.state.task.taskName}
                 </h1>
-                <form id="text"></form>
-                <button value="Edit">Edit</button>
-                <button type="submit" value="Submit">Submit</button>
+                <form id='text'></form>
+                <button value='Edit'>Edit</button>
+                <button type='submit' value='Submit'>Submit</button>
                 <div
-              //       style="
+              //       style='
               //
               // display: flex;
               // justify-content: space-around;
               // align-items: flex-start;
               // font: menu;
-              // font-size:medium;"
+              // font-size:medium;'
                 >
                     <ul>
                         <h4>Details:</h4>
@@ -121,4 +122,3 @@ class TaskInfo extends React.Component {
         );
     }
 }
-export default TaskInfo;

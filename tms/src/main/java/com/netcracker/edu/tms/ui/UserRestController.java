@@ -30,7 +30,7 @@ public class UserRestController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<Iterable<UserDTO>> getAllUsers() {
         List users = StreamSupport.stream(userService.getAllUsers().spliterator(), false).collect(Collectors.toList());
         return new ResponseEntity<>(convertUsersToUsersDTO(users), HttpStatus.OK);

@@ -4,6 +4,7 @@ import com.netcracker.edu.tms.dao.TaskDao;
 import com.netcracker.edu.tms.model.Priority;
 import com.netcracker.edu.tms.model.Status;
 import com.netcracker.edu.tms.model.Task;
+import com.netcracker.edu.tms.repository.TaskRepository;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,12 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskDao taskDao;
+    private TaskRepository taskRepository;
 
     @Autowired
-    TaskServiceImpl(TaskDao taskDao) {
+    TaskServiceImpl(TaskDao taskDao, TaskRepository taskRepository) {
         this.taskDao = taskDao;
+        this.taskRepository = taskRepository;
     }
 
     @Override
@@ -42,6 +45,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public boolean addTask(Task task) {
+        if(taskRepository.existsByProjectAndName(task.getProject(), task.getName()))
+            return false;
+
         task.setCreationDate(new java.sql.Date(System.currentTimeMillis()));
         task.setStatus(Status.NOT_STARTED);
         return taskDao.addTask(task);
@@ -57,8 +63,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public boolean deleteTask(Task task) {
-        if (taskDao.getTaskById(task.getTaskId()) == null) {
-            throw new ResourceNotFoundException("task " + task.getTaskName() + " not found");
+        if (taskDao.getTaskById(task.getId()) == null) {
+            throw new ResourceNotFoundException("task " + task.getName() + " not found");
         } else return taskDao.deleteTask(task);
     }
 

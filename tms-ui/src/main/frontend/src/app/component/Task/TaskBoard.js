@@ -5,8 +5,8 @@ import { AuthConsumer } from '../login/AuthContext';
 
 export default class ProjectContainer extends Component {
     makeControlLinks(project) {
-        let edit = 'projects/edit/' + project.id;
-        let remove = 'projects/delete/' + project.id;
+        let edit = 'tasks/edit/' + project.id;
+        let remove = 'tasks/delete/' + project.id;
 
         return <div>
             <Card.Link style={{ color: 'green' }} href={edit}>Edit</Card.Link>
@@ -14,15 +14,9 @@ export default class ProjectContainer extends Component {
         </div>
     }
 
-    controlIfCreator(project) {
-        return <AuthConsumer>
-            {({ user }) => user.id === project.creatorId ? this.makeControlLinks(project) : <br />}
-        </AuthConsumer>
-    }
-
     render() {
         const colNum = 2;
-        const rawProjects = this.props.projects.map(({project, owner}) => {
+        const rawTasks = this.props.tasks.map(({task, owner}) => {
             project.owner = owner;
             return project;
         } );

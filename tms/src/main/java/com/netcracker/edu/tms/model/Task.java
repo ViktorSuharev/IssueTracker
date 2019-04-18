@@ -5,16 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import javax.persistence.*;
 import javax.validation.constraints.Future;
 import java.math.BigInteger;
 import java.util.Date;
@@ -27,14 +19,14 @@ import java.util.Date;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "task_id", unique = true, nullable = false)
-    private BigInteger taskId;
+    @Column(name = "id", unique = true, nullable = false)
+    private BigInteger id;
 
-    @Column(name = "task_name", nullable = false)
-    private String taskName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "task_description")
-    private String taskDescription;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "creation_date", updatable = false)
     @CreationTimestamp
@@ -48,26 +40,49 @@ public class Task {
     private Date dueDate;
 
     @Column(name = "modification_date")
-    //@Future
     @Temporal(TemporalType.DATE)
     private Date modificationDate;
 
-    //@ManyToOne
-    private BigInteger reporterId; //should be User foreign key
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "reporter_id", nullable = false)
+    private User reporter;
 
-    //@ManyToOne
-    private BigInteger assigneeId; //should be User foreign key
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "assignee_id", nullable = false)
+    private User assignee;
 
-    //@ManyToOne
-    private BigInteger projectId; //should be Project foreign key
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "task_status")
+    @Column(name = "status")
     private Status status;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "task_priority")
+    @Column(name = "priority")
     private Priority priority;
 
+    public Task(String name, String description, Date creationDate, @Future Date dueDate, Date modificationDate, User reporter, User assignee, Project project, Status status, Priority priority) {
+        this.name = name;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.dueDate = dueDate;
+        this.modificationDate = modificationDate;
+        this.reporter = reporter;
+        this.assignee = assignee;
+        this.project = project;
+        this.status = status;
+        this.priority = priority;
+    }
 
+    public Task(String name, String description, @Future Date dueDate, User reporter, User assignee, Project project, Priority priority) {
+        this.name = name;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.reporter = reporter;
+        this.assignee = assignee;
+        this.project = project;
+        this.priority = priority;
+    }
 }

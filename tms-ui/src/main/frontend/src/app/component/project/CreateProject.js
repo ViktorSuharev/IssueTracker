@@ -7,6 +7,7 @@ import '../styles.css';
 import './index.css';
 import TextEditor from '../TextEditor';
 import { authorizationHeader } from '../../actions';
+import { backurl } from '../../properties';
 
 class CreateProject extends React.Component {
     constructor(props) {
@@ -68,17 +69,8 @@ class CreateProject extends React.Component {
     }
 
     componentDidMount() {
-        // getAllUsers().then( (users) => {
-        //     if(!users)
-        //         console.log('UNDEF');
-        //     this.setState({ users: users })
-        //     console.log(JSON.stringify(this.state.users));
-        // })
-        let token = localStorage.getItem('token');
-
-        axios.get('http://localhost:8090/api/users/all', {
-            headers: authorizationHeader()
-        })
+        var header = authorizationHeader();
+        axios.get(backurl + '/users/', header)
             .then(res => {
                 const users = res.data;
                 this.setState({ users: users });
@@ -107,14 +99,11 @@ class CreateProject extends React.Component {
             return;
         }
 
-        let token = localStorage.getItem('token');
+        let header = authorizationHeader();
 
-        axios('http://localhost:8090/api/projects/', {
+        axios(backurl + '/projects/', {
             method: 'POST',
-            headers: {
-                Authorization: token,
-                'content-type': 'application/json',
-            },
+            headers: header.headers,
             data: {
                 project: project,
                 team: this.state.team
@@ -206,7 +195,7 @@ class CreateProject extends React.Component {
                 <Container>
                     <div id='wrapper'>
                         <div className='d-flex flex-row'>
-                            <div className='mt-5 py-2  flex-grow-1'>
+                            <div className='py-2  flex-grow-1'>
                                 <br />
                                 <h2>Create project</h2>
                             </div>
