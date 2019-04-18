@@ -170,136 +170,129 @@ class CreateProject extends React.Component {
 
 
     render() {
-        // const options = this.state.users.map(user =>
-        //     <option value={user.email || ''} key={user.email || ''}>
-        //         {user.name}
-        //     </option>);
-        return (
-            <div>
-                {/* SAVE PROJECT DIALOG */}
-                <Modal show={this.state.show} onHide={this.handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Save new project</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Are you sure you want to save new project?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant='secondary' onClick={this.handleClose}>
+        return <div>
+            {/* SAVE PROJECT DIALOG */}
+            <Modal show={this.state.show} onHide={this.handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Save new project</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to save new project?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant='secondary' onClick={this.handleClose}>
+                        Cancel
+                        </Button>
+                    <Button variant='primary' onClick={this.onSubmitProject}>
+                        Save
+                        </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Container>
+                <div id='wrapper'>
+                    <div className='d-flex flex-row'>
+                        <div className='py-2  flex-grow-1'>
+                            <h2>Create project</h2>
+                        </div>
+                        <Button className='d-flex mr-4 justify-content-end align-self-end mt-2' variant='danger' onClick={this.handleCancel}>
                             Cancel
-                        </Button>
-                        <Button variant='primary' onClick={this.onSubmitProject}>
-                            Save
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
-                <Container>
-                    <div id='wrapper'>
-                        <div className='d-flex flex-row'>
-                            <div className='py-2  flex-grow-1'>
-                                <br />
-                                <h2>Create project</h2>
-                            </div>
-                            <Button className='d-flex mr-4 justify-content-end align-self-end mt-2' variant='danger' onClick={this.handleCancel}>
-                                Cancel
                             </Button>
-                            <Button
-                                className='d-flex mr-4 justify-content-end align-self-end mt-2'
-                                variant='success'
-                                onClick={this.handleShow}>
-                                Create project
+                        <Button
+                            className='d-flex mr-4 justify-content-end align-self-end mt-2'
+                            variant='success'
+                            onClick={this.handleShow}>
+                            Create project
                             </Button>
 
-                        </div>
-                        <hr />
-
-                        <form>
-                            <div className='d-flex flex-row mx-1'>
-                                <div className=' d-flex mr-4 justify-content-end align-self-end mt-2'>
-                                    <h4> Name: <input type='text' value={this.state.name} className='form-control'
-                                        onChange={this.onNameChange} />
-                                    </h4>
-                                </div>
-                            </div>
-                        </form>
-
-                        <br />
-                        <h4>Description:</h4>
-                        <TextEditor
-                            placeholder={this.state.editor.placeholder}
-                            onSave={this.saveDescription}
-                            maxLength={300}
-                        />
-                        <br />
-
-                        <br />
-                        <div className=' d-flex flex-row align-items-center'>
-                            <h4>Project team:</h4>
-                        </div>
-                        <br />
-                        <form onSubmit={this.onAddUser}>
-                            <h6>Add memebers</h6>
-                            <label className='mx-1'>
-                                <select defaultValue={''} name='userName' className='form-control'
-                                    onChange={this.onSelectChange}>
-                                    <option value='' disabled={true}>
-                                        Select user
-                                    </option>
-                                    {this.state.users.map(user =>
-                                        <option value={user.email || ''} key={user.email || ''}>
-                                            {user.name}
-                                        </option>)}
-                                    )}
-                                </select>
-                            </label>
-                            <label className='mx-2'>
-                                <select defaultValue={''} name='role' className='form-control'
-                                    onChange={this.onSelectChange}>
-                                    <option value='' disabled={true}>
-                                        Select role
-                                    </option>
-                                    <option value='Project Manager'>Project Manager</option>
-                                    <option value='Developer'>Developer</option>
-                                    <option value='QA'>QA</option>
-                                </select>
-                            </label>
-                            <input className='mx-2 btn btn-dark' type='submit' value='Add' />
-                        </form>
-
-                        <div className='table-responsive'>
-                            <table className='table table-light table-striped table-bordered table-hover table-sm  '>
-                                <thead className='thead-dark'>
-                                    <tr>
-                                        <th style={{ 'width': '20%' }} scope='col'>Full Name</th>
-                                        <th style={{ 'width': '10%' }} scope='col'>Email</th>
-                                        <th style={{ 'width': '10%' }} scope='col'>Role</th>
-                                        <th style={{ 'width': '4%' }} scope='col'>Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    {this.state.team.map(user =>
-                                        <tr key={user.email + user.role}>
-                                            <td> {user.name}</td>
-                                            <td> {user.email}</td>
-                                            <td> {user.role}</td>
-                                            <th scope='row'>
-                                                <Button variant='danger' onClick={this.onDeleteClick.bind(this, user)}>
-                                                    X
-                                                </Button>
-                                            </th>
-                                        </tr>
-                                    )
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
-                </Container >
-                <br />
-                <br />
-                <br />
-            </div>
-        );
+                    <hr />
+
+                    <form>
+                        <div className='d-flex flex-row mx-1'>
+                            <div className=' d-flex mr-4 justify-content-end align-self-end mt-2'>
+                                <h4> Name: <input type='text' value={this.state.name} className='form-control'
+                                    onChange={this.onNameChange} />
+                                </h4>
+                            </div>
+                        </div>
+                    </form>
+
+                    <br />
+                    <h4>Description:</h4>
+                    <TextEditor
+                        placeholder={this.state.editor.placeholder}
+                        onSave={this.saveDescription}
+                        maxLength={300}
+                    />
+                    <br />
+
+                    <br />
+                    <div className=' d-flex flex-row align-items-center'>
+                        <h4>Project team:</h4>
+                    </div>
+                    <br />
+                    <form onSubmit={this.onAddUser}>
+                        <h6>Add memebers</h6>
+                        <label className='mx-1'>
+                            <select defaultValue={''} name='userName' className='form-control'
+                                onChange={this.onSelectChange}>
+                                <option value='' disabled={true}>
+                                    Select user
+                                    </option>
+                                {this.state.users.map(user =>
+                                    <option value={user.email || ''} key={user.email || ''}>
+                                        {user.name}
+                                    </option>)}
+                                )}
+                                </select>
+                        </label>
+                        <label className='mx-2'>
+                            <select defaultValue={''} name='role' className='form-control'
+                                onChange={this.onSelectChange}>
+                                <option value='' disabled={true}>
+                                    Select role
+                                    </option>
+                                <option value='Project Manager'>Project Manager</option>
+                                <option value='Developer'>Developer</option>
+                                <option value='QA'>QA</option>
+                            </select>
+                        </label>
+                        <input className='mx-2 btn btn-dark' type='submit' value='Add' />
+                    </form>
+
+                    <div className='table-responsive'>
+                        <table className='table table-light table-striped table-bordered table-hover table-sm  '>
+                            <thead className='thead-dark'>
+                                <tr>
+                                    <th style={{ 'width': '20%' }} scope='col'>Full Name</th>
+                                    <th style={{ 'width': '10%' }} scope='col'>Email</th>
+                                    <th style={{ 'width': '10%' }} scope='col'>Role</th>
+                                    <th style={{ 'width': '4%' }} scope='col'>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {this.state.team.map(user =>
+                                    <tr key={user.email + user.role}>
+                                        <td> {user.name}</td>
+                                        <td> {user.email}</td>
+                                        <td> {user.role}</td>
+                                        <th scope='row'>
+                                            <Button variant='danger' onClick={this.onDeleteClick.bind(this, user)}>
+                                                X
+                                                </Button>
+                                        </th>
+                                    </tr>
+                                )
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </Container >
+            <br />
+            <br />
+            <br />
+        </div>
     }
 }
 

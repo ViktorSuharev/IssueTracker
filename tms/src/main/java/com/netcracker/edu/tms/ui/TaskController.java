@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,14 +33,22 @@ public class TaskController {
     @Autowired
     ProjectService projectService;
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{taskId}")
     public ResponseEntity getTaskById(@PathVariable BigInteger taskId) {
         return ResponseEntity.ok(taskService.getTaskById(taskId));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/getTaskByName")
     public List<Task> getTaskByName(@RequestParam("taskName") String taskName) {
         return taskService.getTaskByName(taskName);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/")
+    public Iterable<Task> getTaskByName() {
+        return taskService.getAll();
     }
 
     @PostMapping("/")

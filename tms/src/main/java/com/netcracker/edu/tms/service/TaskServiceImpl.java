@@ -69,6 +69,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Iterable<Task> getAll() {
+        return taskRepository.findAll();
+    }
+
+    @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Task> getTaskByReporter(BigInteger reporterId) {
         return taskDao.getTaskByReporter(reporterId);

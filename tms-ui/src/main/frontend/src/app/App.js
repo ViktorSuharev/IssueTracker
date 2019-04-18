@@ -24,6 +24,7 @@ import ProtectedRoute from './component/ProtectedRoute';
 import ProjectDashboard from './component/project/ProjectDashboard';
 import { Container } from 'react-bootstrap';
 import CreateTask from './component/task/CreateTask';
+import AllTasks from './component/task/AllTasks';
 
 class App extends Component {
     render() {
@@ -45,7 +46,8 @@ class App extends Component {
                         <ProtectedRoute exact path='/projects' component={ProjectDashboard} />
                         
                         <ProtectedRoute path='/tasks/new' component={CreateTask} />
-                        <ProtectedRoute path='/personalarea' component={PersonalArea} />
+                        <ProtectedRoute path='/tasks' component={AllTasks} />
+                        {/* <ProtectedRoute path='/personalarea' component={PersonalArea} /> */}
 
                         <Route path='/auth' component={SignTabs}/>
                     </Switch>

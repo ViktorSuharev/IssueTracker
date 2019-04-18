@@ -28,6 +28,8 @@ export default class CreateTask extends React.Component {
                 assignee: null
             },
 
+            desc: null,
+
             projects: [],
             users: [],
             focuser: false,
@@ -43,6 +45,8 @@ export default class CreateTask extends React.Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
 
+        this.color = this.color.bind(this);
+
         this.onSubmitTask = this.onSubmitTask.bind(this);
     }
 
@@ -50,6 +54,8 @@ export default class CreateTask extends React.Component {
         var task = { ...this.state.task };
         task[target] = value;
         this.setState({ task: task });
+
+        console.log(JSON.stringify(task));
     }
 
     onUpdateTask(event) {
@@ -57,19 +63,16 @@ export default class CreateTask extends React.Component {
         const val = event.target.value;
 
         this.updateTask(prop, val);
-        const task = this.state.task;
-        console.log(JSON.stringify(task));
     }
 
-    onDescriptionSave(text) {
-        this.updateTask('description', text);
+    onDescriptionSave(value) {
+        this.setState({ desc: value });
+        this.updateTask(description, value);
     }
 
     onDueDateChanged(date) {
-        // console.log(JSON.stringify(date));
         this.updateTask('dueDate', date);
         this.setState({ date: date });
-        // console.log(JSON.stringify(this.state));
     }
 
     handleCancel(event) {
@@ -82,7 +85,6 @@ export default class CreateTask extends React.Component {
 
     handleShow(event) {
         event.preventDefault();
-
         this.setState({ show: true });
     }
 
@@ -164,6 +166,10 @@ export default class CreateTask extends React.Component {
 
     }
 
+    color() {
+        return priorities.find(p => p.name === this.state.task.priority).color;
+    }
+
     render() {
         return <div>
             <Modal show={this.state.show} onHide={this.handleClose}>
@@ -196,76 +202,79 @@ export default class CreateTask extends React.Component {
                         variant='success'
                         onClick={this.handleShow}>
                         Add task
-                            </Button>
-
+                    </Button>
                 </div>
-                <Form>
-                    <Form.Group controlId='taskName'>
-                        <Form.Label>Task name</Form.Label>
-                        <Form.Control type='text' name={name} onChange={this.onUpdateTask} placeholder='Task name' />
-                    </Form.Group>
+                <hr />
 
-                    <Form.Group controlId='assigneeSelect'>
-                        <Form.Label>Assignee</Form.Label>
-                        <Form.Control as='select' name={assignee} onChange={this.onUpdateTask}>
-                            {this.state.users.map((user) => <option value={user.id}>{user.name}</option>)}
-                        </Form.Control>
-                    </Form.Group>
-
-                    <Form.Group controlId='reporterSelect'>
-                        <Form.Label>Reporter</Form.Label>
-                        <Form.Control as='select' name={reporter} onChange={this.onUpdateTask}>
-                            {this.state.users.map((user) => <option value={user.id}>{user.name}</option>)}
-                        </Form.Control>
-                    </Form.Group>
-
-                    <Form.Group controlId='projectSelect'>
-                        <Form.Label>Project</Form.Label>
-                        <Form.Control as='select' name={project} onChange={this.onUpdateTask}>
-                            {this.state.projects.map((project) => <option value={project.id}>{project.name}</option>)}
-                        </Form.Control>
-                    </Form.Group>
-
-                    <Form.Group controlId='projectSelect'>
-                        <Form.Label>Priority</Form.Label>
-                        <Form.Control as='select' name={priority} onChange={this.onUpdateTask}>
-                            {priorities.map((priority) => <option value={priority.name} style={{color: priority.color}}>{priority.name}</option>)}
-                        </Form.Control>
-                    </Form.Group>
-
-                    <Form.Group controlId='dateSelector'>
-                        <Form.Label>Due date: </Form.Label>
-                        {/* <DateTime /> */}
-                        {/* <Form.Control> */}
-                        <br />
-                        <SingleDatePicker
-                            //   inputIconPosition='after'
-                            small={true}
-                            // block={true}
-                            numberOfMonths={1}
-                            date={this.state.date}
-                            onDateChange={date => this.onDueDateChanged(date)}
-                            focused={this.state.focused}
-                            // focused={true}
-                            onFocusChange={({ focused }) =>
-                                this.setState({ focused })
-                            }
-                            openDirection='up'
-                            hideKeyboardShortcutsPanel={true}
-                        />
-                        {/* </Form.Control> */}
-                    </Form.Group>
-
-                    <Form.Group controlId='descriptionArea'>
-                        <Form.Label>Description</Form.Label>
-                        <TextEditor
-                            placeholder='Enter description here...'
-                            onSave={this.onDescriptionSave}
-                            maxLength={300}
-                        />
-                        <br />
-                    </Form.Group>
+                <Form inline>
+                    <Form.Label>Task name: &emsp;</Form.Label>
+                    <Form.Control type='text' name={name} onChange={this.onUpdateTask} placeholder='Task name' />
                 </Form>
+                <br />
+
+                <Form inline>
+                    <Form.Label>Assignee:&emsp;&emsp;</Form.Label>
+                    <Form.Control as='select' name={assignee} onChange={this.onUpdateTask}>
+                        {this.state.users.map((user) => <option value={user.id}>{user.name}</option>)}
+                    </Form.Control>
+                </Form>
+                <br />
+
+                <Form inline>
+                    <Form.Label>Reporter:&emsp;&emsp;</Form.Label>
+                    <Form.Control as='select' name={reporter} onChange={this.onUpdateTask}>
+                        {this.state.users.map((user) => <option value={user.id}>{user.name}</option>)}
+                    </Form.Control>
+                </Form>
+                <br />
+
+                <Form inline>
+                    <Form.Label>Project:&emsp;&emsp;&emsp;</Form.Label>
+                    <Form.Control as='select' name={project} onChange={this.onUpdateTask}>
+                        {this.state.projects.map((project) => <option value={project.id}>{project.name}</option>)}
+                    </Form.Control>
+                </Form>
+                <br />
+
+                <Form inline >
+                    <Form.Label>Priority:&emsp;&emsp;&emsp;</Form.Label>
+                    <Form.Control as='select' style={{ color: this.color() }} name={priority} onChange={this.onUpdateTask}>
+                        {priorities.map((priority) => <option value={priority.name} style={{ color: priority.color }}>{priority.name}</option>)}
+                    </Form.Control>
+                </Form>
+                <br />
+                <Form inline>
+                    Due date:&emsp;&emsp;
+                        {/* <DateTime /> */}
+                    {/* <Form.Control> */}
+                    <SingleDatePicker
+                        //   inputIconPosition='after'
+                        small={true}
+                        // block={true}
+                        numberOfMonths={1}
+                        date={this.state.date}
+                        onDateChange={date => this.onDueDateChanged(date)}
+                        focused={this.state.focused}
+                        // focused={true}
+                        onFocusChange={({ focused }) =>
+                            this.setState({ focused })
+                        }
+                        openDirection='up'
+                        hideKeyboardShortcutsPanel={true}
+                    />
+                    {/* </Form.Control> */}
+                </Form>
+                <br />
+
+                <Form>
+                    <Form.Label>Description</Form.Label>
+                    <TextEditor
+                        placeholder='Enter description here...'
+                        onSave={this.onDescriptionSave}
+                        maxLength={300}
+                    />
+                </Form>
+                <br/>
             </Container>
         </div>
     }
@@ -275,9 +284,10 @@ const assignee = 'assignee';
 const project = 'project';
 const name = 'name';
 const priority = 'priority';
+const description = 'description';
 
 const priorities = [
-    { color: 'violet', name: 'MINOR' },
+    { color: 'green', name: 'MINOR' },
     { color: 'blue', name: 'MAJOR' },
     { color: 'orange', name: 'CRITICAL' },
     { color: 'red', name: 'BLOCKER' }];

@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { Container, Card, CardDeck } from 'react-bootstrap'
+import { Badge, Container, Card, CardDeck, Button } from 'react-bootstrap'
 // import TextEditor from '../TextEditor';
 import { AuthConsumer } from '../login/AuthContext';
 
-export default class ProjectContainer extends Component {
-    makeControlLinks(project) {
-        let edit = 'tasks/edit/' + project.id;
-        let remove = 'tasks/delete/' + project.id;
+export default class TaskBoard extends Component {
+    makeControlLinks(task) {
+        if (task === stubTask)
+            return;
+
+        let edit = 'tasks/edit/' + task.id;
+        let remove = 'tasks/delete/' + task.id;
 
         return <div>
             <Card.Link style={{ color: 'green' }} href={edit}>Edit</Card.Link>
@@ -14,53 +17,68 @@ export default class ProjectContainer extends Component {
         </div>
     }
 
+    processTaskElement(task) {
+        if (task === stubTask)
+            return <Card>
+                <Card.Header><h4>Add new</h4></Card.Header>
+                <Card.Body align='center'>
+                    <Button className='rounded' variant='outline-secondary' href='/tasks/new'>
+                        <h1><br/> &nbsp; &nbsp; &nbsp; +  &nbsp; &nbsp; &nbsp;</h1><br/><br/>
+                    </Button>
+                </Card.Body>
+            </Card>
+
+        return <Card>
+            <Card.Header>
+                <Card.Link style={{ color: 'black' }} href={'/tasks/' + task.id}> <h4>{task.name}</h4> </Card.Link>
+            </Card.Header>
+            <Card.Body>
+                {this.getTaskInfo(task)}
+            </Card.Body>
+            <Card.Body>
+                <Card.Text>
+                    Assignee &nbsp; <a href={'/users/' + task.assignee.id}>{task.assignee.fullName}</a>
+                    <br />
+                    Reporter &nbsp; <a href={'/users/' + task.reporter.id}>{task.reporter.fullName}</a>
+                </Card.Text>
+            </Card.Body>
+            <Card.Body>{this.makeControlLinks(task)}</Card.Body>
+        </Card>
+    }
+
+    getTaskInfo(task) {
+        return <Card.Subtitle className='mb-2 text-muted'>
+            <Badge variant={priorities[task.priority].color}>{task.priority}</Badge>
+            &nbsp;
+            <Badge variant={statuses[task.status].color}>{statuses[task.status].name}</Badge>
+            <br/>
+            Deadline: &nbsp; {task.dueDate}
+        </Card.Subtitle>
+    }
+
     render() {
-        const colNum = 2;
-        const rawTasks = this.props.tasks.map(({task, owner}) => {
-            project.owner = owner;
-            return project;
-        } );
+        const colNum = 3;
+        const tasks = this.props.tasks;
+        // const rawTasks = this.props.tasks.map(({task, owner}) => {
+        //     task.author = owner;
+        //     //
+        //     return task;
+        // } );
 
-        while(rawProjects.length % colNum)
-            rawProjects.push({name: '', description: '', owner: {name: null}});
+        while (tasks.length % colNum)
+            tasks.push(stubTask);
 
-        var matrix = reshape(rawProjects, colNum);
+        var matrix = reshape(tasks, colNum);
 
         return <Container>
             {matrix.map((row) => <div><CardDeck>
-                {row.map(
-                    (project) => <Card>
-                        <Card.Body>
-                            <Card.Title><a href={'/projects/'+project.id}>{project.name}</a></Card.Title>
-                            <Card.Subtitle className='mb-2 text-muted'>{project.owner.name}</Card.Subtitle>
-                            {this.controlIfCreator(project)}
-                            {/* <TextEditor value={project.description} readOnly={true} /> */}
-                            <br />
-                            <Card.Text>
-                                {parseMdToText(project.description)}
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                )}
+                {row.map(task => this.processTaskElement(task))}
             </CardDeck>
-            <br/>
+                <br />
             </div>
             )}
-        </Container>;
+        </Container>
     }
-}
-
-const removeMd = require('remove-markdown');
-const DESCRIPTION_LENGTH = 140;
-function parseMdToText(markdown) {
-    let text = removeMd(markdown, {
-        stripListLeaders: true, // strip list leaders (default: true)
-        listUnicodeChar: '',     // char to insert instead of stripped list leaders (default: '')
-        gfm: true,                // support GitHub-Flavored Markdown (default: true)
-        useImgAltText: true      // replace images with alt-text, if present (default: true)
-    });
-
-    return text.length > DESCRIPTION_LENGTH ? text.substring(0, DESCRIPTION_LENGTH - 3) + '...' : text;
 }
 
 function reshape(list, elementsPerSubArray) {
@@ -74,3 +92,21 @@ function reshape(list, elementsPerSubArray) {
     }
     return matrix;
 }
+
+const stubTask = { name: '', description: '', owner: { name: null } };
+
+
+const priorities = {
+    MINOR: { color: 'secondary', name: 'MINOR' },
+    MAJOR: { color: 'primary', name: 'MAJOR' },
+    CRITICAL: { color: 'warning', name: 'CRITICAL' },
+    BLOCKER: { color: 'danger', name: 'BLOCKER' }
+};
+
+const statuses = {
+    NOT_STARTED: { color: 'secondary', name: 'NOT STARTED' },
+    CANCELED: { color: 'danger', name: 'CANCELED' },
+    IN_PROGRESS: { color: 'info', name: 'IN_PROGRESS' },
+    RESOLVED: { color: 'primary', name: 'RESOLVED' },
+    CLOSED: { color: 'dark', name: 'CLOSED' }
+};

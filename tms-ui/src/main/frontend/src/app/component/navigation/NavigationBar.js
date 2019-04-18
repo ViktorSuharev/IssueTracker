@@ -29,6 +29,7 @@ export default class NavigationBar extends Component {
                 </NavDropdown>
                 <NavDropdown title='Task' id='collasible-nav-dropdown'>
                     <NavDropdown.Item href='/tasks/new'>Add</NavDropdown.Item>
+                    <NavDropdown.Item href='/tasks'>Tasks</NavDropdown.Item>
                 </NavDropdown>
             </Nav>
 
