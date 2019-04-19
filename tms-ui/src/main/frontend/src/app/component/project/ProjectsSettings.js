@@ -108,7 +108,7 @@ class ProjectsSettings extends React.Component {
         });
         console.log("addedUsersNew: ", JSON.stringify(addedUsersNew));
         this.setState({ addedUsers: addedUsersNew }, function () {
-            console.log("delete user with id:", userToDelete.id);
+            console.log("delete com.netcracker.edu.tms.user with id:", userToDelete.id);
         });
 
         axios(`http://localhost:8090/users/userstoprojects`, {
@@ -161,11 +161,11 @@ class ProjectsSettings extends React.Component {
             const user = this.state.users.find(user => {
                 return user.id === userId;
             });
-            console.log("user founded:", JSON.stringify(user));
+            console.log("com.netcracker.edu.tms.user founded:", JSON.stringify(user));
             this.setState({
                 user: Object.assign({}, user)
             }, function () {
-                console.log("this.state.user:", JSON.stringify(this.state.user));
+                console.log("this.state.com.netcracker.edu.tms.user:", JSON.stringify(this.state.user));
             })
         }
         if (sw === "role") {

@@ -1,11 +1,10 @@
 package com.netcracker.edu.tms.service;
 
-import com.netcracker.edu.tms.dao.ProjectDao;
-import com.netcracker.edu.tms.model.Project;
-import com.netcracker.edu.tms.model.Task;
-import com.netcracker.edu.tms.model.User;
-import com.netcracker.edu.tms.model.UsersToProjects;
-import com.netcracker.edu.tms.service.mail.MailService;
+import com.netcracker.edu.tms.project.repository.ProjectDao;
+import com.netcracker.edu.tms.project.model.Project;
+import com.netcracker.edu.tms.task.model.Task;
+import com.netcracker.edu.tms.user.model.UserWithPassword;
+import com.netcracker.edu.tms.project.model.ProjectTeam;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -89,13 +88,13 @@ public class ProjectServiceImplTest {
 
     @Test
     public void setProjectsTeam() throws Exception {
-        List<User> toInsert = new ArrayList<>();
-        toInsert.add(new User("fullName1", "password1", "email1"));
-        toInsert.add(new User("fullName2", "password2", "email2"));
-        toInsert.add(new User("fullName3", "password3", "email3"));
-        toInsert.add(new User("fullName4", "password4", "email4"));
+        List<UserWithPassword> toInsert = new ArrayList<>();
+        toInsert.add(new UserWithPassword("fullName1", "password1", "email1"));
+        toInsert.add(new UserWithPassword("fullName2", "password2", "email2"));
+        toInsert.add(new UserWithPassword("fullName3", "password3", "email3"));
+        toInsert.add(new UserWithPassword("fullName4", "password4", "email4"));
 
-        Mockito.when(projectDao.addUsersToProjects(any(UsersToProjects.class))).thenReturn(true);
+        Mockito.when(projectDao.addUsersToProjects(any(ProjectTeam.class))).thenReturn(true);
 
 //        Assert.assertTrue(projectService.setProjectsTeam(toInsert, BigInteger.ONE));
     }
@@ -111,11 +110,11 @@ public class ProjectServiceImplTest {
 
     @Test
     public void getTeamByProjectId() throws Exception {
-        List<User> team = new ArrayList<>();
-        team.add(new User("fullName1", "password1", "email1"));
-        team.add(new User("fullName2", "password2", "email2"));
-        team.add(new User("fullName3", "password3", "email3"));
-        team.add(new User("fullName4", "password4", "email4"));
+        List<UserWithPassword> team = new ArrayList<>();
+        team.add(new UserWithPassword("fullName1", "password1", "email1"));
+        team.add(new UserWithPassword("fullName2", "password2", "email2"));
+        team.add(new UserWithPassword("fullName3", "password3", "email3"));
+        team.add(new UserWithPassword("fullName4", "password4", "email4"));
 
         Mockito.when(projectDao.getTeamByProjectId(any(BigInteger.class))).thenReturn(team);
 //        Assert.assertEquals(team, projectService.getTeamByProjectId(BigInteger.TEN));
@@ -123,7 +122,7 @@ public class ProjectServiceImplTest {
 
     @Test
     public void deleteUserFromTeam() throws Exception {
-        Mockito.when(projectDao.deleteUserFromTeam(any(User.class), any(BigInteger.class))).thenReturn(true);
-//        Assert.assertTrue(projectService.deleteUserFromTeam(new User(), BigInteger.TEN));
+        Mockito.when(projectDao.deleteUserFromTeam(any(UserWithPassword.class), any(BigInteger.class))).thenReturn(true);
+//        Assert.assertTrue(projectService.deleteUserFromTeam(new UserWithPassword(), BigInteger.TEN));
     }
 }

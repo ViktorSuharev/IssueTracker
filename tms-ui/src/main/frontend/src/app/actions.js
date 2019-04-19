@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { backurl } from './properties';
 
+//USEFUL
+export function shortenIfLong(title, length) {
+    return title.length > length ? title.substring(0, length - 4) + '...' : title;
+}
+
+
 //STORAGE
 export function authorizationHeader() {
     let token = localStorage.getItem('token');

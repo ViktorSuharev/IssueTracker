@@ -1,8 +1,8 @@
 //package com.netcracker.edu.tms.dao;
 //
-//import com.netcracker.edu.tms.model.Priority;
-//import com.netcracker.edu.tms.model.Status;
-//import com.netcracker.edu.tms.model.Task;
+//import com.netcracker.edu.tms.task.model.Priority;
+//import com.netcracker.edu.tms.task.model.Status;
+//import com.netcracker.edu.tms.task.model.Task;
 //import org.junit.Assert;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;

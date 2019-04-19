@@ -41,7 +41,7 @@ class CreateProject extends React.Component {
 
 
     saveDescription(description) {
-        if (description.length > 300)
+        if (description.length >= 3000)
             alert('no way! too long!');
         else
             this.setState({ description: description });
@@ -130,14 +130,16 @@ class CreateProject extends React.Component {
                 var email = event.target.value;
                 var user = this.state.users.find(user => user.email === email);
 
-                console.log('Found user:', JSON.stringify(user));
+                console.log('Found com.netcracker.edu.tms.user:', JSON.stringify(user));
 
-                this.setState({ user: user }, () => console.log('this.state.user:', JSON.stringify(this.state.user)))
+                this.setState({ user: user }, () => console.log('this.state.com.netcracker.edu.tms.user:', JSON.stringify(this.state.user)))
                 break;
 
             case 'role':
                 const role = event.target.value;
                 this.setState({ role: role })
+                break;
+            default:
                 break;
         }
     }
@@ -165,7 +167,7 @@ class CreateProject extends React.Component {
         console.log('Team: ', JSON.stringify(teamNew));
 
         this.setState({ team: teamNew }, () =>
-            console.log('delete user: ', userToDelete.email));
+            console.log('delete com.netcracker.edu.tms.user: ', userToDelete.email));
     };
 
 

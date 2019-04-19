@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages =  {
-        "com.netcracker.edu.tms.repository"
+        "com.netcracker.edu.tms.user.repository",
+        "com.netcracker.edu.tms.task.repository",
+        "com.netcracker.edu.tms.project.repository"
 })
 public class PersistenceContext {
 }
