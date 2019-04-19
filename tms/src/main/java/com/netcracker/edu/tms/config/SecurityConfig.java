@@ -1,8 +1,8 @@
 package com.netcracker.edu.tms.config;
 
-import com.netcracker.edu.tms.security.JwtAuthenticationEntryPoint;
-import com.netcracker.edu.tms.security.JwtAuthenticationFilter;
-import com.netcracker.edu.tms.security.SecurityUserDetailsService;
+import com.netcracker.edu.tms.security.token.JwtAuthenticationEntryPoint;
+import com.netcracker.edu.tms.security.token.JwtAuthenticationFilter;
+import com.netcracker.edu.tms.security.service.SecurityUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

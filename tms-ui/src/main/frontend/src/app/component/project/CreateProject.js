@@ -130,9 +130,9 @@ class CreateProject extends React.Component {
                 var email = event.target.value;
                 var user = this.state.users.find(user => user.email === email);
 
-                console.log('Found user:', JSON.stringify(user));
+                console.log('Found com.netcracker.edu.tms.user:', JSON.stringify(user));
 
-                this.setState({ user: user }, () => console.log('this.state.user:', JSON.stringify(this.state.user)))
+                this.setState({ user: user }, () => console.log('this.state.com.netcracker.edu.tms.user:', JSON.stringify(this.state.user)))
                 break;
 
             case 'role':
@@ -167,7 +167,7 @@ class CreateProject extends React.Component {
         console.log('Team: ', JSON.stringify(teamNew));
 
         this.setState({ team: teamNew }, () =>
-            console.log('delete user: ', userToDelete.email));
+            console.log('delete com.netcracker.edu.tms.user: ', userToDelete.email));
     };
 
 

@@ -1,6 +1,6 @@
 //package com.netcracker.edu.tms.dao;
 //
-//import com.netcracker.edu.tms.model.Project;
+//import com.netcracker.edu.tms.project.model.Project;
 //
 //import org.junit.Assert;
 //import org.junit.Test;
