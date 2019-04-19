@@ -21,8 +21,8 @@ public class UserWithPassword {
     @Column(name = "id", unique = true, nullable = false)
     private BigInteger id;
 
-    @Column(name = "fullName")
-    private String fullName;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "password")
     private String password;
@@ -38,8 +38,8 @@ public class UserWithPassword {
     )
     private Set<Role> roles = new HashSet<Role>();
 
-    public UserWithPassword(String fullName, String email, String password) {
-        this.fullName = fullName;
+    public UserWithPassword(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
     }

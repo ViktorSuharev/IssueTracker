@@ -1,5 +1,6 @@
 package com.netcracker.edu.tms.project.model;
 
+import com.netcracker.edu.tms.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +20,9 @@ public class Project {
     @Column(name = "id", unique = true, nullable = false)
     private BigInteger id;
 
-    @Column(name = "creator_id", nullable = false)
-    private BigInteger creatorId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "creator_id", nullable = false)
+    private User creator;
 
     @Column(name = "name", unique = true, nullable = false)
     private String name;
@@ -30,20 +32,28 @@ public class Project {
 
     //List<Pair<UserWithPassword, Role>> team
 
-    public Project(BigInteger id, BigInteger creatorId, String name) {
+    public Project(BigInteger id, User creator, String name) {
         this.id = id;
-        this.creatorId = creatorId;
+        this.creator = creator;
         this.name = name;
     }
 
-    public Project(BigInteger creatorId, String name) {
-        this.creatorId = creatorId;
+    public Project(User creator, String name) {
+        this.creator = creator;
         this.name = name;
     }
 
-    public Project(BigInteger creatorId, String name, String description) {
-        this.creatorId = creatorId;
+    public Project(User creator, String name, String description) {
+        this.creator = creator;
         this.name = name;
         this.description = description;
+    }
+
+    public Project clone(Project source) {
+        this.creator = source.creator;
+        this.name = source.name;
+        this.description = source.description;
+
+        return this;
     }
 }

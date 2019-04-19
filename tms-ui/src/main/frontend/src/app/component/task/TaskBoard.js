@@ -68,7 +68,6 @@ export default class TaskBoard extends Component {
             return;
 
         let edit = 'tasks/edit/' + task.id;
-        let remove = 'tasks/delete/' + task.id;
 
         return <div>
             <Button size='sm' variant='outline-success' value={task.id} href={edit}>&nbsp; Edit &nbsp;</Button>
@@ -97,9 +96,9 @@ export default class TaskBoard extends Component {
             </Card.Body>
             <Card.Body>
                 <Card.Text>
-                    Assignee &nbsp; <a href={'/users/' + task.assignee.id}>{task.assignee.fullName}</a>
+                    Assignee &nbsp; <a href={'/users/' + task.assignee.id}>{task.assignee.name}</a>
                     <br />
-                    Reporter &nbsp; <a href={'/users/' + task.reporter.id}>{task.reporter.fullName}</a>
+                    Reporter &nbsp; <a href={'/users/' + task.reporter.id}>{task.reporter.name}</a>
                 </Card.Text>
             </Card.Body>
             <Card.Body>{this.makeControlLinks(task)}</Card.Body>

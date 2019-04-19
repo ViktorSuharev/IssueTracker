@@ -59,8 +59,8 @@ export default class TaskView extends React.Component {
             <hr />
             <h3>People</h3>
             <ul>
-                {task.assignee ? <li>Assignee: <a href={'/users/' + task.assignee.id}>{task.assignee.fullName}</a></li> : null}
-                {task.reporter ? <li>Reporter: <a href={'/users/' + task.reporter.id}>{task.reporter.fullName}</a></li> : null}
+                {task.assignee ? <li>Assignee: <a href={'/users/' + task.assignee.id}>{task.assignee.name}</a></li> : null}
+                {task.reporter ? <li>Reporter: <a href={'/users/' + task.reporter.id}>{task.reporter.name}</a></li> : null}
 
                 {/* <li>Deadline: {this.state.task.dueDate}</li> */}
                 {/* {task.modificationDate ? <li>Last modified: {this.state.task.modificationDate}</li> : null} */}

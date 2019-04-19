@@ -2,7 +2,7 @@ package com.netcracker.edu.tms.repository;
 
 import com.netcracker.edu.tms.user.model.Role;
 import com.netcracker.edu.tms.user.model.UserWithPassword;
-import com.netcracker.edu.tms.user.repository.UserRepository;
+import com.netcracker.edu.tms.user.repository.UserWithPasswordRepository;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class UserWithPasswordRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserWithPasswordRepository userWithPasswordRepository;
 
     @Autowired
     private TestEntityManager entityManager;
@@ -31,7 +31,7 @@ public class UserWithPasswordRepositoryTest {
     @Test
     public void testGetUserById() {
         UserWithPassword persisted = new UserWithPassword();
-        persisted.setFullName("name");
+        persisted.setName("name");
         persisted.setEmail("email@yandex.ru");
 
 
@@ -47,7 +47,7 @@ public class UserWithPasswordRepositoryTest {
         persisted.setRoles(roles);
 
         BigInteger userId = (BigInteger) entityManager.persistAndGetId(persisted);
-        UserWithPassword saved = userRepository.findById(userId).get();
+        UserWithPassword saved = userWithPasswordRepository.findById(userId).get();
 
         Assert.assertEquals(getRoles(persisted), getRoles(saved));
     }

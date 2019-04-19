@@ -45,7 +45,7 @@ export default class TaskInfo extends React.Component {
             //             console.log('url: ', url);
             //             const creator = res.data;
             //             this.setState({creator});
-            //             console.log('creator's full name: ', this.state.creator.fullName);
+            //             console.log('creator's full name: ', this.state.creator.name);
             //         });
             // });
 

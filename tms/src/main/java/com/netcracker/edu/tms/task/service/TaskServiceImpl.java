@@ -1,17 +1,17 @@
 package com.netcracker.edu.tms.task.service;
 
 import com.netcracker.edu.tms.project.model.Project;
-import com.netcracker.edu.tms.task.repository.TaskDao;
-import com.netcracker.edu.tms.task.repository.TaskRepository;
 import com.netcracker.edu.tms.task.model.Priority;
 import com.netcracker.edu.tms.task.model.Status;
 import com.netcracker.edu.tms.task.model.Task;
+import com.netcracker.edu.tms.task.repository.TaskDao;
+import com.netcracker.edu.tms.task.repository.TaskRepository;
+import com.netcracker.edu.tms.user.model.User;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import com.netcracker.edu.tms.user.model.UserWithPassword;
 
 import java.math.BigInteger;
 import java.text.ParseException;
@@ -77,13 +77,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public Iterable<Task> getTaskByReporter(UserWithPassword reporter) {
+    public Iterable<Task> getTaskByReporter(User reporter) {
         return taskRepository.getAllByReporter(reporter);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public Iterable<Task> getTaskByAssignee(UserWithPassword assignee) {
+    public Iterable<Task> getTaskByAssignee(User assignee) {
         return taskRepository.getAllByAssignee(assignee);
     }
 

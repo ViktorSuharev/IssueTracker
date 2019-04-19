@@ -1,12 +1,12 @@
 package com.netcracker.edu.tms.task.model;
 
 import com.netcracker.edu.tms.project.model.Project;
+import com.netcracker.edu.tms.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
-import com.netcracker.edu.tms.user.model.UserWithPassword;
 
 import javax.persistence.*;
 import javax.validation.constraints.Future;
@@ -47,11 +47,11 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "reporter_id", nullable = false)
-    private UserWithPassword reporter;
+    private User reporter;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "assignee_id", nullable = false)
-    private UserWithPassword assignee;
+    private User assignee;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "project_id", nullable = false)
@@ -65,7 +65,10 @@ public class Task {
     @Column(name = "priority")
     private Priority priority;
 
-    public Task(String name, String description, Date creationDate, @Future Date dueDate, Date modificationDate, UserWithPassword reporter, UserWithPassword assignee, Project project, Status status, Priority priority) {
+    public Task(String name, String description, Date creationDate, @Future Date dueDate,
+                Date modificationDate, User reporter, User assignee, Project project,
+                Status status, Priority priority) {
+
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
@@ -78,7 +81,8 @@ public class Task {
         this.priority = priority;
     }
 
-    public Task(String name, String description, @Future Date dueDate, UserWithPassword reporter, UserWithPassword assignee, Project project, Priority priority) {
+    public Task(String name, String description, @Future Date dueDate, User reporter,
+                User assignee, Project project, Priority priority) {
         this.name = name;
         this.description = description;
         this.dueDate = dueDate;

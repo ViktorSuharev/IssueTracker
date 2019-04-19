@@ -19,17 +19,14 @@ public class User {
     @Column(name = "id", unique = true, nullable = false)
     private BigInteger id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "fullName")
-    private String name;
-
-    public static User of(UserWithPassword userWithPassword) {
-        return new User(
-                userWithPassword.getId(),
-                userWithPassword.getEmail(),
-                userWithPassword.getFullName()
-        );
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 }
