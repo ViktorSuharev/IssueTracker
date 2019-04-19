@@ -5,7 +5,7 @@ import { Form, Badge, Container, Table, Button } from 'react-bootstrap';
 import TextEditor from '../TextEditor';
 import { authorizationHeader } from '../../actions';
 import { backurl } from '../../properties';
-import TaskBoard from '../task/TaskBoard';
+import TaskBoard from './/TaskBoard';
 import { Link } from 'react-router';
 
 export default class TaskView extends React.Component {
