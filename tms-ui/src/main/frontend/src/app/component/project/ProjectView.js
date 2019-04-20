@@ -1,11 +1,10 @@
 import React from 'react';
 import * as axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Container, Table } from 'react-bootstrap';
+import { Container, Table, Button } from 'react-bootstrap';
 import '../styles.css';
-import './index.css';
 import TextEditor from '../TextEditor';
-import { authorizationHeader } from '../../actions';
+import { authorizationHeader, wordWrap } from '../../actions';
 import { backurl } from '../../properties';
 import TaskBoard from '../task/TaskBoard';
 
@@ -46,7 +45,11 @@ export default class ProjectView extends React.Component {
         var project = this.state.project;
 
         return <Container>
-            <h1>{project.name}</h1>
+            <div className='float-right'>
+                <Button variant='success'>&nbsp; Edit &nbsp;</Button>&nbsp;&nbsp;
+                <Button variant='danger' onClick={this.handleShow}>&nbsp; Delete &nbsp;</Button>
+            </div>
+            <h1 style={{ wordBreak: 'break-all' }}>{project.name}</h1>
             <hr />
             {project.description ? <TextEditor
                 readOnly={true}
@@ -76,10 +79,10 @@ export default class ProjectView extends React.Component {
             <hr />
             {this.state.tasks.length ? <div>
                 <h3>Tasks</h3>
-            <br />
-            <TaskBoard tasks={this.state.tasks} />
+                <br />
+                <TaskBoard tasks={this.state.tasks} />
             </div> : null}
-            
+
         </Container>
     }
 }

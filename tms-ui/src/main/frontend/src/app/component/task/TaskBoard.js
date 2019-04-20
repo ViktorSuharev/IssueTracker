@@ -69,7 +69,7 @@ export default class TaskBoard extends Component {
 
         let edit = '/tasks/edit/' + task.id;
 
-        return <div>
+        return <div className='float-right'>
             <Button size='sm' variant='outline-success' value={task.id} href={edit}>&nbsp; Edit &nbsp;</Button>
             &nbsp; &nbsp;
             <Button size='sm' variant='outline-danger' value={task.id} onClick={this.onDelete}>Delete</Button>
@@ -100,8 +100,8 @@ export default class TaskBoard extends Component {
                     <br />
                     Reporter &nbsp; <a href={'/users/' + task.reporter.id}>{task.reporter.name}</a>
                 </Card.Text>
+                {this.makeControlLinks(task)}
             </Card.Body>
-            <Card.Body>{this.makeControlLinks(task)}</Card.Body>
         </Card>
     }
 
@@ -111,7 +111,10 @@ export default class TaskBoard extends Component {
             &nbsp;
             <Badge variant={statuses[task.status].color}>{statuses[task.status].name}</Badge>
             <br />
-            Deadline: &nbsp; {task.dueDate}
+            Deadline: &nbsp;{task.dueDate}
+            <br/>
+            Created: &nbsp; &nbsp;{task.creationDate}
+
         </Card.Subtitle>
     }
 

@@ -39,7 +39,7 @@ export default class NavigationBar extends Component {
                         {({logout}) => <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>}
                     </AuthConsumer>
                 </NavDropdown>
-                <Spinner animation='border' size='sm' variant='info' />
+                {/* <Spinner animation='border' size='sm' variant='info' /> */}
 
         </Navbar.Collapse>
     </Navbar>;

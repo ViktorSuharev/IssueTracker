@@ -125,7 +125,7 @@ export default class ProjectContainer extends Component {
                 <Modal.Header closeButton>
                     <Modal.Title>Delete project</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Are you sure you want to delete project '{this.state.deleteProject.name}'?</Modal.Body>
+                <Modal.Body style={{ wordBreak: 'break-all' }}>Are you sure you want to delete project '{this.state.deleteProject.name}'?</Modal.Body>
                 <Modal.Footer>
                     <Button variant='secondary' onClick={this.handleClose}>
                         Cancel

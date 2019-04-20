@@ -1,4 +1,4 @@
-import './component/project/index.css';
+import '../index.css';
 import 'github-fork-ribbon-css/gh-fork-ribbon.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -26,6 +26,7 @@ import ProjectView from './component/project/ProjectView';
 import TaskView from './component/task/TaskView';
 import NotFound from './component/NotFound';
 import TaskEditor from './component/task/TaskEditor';
+import ProjectEditor from './component/project/ProjectEditor';
 
 class App extends Component {
     render() {
@@ -41,7 +42,7 @@ class App extends Component {
 
                         <ProtectedRoute path='/projects/new' component={Wrapper}/>
                         {/* <ProtectedRoute path='/projects/tasks/:id' component={ProjectsTasks} /> */}
-                        <ProtectedRoute exact path='/projects/edit/:id' component={ProjectsSettings} />
+                        <ProtectedRoute exact path='/projects/edit/:id' component={ProjectEditor} />
                         <ProtectedRoute exact path='/projects/info/:id' component={ProjectInfo} />
                         <ProtectedRoute exact path='/projects/:id' component={ProjectView} />
                         <ProtectedRoute exact path='/projects' component={ProjectDashboard} />

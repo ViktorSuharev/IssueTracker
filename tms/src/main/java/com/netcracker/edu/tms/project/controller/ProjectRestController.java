@@ -85,7 +85,7 @@ public class ProjectRestController {
     }
 
     @Transactional
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@AuthenticationPrincipal UserPrincipal currentUser,
                                                  @RequestBody ProjectInfo projectInfo, @PathVariable BigInteger id) {
 

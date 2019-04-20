@@ -55,8 +55,6 @@ export default class TaskEditor extends React.Component {
         var task = { ...this.state.task };
         task[target] = value;
         this.setState({ task: task });
-
-        console.log(JSON.stringify(task));
     }
 
     onUpdateTask(event) {
@@ -190,7 +188,9 @@ export default class TaskEditor extends React.Component {
             <Container>
                 <div className='float-right'>
                     <Button className='d-inline-flex p-2 main-control' variant='secondary' href='/tasks/my'>Cancel</Button>&nbsp;
-                    <Button className='d-inline-flex p-2 main-control' variant='success' onClick={this.handleShow}>Save</Button>
+                    <Button
+                        style={{width: '60px'}}
+                        className='d-inline-flex p-2 main-control' variant='success' onClick={this.handleShow}>Save</Button>
                 </div>
                 <h2>Edit task</h2>
                 <hr />

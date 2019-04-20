@@ -1,6 +1,6 @@
 import React from 'react';
 import * as axios from 'axios';
-import './index.css';
+import '../styles.css';
 import { Container } from 'react-bootstrap';
 
 

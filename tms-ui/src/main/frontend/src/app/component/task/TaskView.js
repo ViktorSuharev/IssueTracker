@@ -91,16 +91,14 @@ export default class TaskView extends React.Component {
             <Container>
                 <div className='float-right'>
                     <Button variant='success'>&nbsp; Edit &nbsp;</Button>&nbsp;&nbsp;
-                <Button variant='danger' onClick={this.handleShow}>&nbsp; Delete &nbsp;</Button>
+                    <Button variant='danger' onClick={this.handleShow}>&nbsp; Delete &nbsp;</Button>
                 </div>
                 <div className='flex-row'>
                     {task.priority ? <Badge className='align-self-start' variant={priorities[task.priority].color}>{task.priority}</Badge> : null}
                     &nbsp;
                 {task.priority ? <Badge className='align-self-start' variant={statuses[task.status].color}>{statuses[task.status].name}</Badge> : null}
 
-                    <div className='py-2  flex-grow-1'>
-                        <h1>{task.name}</h1>
-                    </div>
+                    <h1 style={{ wordBreak: 'break-all' }}>{task.name}</h1>
                 </div>
                 <hr />
 
