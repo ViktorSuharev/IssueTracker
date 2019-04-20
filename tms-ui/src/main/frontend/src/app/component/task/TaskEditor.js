@@ -4,6 +4,8 @@ import axios from 'axios';
 import { backurl } from '../../properties';
 import { authorizationHeader } from '../../actions';
 import TextEditor from '../TextEditor';
+import './styles.css';
+
 // import { DateTime } from 'react-datetime-bootstrap';
 
 import 'react-dates/initialize';
@@ -187,8 +189,8 @@ export default class TaskEditor extends React.Component {
             </Modal>
             <Container>
                 <div className='float-right'>
-                    <Button className='d-inline-flex p-2' variant='secondary' href='/tasks/my'>&nbsp; Cancel &nbsp;</Button>
-                    <Button className='d-inline-flex p-2' variant='danger' onClick={this.handleShow}>&nbsp; Edit &nbsp;</Button>
+                    <Button className='d-inline-flex p-2 main-control' variant='secondary' href='/tasks/my'>Cancel</Button>&nbsp;
+                    <Button className='d-inline-flex p-2 main-control' variant='success' onClick={this.handleShow}>Save</Button>
                 </div>
                 <h2>Edit task</h2>
                 <hr />
