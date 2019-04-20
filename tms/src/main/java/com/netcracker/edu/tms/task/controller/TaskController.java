@@ -26,6 +26,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.List;
 
+@PreAuthorize("hasRole('USER')")
 @RequestMapping(value = "/api/tasks")
 @RestController
 public class TaskController {
@@ -39,7 +40,6 @@ public class TaskController {
     @Autowired
     ProjectService projectService;
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/")
     public Iterable<Task> getAllTasks() {
         return taskService.getAll();
@@ -54,7 +54,6 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
     }
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/my")
     public ReporterOrAssigneeTasks getMyTasks(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         User user = userService.getUserByEmail(userPrincipal.getUsername());
@@ -73,13 +72,11 @@ public class TaskController {
     }
 
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{taskId}")
     public ResponseEntity getTaskById(@PathVariable BigInteger taskId) {
         return ResponseEntity.ok(taskService.getTaskById(taskId));
     }
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/getTaskByName")
     public List<Task> getTaskByName(@RequestParam("taskName") String taskName) {
         return taskService.getTaskByName(taskName);

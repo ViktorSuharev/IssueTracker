@@ -11,13 +11,14 @@ import 'react-dates/lib/css/_datepicker.css';
 import { SingleDatePicker } from 'react-dates';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default class CreateTask extends React.Component {
+export default class TaskEditor extends React.Component {
     constructor(props) {
         super(props);
 
         const date = new Date();
 
         this.state = {
+            id: this.props.match.params.id,
             task: {
                 name: null,
                 description: null,
@@ -27,8 +28,6 @@ export default class CreateTask extends React.Component {
                 reporter: null,
                 assignee: null
             },
-
-            desc: null,
 
             projects: [],
             users: [],
@@ -187,23 +186,11 @@ export default class CreateTask extends React.Component {
                 </Modal.Footer>
             </Modal>
             <Container>
-                <div className='d-flex flex-row'>
-                    <div className='py-2  flex-grow-1'>
-                        <h2>Create task</h2>
-                    </div>
-                    <Button
-                        className='d-flex mr-4 justify-content-end align-self-end mt-2'
-                        variant='danger'
-                        onClick={this.handleCancel}>
-                        Cancel
-                </Button>
-                    <Button
-                        className='d-flex mr-4 justify-content-end align-self-end mt-2'
-                        variant='success'
-                        onClick={this.handleShow}>
-                        Add task
-                    </Button>
+                <div className='float-right'>
+                    <Button className='d-inline-flex p-2' variant='secondary' href='/tasks/my'>&nbsp; Cancel &nbsp;</Button>
+                    <Button className='d-inline-flex p-2' variant='danger' onClick={this.handleShow}>&nbsp; Edit &nbsp;</Button>
                 </div>
+                <h2>Edit task</h2>
                 <hr />
 
                 <Form inline>
@@ -274,7 +261,7 @@ export default class CreateTask extends React.Component {
                         maxLength={300}
                     />
                 </Form>
-                <br/>
+                <br />
             </Container>
         </div>
     }

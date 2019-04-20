@@ -24,6 +24,8 @@ import AllTasks from './component/task/AllTasks';
 import MyTasks from './component/task/MyTasks';
 import ProjectView from './component/project/ProjectView';
 import TaskView from './component/task/TaskView';
+import NotFound from './component/NotFound';
+import TaskEditor from './component/task/TaskEditor';
 
 class App extends Component {
     render() {
@@ -39,18 +41,20 @@ class App extends Component {
 
                         <ProtectedRoute path='/projects/new' component={Wrapper}/>
                         {/* <ProtectedRoute path='/projects/tasks/:id' component={ProjectsTasks} /> */}
-                        <ProtectedRoute path='/projects/edit/:id' component={ProjectsSettings} />
-                        <ProtectedRoute path='/projects/info/:id' component={ProjectInfo} />
-                        <ProtectedRoute path='/projects/:id' component={ProjectView} />
+                        <ProtectedRoute exact path='/projects/edit/:id' component={ProjectsSettings} />
+                        <ProtectedRoute exact path='/projects/info/:id' component={ProjectInfo} />
+                        <ProtectedRoute exact path='/projects/:id' component={ProjectView} />
                         <ProtectedRoute exact path='/projects' component={ProjectDashboard} />
                         
                         <ProtectedRoute exact path='/tasks' component={AllTasks} />
-                        <ProtectedRoute path='/tasks/new' component={CreateTask} />
-                        <ProtectedRoute path='/tasks/my' component={MyTasks} />
-                        <ProtectedRoute path='/tasks/:id' component={TaskView} />
-                        {/* <ProtectedRoute path='/personalarea' component={PersonalArea} /> */}
+                        <ProtectedRoute exact path='/tasks/new' component={CreateTask} />
+                        <ProtectedRoute exact path='/tasks/edit/:id' component={TaskEditor} />
+                        <ProtectedRoute exact path='/tasks/my' component={MyTasks} />
+                        <ProtectedRoute exact path='/tasks/:id' component={TaskView} />
 
                         <Route path='/auth' component={SignTabs}/>
+                        <Route path="*" component={NotFound} />
+
                     </Switch>
                 </AuthProvider>
         </Router>;

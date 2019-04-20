@@ -2,6 +2,7 @@ package com.netcracker.edu.tms.project.service;
 
 import com.netcracker.edu.tms.project.model.Project;
 import com.netcracker.edu.tms.project.model.ProjectMember;
+import com.netcracker.edu.tms.project.model.ProjectRole;
 import com.netcracker.edu.tms.user.model.User;
 
 import java.math.BigInteger;
@@ -29,7 +30,9 @@ public interface ProjectService {
 
     void deleteProjectMember(ProjectMember projectMember);
 
-    void deleteTeam(Project project);
+    boolean deleteTeam(Project project);
 
     void sendInvitationToNewProject(Project project);
+
+    ProjectRole createRoleIfNotExists(String name);
 }

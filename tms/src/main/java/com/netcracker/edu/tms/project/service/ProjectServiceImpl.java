@@ -4,7 +4,9 @@ import com.netcracker.edu.tms.mail.model.Mail;
 import com.netcracker.edu.tms.mail.service.mail.MailService;
 import com.netcracker.edu.tms.project.model.Project;
 import com.netcracker.edu.tms.project.model.ProjectMember;
+import com.netcracker.edu.tms.project.model.ProjectRole;
 import com.netcracker.edu.tms.project.repository.ProjectRepository;
+import com.netcracker.edu.tms.project.repository.ProjectRoleRepository;
 import com.netcracker.edu.tms.project.repository.TeamRepository;
 import com.netcracker.edu.tms.user.model.User;
 import com.netcracker.edu.tms.user.service.UserService;
@@ -20,18 +22,21 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
+
     private UserService userService;
     private MailService mailService;
     private TeamRepository teamRepository;
     private ProjectRepository projectRepository;
+    private ProjectRoleRepository projectRoleRepository;
 
     @Autowired
-    public ProjectServiceImpl(UserService userService, MailService mailService,
-                              TeamRepository teamRepository, ProjectRepository projectRepository) {
+    public ProjectServiceImpl(UserService userService, MailService mailService, TeamRepository teamRepository,
+                              ProjectRepository projectRepository, ProjectRoleRepository projectRoleRepository) {
         this.userService = userService;
         this.mailService = mailService;
         this.teamRepository = teamRepository;
         this.projectRepository = projectRepository;
+        this.projectRoleRepository = projectRoleRepository;
     }
 
     @Override
@@ -55,6 +60,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public boolean deleteProject(Project project) {
+        teamRepository.deleteAllByProject(project);
         projectRepository.deleteById(project.getId());
         return true;
     }
@@ -98,8 +104,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void deleteTeam(Project project) {
+    public boolean deleteTeam(Project project) {
         teamRepository.deleteAllByProject(project);
+        return true;
     }
 
     @Override
@@ -118,4 +125,11 @@ public class ProjectServiceImpl implements ProjectService {
                 "You were invited in new project " + project.getName() + " over MailSenderImpl!").body(
                 "Congratulations!").build());
     }
+
+    @Override
+    public ProjectRole createRoleIfNotExists(String name) {
+        ProjectRole role = projectRoleRepository.findByName(name);
+        return role == null ? projectRoleRepository.save(new ProjectRole(name)) : role;
+    }
+
 }

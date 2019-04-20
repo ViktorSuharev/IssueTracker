@@ -18,15 +18,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Slf4j
 @RestController
+@PreAuthorize("hasRole('USER')")
 @RequestMapping("/api/projects")
 public class ProjectRestController {
 
@@ -39,13 +42,11 @@ public class ProjectRestController {
         this.userService = userService;
     }
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/")
     public ResponseEntity<Iterable<Project>> getAllProjects() {
         return ResponseEntity.ok(projectService.getAllProjects());
     }
 
-    @PreAuthorize("hasRole('USER')")
     @PostMapping("/")
     public ResponseEntity<Project> createProject(@AuthenticationPrincipal UserPrincipal currentUser,
                                                  @RequestBody ProjectInfo projectInfo) {
@@ -59,6 +60,8 @@ public class ProjectRestController {
         if (team == null || !team.iterator().hasNext())
             return ResponseEntity.badRequest().build();
 
+        team = processTeam(team);
+
         //save project
         Project created = projectService.addProject(project);
 
@@ -69,6 +72,16 @@ public class ProjectRestController {
         projectService.sendInvitationToNewProject(created);
 
         return ResponseEntity.ok(created);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Project> getProjectById(@PathVariable(name = "id") BigInteger id) {
+        try{
+            Project project = projectService.getProjectById(id);
+            return ResponseEntity.ok(project);
+        } catch (NoSuchElementException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @Transactional
@@ -87,6 +100,8 @@ public class ProjectRestController {
 
         if (!projectToUpdate.getCreator().equals(creator))
             return ResponseEntity.badRequest().build();
+
+        team = processTeam(team);
 
         try {
             Project project = projectService.updateProject(projectToUpdate, newProject);
@@ -107,7 +122,7 @@ public class ProjectRestController {
         return ResponseEntity.ok(projectService.getProjectsOfUser(user));
     }
 
-    @GetMapping("/{id}/team")
+    @GetMapping("/team/{id}")
     public ResponseEntity<Iterable<UserWithRole>> getTeamByProjectId(@PathVariable(name = "id") BigInteger id) {
         Project project = projectService.getProjectById(id);
 
@@ -124,7 +139,8 @@ public class ProjectRestController {
         Project project = projectService.getProjectById(id);
 
         if (project.getCreator().equals(user)
-                && projectService.deleteProject(project))
+                && projectService.deleteProject(project)
+        )
             return ResponseEntity.ok().build();
 
         return ResponseEntity.badRequest().build();
@@ -148,4 +164,20 @@ public class ProjectRestController {
         private Project project;
         private Iterable<ProjectMember> team;
     }
+
+    private Iterable<ProjectMember> processTeam(Iterable<ProjectMember> team) {
+        return StreamSupport.stream(team.spliterator(), false)
+                .map(this::processMember).collect(Collectors.toList());
+    }
+
+    private ProjectMember processMember(ProjectMember member) {
+        User user = userService.getUserByEmail(member.getUser().getEmail());
+        ProjectRole role = projectService.createRoleIfNotExists(member.getRole().getName());
+
+        member.setRole(role);
+        member.setUser(user);
+
+        return member;
+    }
+
 }

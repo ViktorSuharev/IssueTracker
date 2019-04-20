@@ -1,7 +1,7 @@
 import React from 'react';
 import * as axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Form, Badge, Container, Table, Button } from 'react-bootstrap';
+import { Form, Modal, Badge, Container, Table, Button } from 'react-bootstrap';
 import TextEditor from '../TextEditor';
 import { authorizationHeader } from '../../actions';
 import { backurl } from '../../properties';
@@ -19,7 +19,44 @@ export default class TaskView extends React.Component {
                 reporter: { fullName: '', id: 0 },
             }
         };
+
+        this.deleteTask = this.deleteTask.bind(this);
+
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleShow = this.handleShow.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
+
+    handleCancel(event) {
+        event.preventDefault();
+    }
+
+    handleClose() {
+        this.setState({ show: false });
+    }
+
+    handleShow(event) {
+        event.preventDefault();
+
+        this.setState({ show: true });
+    }
+
+    deleteTask(event) {
+        event.preventDefault();
+
+        const task = this.state.task;
+        axios.delete(backurl + '/tasks/' + task.id, authorizationHeader())
+            .then(response => {
+                alert(task.name + ' deleted');
+                window.location.reload(false);
+            })
+            .catch(error => {
+                alert(error.response.status);
+            })
+
+        this.handleClose();
+    }
+
 
     componentDidMount() {
         var header = authorizationHeader();
@@ -31,55 +68,71 @@ export default class TaskView extends React.Component {
             })
     };
 
+    modalDeleteTask = () => <Modal show={this.state.show} onHide={this.handleClose}>
+        <Modal.Header closeButton>
+            <Modal.Title>Delete task</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete task '{this.state.task.name}'?</Modal.Body>
+        <Modal.Footer>
+            <Button variant='secondary' onClick={this.handleClose}>
+                Cancel
+        </Button>
+            <Button variant='danger' onClick={this.deleteTask}>
+                Delete
+        </Button>
+        </Modal.Footer>
+    </Modal>
+
     render() {
         var task = this.state.task;
 
-        return <Container>
-            
-            <div className='float-right'>
-                <Button variant='success'>&nbsp; Edit &nbsp;</Button>&nbsp;&nbsp;
-                <Button variant='danger'>&nbsp; Delete &nbsp;</Button>
-            </div>
-            <div className='flex-row'>
-                {task.priority ? <Badge className='align-self-start' variant={priorities[task.priority].color}>{task.priority}</Badge> : null}
-                &nbsp;
+        return <div>
+            {this.modalDeleteTask()}
+            <Container>
+                <div className='float-right'>
+                    <Button variant='success'>&nbsp; Edit &nbsp;</Button>&nbsp;&nbsp;
+                <Button variant='danger' onClick={this.handleShow}>&nbsp; Delete &nbsp;</Button>
+                </div>
+                <div className='flex-row'>
+                    {task.priority ? <Badge className='align-self-start' variant={priorities[task.priority].color}>{task.priority}</Badge> : null}
+                    &nbsp;
                 {task.priority ? <Badge className='align-self-start' variant={statuses[task.status].color}>{statuses[task.status].name}</Badge> : null}
 
-                <div className='py-2  flex-grow-1'>
-                    <h1>{task.name}</h1>
+                    <div className='py-2  flex-grow-1'>
+                        <h1>{task.name}</h1>
+                    </div>
                 </div>
-            </div>
-            <hr />
+                <hr />
 
 
-            {task.description ? <TextEditor
-                readOnly={true}
-                value={task.description} /> : null
-            }
-            <hr />
-            <h3>People</h3>
-            <ul>
-                {task.assignee ? <li>Assignee: <a href={'/users/' + task.assignee.id}>{task.assignee.name}</a></li> : null}
-                {task.reporter ? <li>Reporter: <a href={'/users/' + task.reporter.id}>{task.reporter.name}</a></li> : null}
+                {task.description ? <TextEditor
+                    readOnly={true}
+                    value={task.description} /> : null
+                }
+                <hr />
+                <h3>People</h3>
+                <ul>
+                    {task.assignee ? <li>Assignee: <a href={'/users/' + task.assignee.id}>{task.assignee.name}</a></li> : null}
+                    {task.reporter ? <li>Reporter: <a href={'/users/' + task.reporter.id}>{task.reporter.name}</a></li> : null}
 
-                {/* <li>Deadline: {this.state.task.dueDate}</li> */}
-                {/* {task.modificationDate ? <li>Last modified: {this.state.task.modificationDate}</li> : null} */}
-            </ul>
-            <br />
+                    {/* <li>Deadline: {this.state.task.dueDate}</li> */}
+                    {/* {task.modificationDate ? <li>Last modified: {this.state.task.modificationDate}</li> : null} */}
+                </ul>
+                <br />
 
-            <h3>Dates</h3>
-            <ul>
-                <li>Created: {task.creationDate}</li>
-                <li>Deadline: {task.dueDate}</li>
-                {task.modificationDate ? <li>Last modified: {task.modificationDate}</li> : null}
-            </ul>
-            <br />
-            <hr />
+                <h3>Dates</h3>
+                <ul>
+                    <li>Created: {task.creationDate}</li>
+                    <li>Deadline: {task.dueDate}</li>
+                    {task.modificationDate ? <li>Last modified: {task.modificationDate}</li> : null}
+                </ul>
+                <br />
+                <hr />
 
-            <h3>History</h3>
-            <br />
+                <h3>History</h3>
+                <br />
 
-            {/* <Table striped bordered hover>
+                {/* <Table striped bordered hover>
                 <thead className='thead-dark'>
                     <tr>
                         <th>name</th>
@@ -95,8 +148,10 @@ export default class TaskView extends React.Component {
                     </tr>)}
                 </tbody>
             </Table> */}
-            <hr />
-        </Container>
+                <hr />
+            </Container>
+        </div>
+
     }
 }
 
