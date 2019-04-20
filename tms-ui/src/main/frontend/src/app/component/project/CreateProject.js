@@ -1,13 +1,13 @@
 import React from 'react';
 import * as axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-// import { Link } from 'react-router-dom';
-import { Container, Modal, Button } from 'react-bootstrap';
+import { FormControl, Container, Modal, Button, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap';
 import '../styles.css';
 import './index.css';
 import TextEditor from '../TextEditor';
 import { authorizationHeader } from '../../actions';
-import { backurl } from '../../properties';
+import { backurl, project_roles } from '../../properties';
+import DropdownItem from 'react-bootstrap/DropdownItem';
 
 class CreateProject extends React.Component {
     constructor(props) {
@@ -19,7 +19,7 @@ class CreateProject extends React.Component {
             users: [{}],
             team: [],
             user: null,
-            role: null,
+            role: project_roles[0],
             show: false,
 
             editor: {
@@ -73,7 +73,7 @@ class CreateProject extends React.Component {
         axios.get(backurl + '/users/', header)
             .then(res => {
                 const users = res.data;
-                this.setState({ users: users });
+                this.setState({ users: users, user: users[0] });
             })
     };
 
@@ -126,22 +126,21 @@ class CreateProject extends React.Component {
         const eventName = event.target.name;
 
         switch (eventName) {
-            case 'userName':
-                var email = event.target.value;
-                var user = this.state.users.find(user => user.email === email);
-
-                console.log('Found com.netcracker.edu.tms.user:', JSON.stringify(user));
-
-                this.setState({ user: user }, () => console.log('this.state.com.netcracker.edu.tms.user:', JSON.stringify(this.state.user)))
+            case 'user':
+                var user = JSON.parse(event.target.value);
+                this.setState({ user: user })
                 break;
 
             case 'role':
-                const role = event.target.value;
+                var role = JSON.parse(event.target.value);
                 this.setState({ role: role })
                 break;
+
             default:
                 break;
         }
+
+        console.log('STATE: ', JSON.stringify(this.state))
     }
 
     onAddUser(event) {
@@ -151,22 +150,22 @@ class CreateProject extends React.Component {
             alert('Employee was not selected!');
             return;
         }
+        
 
-        var curUser = new User(this.state.user.name, this.state.user.email, this.state.role);
-        console.log('OnSubmit:', JSON.stringify(curUser));
+        var curUser = {user: this.state.user, role: this.state.role};
 
-        var alreadySelected = this.state.team.some(e => e.email === curUser.email);
+        var alreadySelected = this.state.team.some(e => e.user.id === curUser.user.id);
 
-        alreadySelected ? alert(JSON.stringify(curUser.name) + ' has been already added')
+        alreadySelected ? alert(JSON.stringify(curUser.user.name) + ' has been already added')
             : this.setState({ team: [...this.state.team, curUser] });
     }
 
     onDeleteClick = (userToDelete) => {
-        const teamNew = this.state.team.filter(u => u.email !== userToDelete.email);
+        const team = this.state.team.filter(u => u.user.id !== userToDelete.id);
 
-        console.log('Team: ', JSON.stringify(teamNew));
+        console.log('Team: ', JSON.stringify(team));
 
-        this.setState({ team: teamNew }, () =>
+        this.setState({ team: team }, () =>
             console.log('delete com.netcracker.edu.tms.user: ', userToDelete.email));
     };
 
@@ -232,34 +231,34 @@ class CreateProject extends React.Component {
                         <h4>Project team:</h4>
                     </div>
                     <br />
-                    <form onSubmit={this.onAddUser}>
-                        <h6>Add memebers</h6>
-                        <label className='mx-1'>
-                            <select defaultValue={''} name='userName' className='form-control'
-                                onChange={this.onSelectChange}>
-                                <option value='' disabled={true}>
-                                    Select user
-                                    </option>
-                                {this.state.users.map(user =>
-                                    <option value={user.email || ''} key={user.email || ''}>
-                                        {user.name}
-                                    </option>)}
-                                )}
+
+                    <InputGroup>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text>User </InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <select name='user' className='form-control'
+                            onChange={this.onSelectChange}>
+                            {this.state.users.map(user =>
+                                <option value={JSON.stringify(user)} key={user.email}>
+                                    {user.name}
+                                </option>)}
+                            )}
                                 </select>
-                        </label>
-                        <label className='mx-2'>
-                            <select defaultValue={''} name='role' className='form-control'
-                                onChange={this.onSelectChange}>
-                                <option value='' disabled={true}>
-                                    Select role
-                                    </option>
-                                <option value='Project Manager'>Project Manager</option>
-                                <option value='Developer'>Developer</option>
-                                <option value='QA'>QA</option>
-                            </select>
-                        </label>
-                        <input className='mx-2 btn btn-dark' type='submit' value='Add' />
-                    </form>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text>Role </InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <select defaultValue={''} name='role' className='form-control'
+                            onChange={this.onSelectChange}>
+
+                            {project_roles.map(role =>
+                                <option value={JSON.stringify(role)} key={role.name}>
+                                    {role.name}
+                                </option>)}
+                            )}
+                                </select>
+                                <Button variant='dark' onClick={this.onAddUser}>Add</Button>
+                    </InputGroup>
+                    <hr/>
 
                     <div className='table-responsive'>
                         <table className='table table-light table-striped table-bordered table-hover table-sm  '>
@@ -273,13 +272,13 @@ class CreateProject extends React.Component {
                             </thead>
                             <tbody>
 
-                                {this.state.team.map(user =>
-                                    <tr key={user.email + user.role}>
+                                {this.state.team.map(({user, role}) =>
+                                    <tr key={user.email}>
                                         <td> {user.name}</td>
                                         <td> {user.email}</td>
-                                        <td> {user.role}</td>
+                                        <td> {role.name}</td>
                                         <th scope='row'>
-                                            <Button variant='danger' onClick={this.onDeleteClick.bind(this, user)}>
+                                            <Button variant='dark' onClick={this.onDeleteClick.bind(this, user)}>
                                                 X
                                                 </Button>
                                         </th>

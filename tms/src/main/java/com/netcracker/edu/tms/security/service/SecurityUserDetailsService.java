@@ -2,7 +2,7 @@ package com.netcracker.edu.tms.security.service;
 
 import com.netcracker.edu.tms.security.model.UserPrincipal;
 import com.netcracker.edu.tms.user.model.UserWithPassword;
-import com.netcracker.edu.tms.user.repository.UserRepository;
+import com.netcracker.edu.tms.user.repository.UserWithPasswordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,16 +11,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SecurityUserDetailsService implements UserDetailsService {
-    private UserRepository userRepository;
+    private UserWithPasswordRepository userWithPasswordRepository;
 
     @Autowired
-    public SecurityUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public SecurityUserDetailsService(UserWithPasswordRepository userWithPasswordRepository) {
+        this.userWithPasswordRepository = userWithPasswordRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserWithPassword userWithPassword = userRepository.findByEmail(email);
+        UserWithPassword userWithPassword = userWithPasswordRepository.findByEmail(email);
 
         if (userWithPassword == null) {
             throw new UsernameNotFoundException("UserWithPassword not found by name : " + email);

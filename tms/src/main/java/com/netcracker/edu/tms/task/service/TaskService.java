@@ -4,7 +4,7 @@ import com.netcracker.edu.tms.project.model.Project;
 import com.netcracker.edu.tms.task.model.Priority;
 import com.netcracker.edu.tms.task.model.Status;
 import com.netcracker.edu.tms.task.model.Task;
-import com.netcracker.edu.tms.user.model.UserWithPassword;
+import com.netcracker.edu.tms.user.model.User;
 
 import java.math.BigInteger;
 import java.text.ParseException;
@@ -24,9 +24,9 @@ public interface TaskService {
 
     Iterable<Task> getAll();
 
-    Iterable<Task> getTaskByReporter(UserWithPassword reporter);//argument should be UserWithPassword instance
+    Iterable<Task> getTaskByReporter(User reporter);//argument should be UserWithPassword instance
 
-    Iterable<Task> getTaskByAssignee(UserWithPassword assignee);//argument should be UserWithPassword instance
+    Iterable<Task> getTaskByAssignee(User assignee);//argument should be UserWithPassword instance
 
     List<Task> getTaskByCreationDate(String creationDate) throws ParseException;
 

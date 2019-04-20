@@ -1,13 +1,14 @@
 package com.netcracker.edu.tms.task.controller;
 
 import com.netcracker.edu.tms.project.model.Project;
-import com.netcracker.edu.tms.security.model.UserPrincipal;
 import com.netcracker.edu.tms.project.service.ProjectService;
-import com.netcracker.edu.tms.task.service.TaskService;
+import com.netcracker.edu.tms.security.model.UserPrincipal;
 import com.netcracker.edu.tms.task.model.Priority;
 import com.netcracker.edu.tms.task.model.Status;
 import com.netcracker.edu.tms.task.model.Task;
 import com.netcracker.edu.tms.task.model.TaskDTO;
+import com.netcracker.edu.tms.task.service.TaskService;
+import com.netcracker.edu.tms.user.model.User;
 import com.netcracker.edu.tms.user.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,12 +21,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import com.netcracker.edu.tms.user.model.UserWithPassword;
 
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.List;
 
+@PreAuthorize("hasRole('USER')")
 @RequestMapping(value = "/api/tasks")
 @RestController
 public class TaskController {
@@ -39,7 +40,6 @@ public class TaskController {
     @Autowired
     ProjectService projectService;
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/")
     public Iterable<Task> getAllTasks() {
         return taskService.getAll();
@@ -54,13 +54,12 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
     }
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/my")
     public ReporterOrAssigneeTasks getMyTasks(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        UserWithPassword userWithPassword = userService.getUserByEmail(userPrincipal.getUsername());
+        User user = userService.getUserByEmail(userPrincipal.getUsername());
 
-        Iterable<Task> asAssignee = taskService.getTaskByAssignee(userWithPassword);
-        Iterable<Task> asReporter = taskService.getTaskByReporter(userWithPassword);
+        Iterable<Task> asAssignee = taskService.getTaskByAssignee(user);
+        Iterable<Task> asReporter = taskService.getTaskByReporter(user);
 
         ReporterOrAssigneeTasks tasks = new ReporterOrAssigneeTasks(asAssignee, asReporter);
         return tasks;
@@ -73,13 +72,11 @@ public class TaskController {
     }
 
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{taskId}")
     public ResponseEntity getTaskById(@PathVariable BigInteger taskId) {
         return ResponseEntity.ok(taskService.getTaskById(taskId));
     }
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/getTaskByName")
     public List<Task> getTaskByName(@RequestParam("taskName") String taskName) {
         return taskService.getTaskByName(taskName);
@@ -103,13 +100,13 @@ public class TaskController {
 
     @GetMapping("/reporter")
     public @ResponseBody Iterable<Task> getTaskByReporter(@RequestParam("reporterId") BigInteger reporterId) { //argument should be UserWithPassword instance
-        UserWithPassword reporter = userService.getUserByID(reporterId);
+        User reporter = userService.getUserById(reporterId);
         return taskService.getTaskByReporter(reporter);
     }
 
     @GetMapping("/assignee")
     public @ResponseBody Iterable<Task> getTaskByAssignee(@RequestParam("assigneeId") BigInteger assigneeId) { //argument should be UserWithPassword instance
-        UserWithPassword assignee = userService.getUserByID(assigneeId);
+        User assignee = userService.getUserById(assigneeId);
         return taskService.getTaskByAssignee(assignee);
     }
 

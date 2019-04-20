@@ -49,16 +49,14 @@ export default class ProjectContainer extends Component {
 
     controlIfCreator(project) {
         return <AuthConsumer>
-            {({ user }) => user.id === project.creatorId ? this.makeControlLinks(project) : <br />}
+            {({ user }) => user.id === project.creator.id ? this.makeControlLinks(project) : <br />}
         </AuthConsumer>
     }
 
     onDelete(event) {
         const projectId = event.target.value;
 
-        const project = this.props.projects
-            .map(({ project, owner }) => project)
-            .find((p) => p.id == projectId);
+        const project = this.props.projects.find((p) => p.id == projectId);
 
         this.setState({ deleteProject: project });
         this.handleShow(event);
@@ -83,10 +81,14 @@ export default class ProjectContainer extends Component {
     processProjectCard(project) {
         if (project === stub)
             return <Card>
-                <Card.Header><h4>Create new</h4></Card.Header>
-                <Card.Body align='center'>
-                    <Button className='rounded' variant='outline-secondary' href='/projects/new'>
-                        <h1><br /> &nbsp; &nbsp; &nbsp; +  &nbsp; &nbsp; &nbsp;</h1><br /><br />
+                <Card.Header>
+                    <Card.Link href='/projects/new'>
+                        <h4>Create new</h4>
+                    </Card.Link>
+                </Card.Header>
+                <Card.Body className='d-flex' align='center'>
+                    <Button className='p-5 w-100 rounded' variant='outline-secondary' href='/projects/new'>
+                        <h1 className='display-3'>+</h1>
                     </Button>
                 </Card.Body>
             </Card>
@@ -98,7 +100,7 @@ export default class ProjectContainer extends Component {
                 </Card.Link>
             </Card.Header>
             <Card.Body>
-                <Card.Subtitle className='mb-2 text-muted'>{project.owner.name}</Card.Subtitle>
+                <Card.Subtitle className='mb-2 text-muted'>{project.creator.name}</Card.Subtitle>
                 {this.controlIfCreator(project)}
                 {/* <TextEditor value={project.description} readOnly={true} /> */}
                 <br />
@@ -110,11 +112,8 @@ export default class ProjectContainer extends Component {
     }
 
     render() {
-        const colNum = 2;
-        const rawProjects = this.props.projects.map(({ project, owner }) => {
-            project.owner = owner;
-            return project;
-        });
+        const colNum = 3;
+        const rawProjects = this.props.projects;
 
         while (rawProjects.length % colNum)
             rawProjects.push(stub);

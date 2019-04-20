@@ -2,9 +2,9 @@ package com.netcracker.edu.tms.task.model;
 
 import com.netcracker.edu.tms.project.model.Project;
 import com.netcracker.edu.tms.project.service.ProjectService;
+import com.netcracker.edu.tms.user.model.User;
 import com.netcracker.edu.tms.user.service.UserService;
 import lombok.Data;
-import com.netcracker.edu.tms.user.model.UserWithPassword;
 
 import java.math.BigInteger;
 import java.text.ParseException;
@@ -29,8 +29,8 @@ public class TaskDTO {
     private String description;
 
     public Task convert(UserService userService, ProjectService projectService) {
-        UserWithPassword assignee = userService.getUserByID(assigneeId);
-        UserWithPassword reporter = userService.getUserByID(reporterId);
+        User assignee = userService.getUserById(assigneeId);
+        User reporter = userService.getUserById(reporterId);
         Project project = projectService.getProjectById(projectId);
         //TODO
 //        Date dueDate = null;

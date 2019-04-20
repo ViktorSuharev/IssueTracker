@@ -2,100 +2,37 @@ package com.netcracker.edu.tms.project.service;
 
 import com.netcracker.edu.tms.project.model.Project;
 import com.netcracker.edu.tms.project.model.ProjectMember;
-import com.netcracker.edu.tms.project.model.ProjectWithCreator;
-import com.netcracker.edu.tms.task.model.Task;
-import com.netcracker.edu.tms.user.model.UserWithPassword;
+import com.netcracker.edu.tms.project.model.ProjectRole;
+import com.netcracker.edu.tms.user.model.User;
 
 import java.math.BigInteger;
 import java.util.List;
 
 public interface ProjectService {
 
-    /**
-     * Get project by specified id
-     *
-     * @param projectId
-     * @return {@link Project} or null
-     */
     Project getProjectById(BigInteger projectId);
 
-    /**
-     * Add new project to database
-     *
-     * @param newProject
-     * @return true or false depending on operation result
-     */
-    boolean addProject(Project newProject);
+    Project addProject(Project project);
 
-    /**
-     * Update existent project
-     *
-     * @param project
-     * @param oldProjectId
-     * @return true or false depending on operation result
-     */
-    boolean updateProject(Project project, BigInteger oldProjectId);
+    Project updateProject(Project projectToUpdate, Project newProject);
 
-    /**
-     * Delete project
-     *
-     * @param projectId
-     * @return true or false depending on operation result
-     */
-    boolean deleteProject(BigInteger projectId);
+    boolean deleteProject(Project project);
 
-    /**
-     *
-     */
-    List<Project> findProjectsByCreatorId(BigInteger creatorId);
+    Iterable<Project> findProjectsByCreator(User creator);
 
-    /**
-     * Select all projects from DB
-     *
-     * @return list of {@link Project} or empty list
-     */
-    List<ProjectWithCreator> getAllProjectsWithCreators();
+    Iterable<Project> getAllProjects();
 
-    /**
-     * Select all projects from DB
-     *
-     * @return list of {@link Project} or empty list
-     */
-    List<Project> getAllProjects();
+    List<Project> getProjectsOfUser(User user);
 
-    /**
-     *
-     */
-    Project getProjectByName(String name);
+    boolean setProjectsTeam(Project project, Iterable<ProjectMember> team);
 
-    /**
-     *
-     */
-    List<Project> getProjectsByUserId(BigInteger userId);
+    Iterable<ProjectMember> getTeamByProject(Project project);
 
-    /**
-     *
-     */
-    boolean setProjectsTeam(BigInteger projectId, List<ProjectMember> team);
+    void deleteProjectMember(ProjectMember projectMember);
 
-    /**
-     *
-     */
-    List<Task> getTasksByUserId(BigInteger userId);
+    boolean deleteTeam(Project project);
 
-    /**
-     *
-     */
-    List<UserWithPassword> getTeamByProjectId(BigInteger projectId);
+    void sendInvitationToNewProject(Project project);
 
-    /**
-     *
-     */
-    boolean deleteUserFromTeam(UserWithPassword userWithPasswordToDelete, BigInteger projectId);
-
-
-    /**
-     *
-     */
-    void sendInvitationToNewProject(Project project, List<ProjectMember> team);
+    ProjectRole createRoleIfNotExists(String name);
 }

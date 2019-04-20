@@ -54,7 +54,7 @@ export default class ProjectView extends React.Component {
             }
             <hr />
             <h3>Team</h3>
-            <br/>
+            <br />
 
             <Table striped bordered hover>
                 <thead className='thead-dark'>
@@ -65,17 +65,21 @@ export default class ProjectView extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    { this.state.team.map(u => <tr>
-                        <td>{u.name}</td>
-                        <td>{u.email}</td>
-                        <td>{u.role}</td>
-                    </tr> )}
+                    {this.state.team.map(({ user, role }) =>
+                        <tr key={user.email}>
+                            <td> {user.name}</td>
+                            <td> {user.email}</td>
+                            <td> {role.name}</td>
+                        </tr>)}
                 </tbody>
             </Table>
             <hr />
-            <h3>Tasks</h3>
-            <br/>
-            <TaskBoard tasks={this.state.tasks}/>
+            {this.state.tasks.length ? <div>
+                <h3>Tasks</h3>
+            <br />
+            <TaskBoard tasks={this.state.tasks} />
+            </div> : null}
+            
         </Container>
     }
 }

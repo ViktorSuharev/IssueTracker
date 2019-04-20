@@ -66,7 +66,7 @@ export default class Register extends Component {
         event.preventDefault();
 
         let credential = {
-            fullName: this.state.firstName + ' ' + this.state.lastName,
+            name: this.state.firstName + ' ' + this.state.lastName,
             email: this.state.email,
             password: this.state.password
         };

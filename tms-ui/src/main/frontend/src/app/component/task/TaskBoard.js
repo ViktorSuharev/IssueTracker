@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Modal, Badge, Container, Card, CardDeck, Button } from 'react-bootstrap'
 import { shortenIfLong } from '../../actions';
 import axios from 'axios';
-import {backurl} from '../../properties';
-import {authorizationHeader} from '../../actions';
+import { backurl } from '../../properties';
+import { authorizationHeader } from '../../actions';
 
 export default class TaskBoard extends Component {
     constructor(props) {
@@ -67,8 +67,7 @@ export default class TaskBoard extends Component {
         if (task === stubTask)
             return;
 
-        let edit = 'tasks/edit/' + task.id;
-        let remove = 'tasks/delete/' + task.id;
+        let edit = '/tasks/edit/' + task.id;
 
         return <div>
             <Button size='sm' variant='outline-success' value={task.id} href={edit}>&nbsp; Edit &nbsp;</Button>
@@ -81,9 +80,9 @@ export default class TaskBoard extends Component {
         if (task === stubTask)
             return <Card>
                 <Card.Header><h4>Add new</h4></Card.Header>
-                <Card.Body align='center'>
-                    <Button className='rounded' variant='outline-secondary' href='/tasks/new'>
-                        <h1><br /> &nbsp; &nbsp; &nbsp; +  &nbsp; &nbsp; &nbsp;</h1><br /><br />
+                <Card.Body className='d-flex' align='center'>
+                    <Button className='p-5 w-100 rounded' variant='outline-secondary' href='/tasks/new'>
+                        <h1 className='display-3'>+</h1>
                     </Button>
                 </Card.Body>
             </Card>
@@ -97,9 +96,9 @@ export default class TaskBoard extends Component {
             </Card.Body>
             <Card.Body>
                 <Card.Text>
-                    Assignee &nbsp; <a href={'/users/' + task.assignee.id}>{task.assignee.fullName}</a>
+                    Assignee &nbsp; <a href={'/users/' + task.assignee.id}>{task.assignee.name}</a>
                     <br />
-                    Reporter &nbsp; <a href={'/users/' + task.reporter.id}>{task.reporter.fullName}</a>
+                    Reporter &nbsp; <a href={'/users/' + task.reporter.id}>{task.reporter.name}</a>
                 </Card.Text>
             </Card.Body>
             <Card.Body>{this.makeControlLinks(task)}</Card.Body>
@@ -116,34 +115,32 @@ export default class TaskBoard extends Component {
         </Card.Subtitle>
     }
 
+    modalDeleteTask = () => <Modal show={this.state.show} onHide={this.handleClose}>
+        <Modal.Header closeButton>
+            <Modal.Title>Delete task</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete task '{this.state.deleteTask.name}'?</Modal.Body>
+        <Modal.Footer>
+            <Button variant='secondary' onClick={this.handleClose}>
+                Cancel
+        </Button>
+            <Button variant='danger' onClick={this.deleteTask}>
+                Delete
+        </Button>
+        </Modal.Footer>
+    </Modal>
+
     render() {
         const colNum = 3;
         const tasks = this.props.tasks;
-        // const rawTasks = this.props.tasks.map(({task, owner}) => {
-        //     task.author = owner;
-        //     //
-        //     return task;
-        // } );
 
         while (tasks.length % colNum)
             tasks.push(stubTask);
 
         var matrix = reshape(tasks, colNum);
 
-        return <div><Modal show={this.state.show} onHide={this.handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>Delete task</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Are you sure you want to delete task '{this.state.deleteTask.name}'?</Modal.Body>
-            <Modal.Footer>
-                <Button variant='secondary' onClick={this.handleClose}>
-                    Cancel
-                </Button>
-                <Button variant='danger' onClick={this.deleteTask}>
-                    Delete
-                </Button>
-            </Modal.Footer>
-            </Modal>
+        return <div>
+            {this.modalDeleteTask()}
             <Container>
                 {matrix.map((row) => <div><CardDeck>
                     {row.map(task => this.processTaskElement(task))}

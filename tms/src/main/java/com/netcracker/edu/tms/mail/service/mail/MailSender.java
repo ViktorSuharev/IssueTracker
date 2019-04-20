@@ -34,7 +34,7 @@ public class    MailSender implements Runnable {
 
             Transport.send(message);
         } catch (MessagingException e) {
-            LOGGER.error("Message exeption in MailSender with stack trace: ", e.getStackTrace());
+            LOGGER.error("Message exeption in MailSender with stack trace: ", e.getMessage());
         }
     }
 }
