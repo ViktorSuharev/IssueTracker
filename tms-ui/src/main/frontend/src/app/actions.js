@@ -8,7 +8,6 @@ export function wordWrap(toWrap, length) {
     var res = [];
     let i = 0;
     for(i = 0; i < word.length; i+= len) {
-        // var w = 
         res.push(word.substr(i, len));
         console.log(JSON.stringify(res));
     }
@@ -18,7 +17,9 @@ export function wordWrap(toWrap, length) {
 
 //USEFUL
 export function shortenIfLong(title, length) {
-    return title.length > length ? title.substring(0, length - 4) + '...' : title;
+    const len = length ? length : 20;
+
+    return title.length > len ? title.substring(0, len - 4) + '...' : title;
 }
 
 

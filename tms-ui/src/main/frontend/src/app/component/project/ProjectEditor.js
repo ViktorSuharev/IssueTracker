@@ -30,7 +30,10 @@ export default class ProjectEditor extends React.Component {
 
             editor: {
                 placeholder: 'Enter description...'
-            }
+            },
+
+            originalProject: null,
+            originalTeam: []
         };
 
         this.saveDescription = this.saveDescription.bind(this);
@@ -82,13 +85,14 @@ export default class ProjectEditor extends React.Component {
                 this.setState({
                     name: project.name,
                     description: project.description,
-                    creator: project.creator
+                    creator: project.creator,
+                    originalProject: project
                 })
 
                 axios.get(backurl + '/projects/team/' + this.state.id, header)
                     .then(response => {
                         const team = response.data;
-                        this.setState({ team: team });
+                        this.setState({ team: team, originalTeam: team });
                     })
             }
 
@@ -111,8 +115,6 @@ export default class ProjectEditor extends React.Component {
             creator: this.state.creator
         };
 
-        console.log('DESCRIPTION: ', JSON.stringify(project.description));
-
         if (!this.state.name) {
             alert('Create project: name your project!');
             this.handleClose();
@@ -124,6 +126,14 @@ export default class ProjectEditor extends React.Component {
             this.handleClose();
             return;
         }
+
+        const original = this.state.originalProject;
+        if(project.name === original.name 
+            && project.description === original.description
+            && this.state.team === this.state.originalTeam) {
+                alert('Nothing changed');
+                this.handleClose();
+            }
 
         let header = authorizationHeader();
 
@@ -212,22 +222,22 @@ export default class ProjectEditor extends React.Component {
         return <div>
             <Modal show={this.state.show} onHide={this.handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Save new project</Modal.Title>
+                    <Modal.Title>Update project</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Are you sure you want to save new project?</Modal.Body>
+                <Modal.Body>Are you sure you want to update the project?</Modal.Body>
                 <Modal.Footer>
                     <Button variant='secondary' onClick={this.handleClose}>
                         Cancel
                         </Button>
                     <Button variant='primary' onClick={this.onSubmitProject}>
-                        Save
+                        Update
                         </Button>
                 </Modal.Footer>
             </Modal>
 
             <Container>
                 <div className="d-flex">
-                    <div className='mr-auto'><h2>Create project</h2></div>
+                    <div className='mr-auto'><h2>Edit project</h2></div>
                     <div className='float-right'>
                         <Button variant='secondary' onClick={this.setRedirect}>Cancel</Button>
                         <span>&nbsp;&nbsp;</span>

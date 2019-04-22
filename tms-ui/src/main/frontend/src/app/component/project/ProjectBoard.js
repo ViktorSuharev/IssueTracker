@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Modal, Container, Button, Card, CardDeck } from 'react-bootstrap'
-// import TextEditor from '../TextEditor';
+import { Modal, Container, Button, Card, CardDeck } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { AuthConsumer } from '../login/AuthContext';
 import axios from 'axios';
 import { backurl } from '../../properties';
-import { authorizationHeader } from '../../actions';
+import { authorizationHeader, shortenIfLong } from '../../actions';
 
-export default class ProjectContainer extends Component {
+export default class ProjectBoard extends Component {
     constructor(props) {
         super(props);
 
@@ -40,10 +40,10 @@ export default class ProjectContainer extends Component {
     makeControlLinks(project) {
         let edit = 'projects/edit/' + project.id;
 
-        return <div>
-            <Button size='sm' variant='outline-success' value={project.id} href={edit}>&nbsp; Edit &nbsp;</Button>
-            &nbsp; &nbsp;
-            <Button size='sm' variant='outline-danger' value={project.id} onClick={this.onDelete}>Delete</Button>
+        return <div className='float-right'>
+            <Button size='sm' variant='success' value={project.id}><Link className='link' to={edit}>&nbsp; Edit &nbsp;</Link></Button>
+            &nbsp;
+            <Button size='sm' variant='danger' value={project.id} onClick={this.onDelete}>Delete</Button>
         </div>
     }
 
@@ -95,14 +95,13 @@ export default class ProjectContainer extends Component {
 
         return <Card>
             <Card.Header>
-                <Card.Link href={'/projects/' + project.id}>
-                    <h4>{project.name}</h4>
-                </Card.Link>
+                <Link to={'/projects/' + project.id}>
+                    <h4>{shortenIfLong(project.name, 20)}</h4>
+                </Link>
             </Card.Header>
             <Card.Body>
-                <Card.Subtitle className='mb-2 text-muted'>{project.creator.name}</Card.Subtitle>
-                {this.controlIfCreator(project)}
-                {/* <TextEditor value={project.description} readOnly={true} /> */}
+                <Card.Subtitle className='mb-2 text-muted'>{project.creator.name}
+                    {this.controlIfCreator(project)}</Card.Subtitle>
                 <br />
                 <Card.Text>
                     {parseMdToText(project.description)}

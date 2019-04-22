@@ -12,13 +12,12 @@ import HelloWorld from './component/HelloWorld';
 import AboutUser from './component/user/AboutUser';
 
 import React, { Component } from 'react'
+import { Container } from 'react-bootstrap';
 
 import NavigationBar from './component/navigation/NavigationBar.js';
 import { AuthProvider, AuthConsumer } from './component/login/AuthContext';
 import SignTabs from './component/login/SignTabs';
 import ProtectedRoute from './component/ProtectedRoute';
-import ProjectDashboard from './component/project/ProjectDashboard';
-import { Container } from 'react-bootstrap';
 import CreateTask from './component/task/CreateTask';
 import AllTasks from './component/task/AllTasks';
 import MyTasks from './component/task/MyTasks';
@@ -27,6 +26,7 @@ import TaskView from './component/task/TaskView';
 import NotFound from './component/NotFound';
 import TaskEditor from './component/task/TaskEditor';
 import ProjectEditor from './component/project/ProjectEditor';
+import AllProjects from './component/project/AllProjects';
 
 class App extends Component {
     render() {
@@ -45,7 +45,7 @@ class App extends Component {
                         <ProtectedRoute exact path='/projects/edit/:id' component={ProjectEditor} />
                         <ProtectedRoute exact path='/projects/info/:id' component={ProjectInfo} />
                         <ProtectedRoute exact path='/projects/:id' component={ProjectView} />
-                        <ProtectedRoute exact path='/projects' component={ProjectDashboard} />
+                        <ProtectedRoute exact path='/projects' component={AllProjects} />
                         
                         <ProtectedRoute exact path='/tasks' component={AllTasks} />
                         <ProtectedRoute exact path='/tasks/new' component={CreateTask} />

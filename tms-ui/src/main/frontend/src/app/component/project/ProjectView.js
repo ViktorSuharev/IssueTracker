@@ -7,6 +7,7 @@ import TextEditor from '../TextEditor';
 import { authorizationHeader, wordWrap } from '../../actions';
 import { backurl } from '../../properties';
 import TaskBoard from '../task/TaskBoard';
+import {Link} from 'react-router-dom';
 
 export default class ProjectView extends React.Component {
     constructor(props) {
@@ -46,7 +47,7 @@ export default class ProjectView extends React.Component {
 
         return <Container>
             <div className='float-right'>
-                <Button variant='success'>&nbsp; Edit &nbsp;</Button>&nbsp;&nbsp;
+                <Button variant='success'><Link className='link' to = {'/projects/edit/' + this.state.id}>&nbsp; Edit &nbsp;</Link></Button>&nbsp;&nbsp;
                 <Button variant='danger' onClick={this.handleShow}>&nbsp; Delete &nbsp;</Button>
             </div>
             <h1 style={{ wordBreak: 'break-all' }}>{project.name}</h1>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Spinner, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { AuthConsumer } from '../login/AuthContext';
 import '../styles.css';

@@ -1,11 +1,11 @@
 import * as axios from 'axios';
 import React, { Component } from 'react';
 import { Container } from 'react-bootstrap'
-import ProjectContainer from './ProjectContainer';
 import { backurl } from '../../properties';
 import { authorizationHeader } from '../../actions';
+import ProjectBoard from './ProjectBoard';
 
-export default class ProjectDashboard extends Component {
+export default class AllProjects extends Component {
     constructor(props) {
         super(props);
 
@@ -31,7 +31,7 @@ export default class ProjectDashboard extends Component {
         return <Container>
             <h3> All projects</h3>
             <hr />
-            <ProjectContainer projects={this.state.projects} />
+            <ProjectBoard projects={this.state.projects} />
         </Container>;
     }
 }
