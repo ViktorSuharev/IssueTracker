@@ -1,6 +1,7 @@
 package com.netcracker.edu.tms.task.repository;
 
 import com.netcracker.edu.tms.project.model.Project;
+import com.netcracker.edu.tms.task.model.Status;
 import com.netcracker.edu.tms.task.model.Task;
 import com.netcracker.edu.tms.user.model.User;
 import org.springframework.data.repository.CrudRepository;
@@ -12,7 +13,15 @@ public interface TaskRepository extends CrudRepository<Task, BigInteger> {
 
     Iterable<Task> findAllByAssignee(User assignee);
 
+    Iterable<Task> findAllByAssigneeAndStatus(User assignee, Status status);
+
     Iterable<Task> findAllByReporter(User reporter);
 
     Iterable<Task> findAllByProject(Project project);
+
+    Iterable<Task> findAllByProjectAndStatus(Project project, Status status);
+
+    void deleteAllByProject(Project project);
+
+    Iterable<Task> findAllByStatus(Status status);
 }

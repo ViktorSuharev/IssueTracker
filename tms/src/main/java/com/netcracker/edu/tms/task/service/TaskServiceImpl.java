@@ -9,6 +9,7 @@ import com.netcracker.edu.tms.task.repository.HistoryRepository;
 import com.netcracker.edu.tms.task.repository.TaskDao;
 import com.netcracker.edu.tms.task.repository.TaskRepository;
 import com.netcracker.edu.tms.user.model.User;
+import io.jsonwebtoken.lang.Collections;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 
 @Service
@@ -51,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public boolean addTask(Task task) {
-        if(taskRepository.existsByProjectAndName(task.getProject(), task.getName()))
+        if (taskRepository.existsByProjectAndName(task.getProject(), task.getName()))
             return false;
 
         task.setCreationDate(new java.sql.Date(System.currentTimeMillis()));
@@ -126,5 +131,54 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Iterable<History> getHistoryByTaskId(BigInteger id) {
         return historyRepository.findAllByTaskId(id);
+    }
+
+    @Override
+    public Iterable<Task> getActiveTasksByAssignee(User assignee) {
+        Iterable<Task> notStartedTasks = taskRepository.findAllByAssigneeAndStatus(assignee, Status.NOT_STARTED);
+        Iterable<Task> inProgressTasks = taskRepository.findAllByAssigneeAndStatus(assignee, Status.IN_PROGRESS);
+
+        return Stream.concat(
+                StreamSupport.stream(notStartedTasks.spliterator(), false),
+                StreamSupport.stream(inProgressTasks.spliterator(), false))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAllTasksByProject(Project project) {
+        taskRepository.deleteAllByProject(project);
+    }
+
+    @Override
+    public Iterable<Task> getActiveTasksByProject(Project project) {
+        Iterable<Task> notStartedTasks = taskRepository.findAllByProjectAndStatus(project, Status.NOT_STARTED);
+        Iterable<Task> inProgressTasks = taskRepository.findAllByProjectAndStatus(project, Status.IN_PROGRESS);
+
+        return Stream.concat(
+                StreamSupport.stream(notStartedTasks.spliterator(), false),
+                StreamSupport.stream(inProgressTasks.spliterator(), false))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Iterable<Task> getResolvedTasksByProject(Project project) {
+        return taskRepository.findAllByProjectAndStatus(project, Status.RESOLVED);
+    }
+
+    @Override
+    public Iterable<Task> getAllActiveTasks() {
+        Iterable<Task> notStartedTasks = taskRepository.findAllByStatus(Status.NOT_STARTED);
+        Iterable<Task> inProgressTasks = taskRepository.findAllByStatus(Status.IN_PROGRESS);
+
+        return Stream.concat(
+                StreamSupport.stream(notStartedTasks.spliterator(), false),
+                StreamSupport.stream(inProgressTasks.spliterator(), false))
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public Iterable<Task> getResolvedTasksByUser(User user) {
+        return taskRepository.findAllByAssigneeAndStatus(user, Status.RESOLVED);
     }
 }

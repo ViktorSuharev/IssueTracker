@@ -42,11 +42,13 @@ public class ProjectRestController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/")
     public ResponseEntity<Iterable<Project>> getAllProjects() {
         return ResponseEntity.ok(projectService.getAllProjects());
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/")
     public ResponseEntity<Project> createProject(@AuthenticationPrincipal UserPrincipal currentUser,
                                                  @RequestBody ProjectInfo projectInfo) {
@@ -74,6 +76,7 @@ public class ProjectRestController {
         return ResponseEntity.ok(created);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable(name = "id") BigInteger id) {
         try{
@@ -85,6 +88,7 @@ public class ProjectRestController {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@AuthenticationPrincipal UserPrincipal currentUser,
                                                  @RequestBody ProjectInfo projectInfo, @PathVariable BigInteger id) {
@@ -116,12 +120,22 @@ public class ProjectRestController {
         }
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/member/{id}")
+    public ResponseEntity<Iterable<ProjectMember>> getProjectsByMember(@PathVariable(name="id") BigInteger id) {
+        User user = userService.getUserById(id);
+        Iterable<ProjectMember> projects = projectService.getProjectsWithUser(user);
+        return ResponseEntity.ok(projects);
+    }
+
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/creator/{id}")
     public ResponseEntity<Iterable<Project>> getAllProjects(@PathVariable(name = "id") BigInteger id) {
         User user = userService.getUserById(id);
-        return ResponseEntity.ok(projectService.getProjectsOfUser(user));
+        return ResponseEntity.ok(projectService.getProjectsByCreator(user));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/team/{id}")
     public ResponseEntity<Iterable<UserWithRole>> getTeamByProjectId(@PathVariable(name = "id") BigInteger id) {
         Project project = projectService.getProjectById(id);
@@ -131,6 +145,7 @@ public class ProjectRestController {
                 .collect(Collectors.toList()));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("{id}")
     public ResponseEntity<HttpStatus> deleteProject(@AuthenticationPrincipal UserPrincipal currentUser,
                                                     @PathVariable(name = "id") BigInteger id) {

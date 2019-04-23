@@ -18,7 +18,7 @@ public interface ProjectService {
 
     boolean deleteProject(Project project);
 
-    Iterable<Project> findProjectsByCreator(User creator);
+    Iterable<Project> getProjectsByCreator(User creator);
 
     Iterable<Project> getAllProjects();
 
@@ -35,4 +35,6 @@ public interface ProjectService {
     void sendInvitationToNewProject(Project project);
 
     ProjectRole createRoleIfNotExists(String name);
+
+    Iterable<ProjectMember> getProjectsWithUser(User user);
 }

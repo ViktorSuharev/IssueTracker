@@ -5,9 +5,6 @@ import { backurl } from '../../properties';
 import { authorizationHeader } from '../../actions';
 import TextEditor from '../TextEditor';
 import './styles.css';
-import NotFound from '../NotFound';
-
-// import { DateTime } from 'react-datetime-bootstrap';
 
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
@@ -76,6 +73,7 @@ export default class TaskEditor extends React.Component {
 
     handleCancel(event) {
         event.preventDefault();
+        this.props.history.goBack();
     }
 
     handleClose() {
@@ -175,8 +173,8 @@ export default class TaskEditor extends React.Component {
             .then(res => {
                 console.log(res.status);
                 console.log(res.data);
-                alert('Success!');
                 this.handleClose();
+                this.props.history.goBack();
             })
             .catch(error => {
                 switch (error.response.status) {
@@ -202,7 +200,7 @@ export default class TaskEditor extends React.Component {
 
         return <Container>
             <div className='float-right'>
-                <Button className='d-inline-flex p-2 main-control' variant='secondary' href='/tasks/my'>Cancel</Button>&nbsp;
+                <Button className='d-inline-flex p-2 main-control' variant='secondary' onClick={this.handleCancel}>Cancel</Button>&nbsp;
             <Button className='d-inline-flex p-2 main-control' variant='success' onClick={this.handleShow}>Update</Button>
             </div>
             <h2>Edit task</h2>

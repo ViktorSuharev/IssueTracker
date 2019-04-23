@@ -24,10 +24,9 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.List;
 
-@PreAuthorize("hasRole('USER')")
 @RequestMapping(value = "/api/tasks")
 @RestController
-public class TaskController {
+public class TaskRestController {
 
     @Autowired
     private TaskService taskService;
@@ -38,11 +37,20 @@ public class TaskController {
     @Autowired
     ProjectService projectService;
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/")
     public Iterable<Task> getAllTasks() {
         return taskService.getAll();
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/active")
+    public Iterable<Task> getAllActiveTasks() {
+        return taskService.getAllActiveTasks();
+    }
+
+
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/")
     public ResponseEntity addTask(@RequestBody TaskDTO task) {
         Task t = task.convert(userService, projectService);
@@ -52,6 +60,7 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/my")
     public ReporterOrAssigneeTasks getMyTasks(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         User user = userService.getUserByEmail(userPrincipal.getUsername());
@@ -63,6 +72,7 @@ public class TaskController {
         return tasks;
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/project/{id}")
     public @ResponseBody Iterable<Task> getTaskByProject(@PathVariable("id") BigInteger projectId){
         Project project = projectService.getProjectById(projectId);
@@ -70,16 +80,19 @@ public class TaskController {
     }
 
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
     public ResponseEntity getTaskById(@PathVariable BigInteger id) {
         return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/history/{id}")
     public ResponseEntity<Iterable<History>> getTaskHistoryByTaskId(@PathVariable BigInteger id) {
         return ResponseEntity.ok(taskService.getHistoryByTaskId(id));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/{id}")
     public ResponseEntity updateTask(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                      @PathVariable BigInteger id,
@@ -91,6 +104,7 @@ public class TaskController {
         return ResponseEntity.ok(taskService.updateTask(task, comment, user));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{id}")
     ResponseEntity deleteTask(@PathVariable BigInteger id) {
         try {
@@ -102,32 +116,65 @@ public class TaskController {
         }
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/reporter")
     public @ResponseBody Iterable<Task> getTaskByReporter(@RequestParam("reporterId") BigInteger reporterId) {
         User reporter = userService.getUserById(reporterId);
         return taskService.getTaskByReporter(reporter);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/assignee")
     public @ResponseBody Iterable<Task> getTaskByAssignee(@RequestParam("assigneeId") BigInteger assigneeId) {
         User assignee = userService.getUserById(assigneeId);
         return taskService.getTaskByAssignee(assignee);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/creationDate")
     public @ResponseBody List<Task> getTaskByCreationDate(@RequestParam("creationDate")
                                                           @DateTimeFormat(pattern = "dd/MM/yyyy") String creationDate) throws ParseException {
         return taskService.getTaskByCreationDate(creationDate);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/status")
-    public @ResponseBody List<Task> getTaskByStatus(@RequestParam("taskStatus") Status taskStatus){
-        return taskService.getTaskByStatus(taskStatus);
+    public @ResponseBody List<Task> getTaskByStatus(@RequestParam("status") Status status){
+        return taskService.getTaskByStatus(status);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/priority")
     public @ResponseBody List<Task> getTaskByPriority(@RequestParam("taskPriority") Priority taskPriority){
         return taskService.getTaskByPriority(taskPriority);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/active/assignee/{id}")
+    public @ResponseBody Iterable<Task> getActiveTasksByAssignee(@PathVariable(name = "id") BigInteger id){
+        User user = userService.getUserById(id);
+        return taskService.getActiveTasksByAssignee(user);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/active/project/{id}")
+    public @ResponseBody Iterable<Task> getActiveTasksByProject(@PathVariable(name = "id") BigInteger id){
+        Project project = projectService.getProjectById(id);
+        return taskService.getActiveTasksByProject(project);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/resolved/project/{id}")
+    public @ResponseBody Iterable<Task> getResolvedTasksByProject(@PathVariable(name = "id") BigInteger id){
+        Project project = projectService.getProjectById(id);
+        return taskService.getResolvedTasksByProject(project);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/resolved/assignee/{id}")
+    public @ResponseBody Iterable<Task> getResolvedTasksByAssignee(@PathVariable(name = "id") BigInteger id){
+        User user = userService.getUserById(id);
+        return taskService.getResolvedTasksByUser(user);
     }
 
     @AllArgsConstructor

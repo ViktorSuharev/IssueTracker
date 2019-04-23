@@ -4,6 +4,7 @@ import { shortenIfLong } from '../../actions';
 import axios from 'axios';
 import { backurl } from '../../properties';
 import { authorizationHeader } from '../../actions';
+import { Link } from 'react-router-dom';
 
 export default class TaskBoard extends Component {
     constructor(props) {
@@ -40,7 +41,7 @@ export default class TaskBoard extends Component {
         const taskId = event.target.value;
 
         const task = this.props.tasks
-            .find((p) => p.id == taskId);
+            .find((p) => p.id === taskId);
 
         this.setState({ deleteTask: task });
         this.handleShow(event);
@@ -70,9 +71,13 @@ export default class TaskBoard extends Component {
         let edit = '/tasks/edit/' + task.id;
 
         return <div className='float-right'>
-            <Button size='sm' variant='outline-success' value={task.id} href={edit}>&nbsp; Edit &nbsp;</Button>
+            <Button size='sm' variant='success' value={task.id}>
+                <Link className='link' to={edit}>&nbsp; Edit &nbsp;</Link>
+            </Button>
             &nbsp; &nbsp;
-            <Button size='sm' variant='outline-danger' value={task.id} onClick={this.onDelete}>Delete</Button>
+            <Button size='sm' variant='danger' value={task.id} onClick={this.onDelete}>
+                Delete
+            </Button>
         </div>
     }
 
@@ -81,15 +86,17 @@ export default class TaskBoard extends Component {
             return <Card>
                 <Card.Header><h4>Add new</h4></Card.Header>
                 <Card.Body className='d-flex' align='center'>
-                    <Button className='p-5 w-100 rounded' variant='outline-secondary' href='/tasks/new'>
-                        <h1 className='display-3'>+</h1>
+                    <Button className='p-5 w-100 rounded' variant='outline-dark'>
+                        <Link className='black-link' to='/tasks/new'>
+                            <h1 className='display-3'>+</h1>
+                        </Link>
                     </Button>
                 </Card.Body>
             </Card>
 
         return <Card>
             <Card.Header>
-                <Card.Link style={{ color: 'black' }} href={'/tasks/' + task.id}> <h4>{shortenIfLong(task.name, 25)}</h4> </Card.Link>
+                <Link className='black-link' to={'/tasks/' + task.id}><h4>{shortenIfLong(task.name, 25)}</h4></Link>
             </Card.Header>
             <Card.Body>
                 {this.getTaskInfo(task)}
@@ -112,10 +119,10 @@ export default class TaskBoard extends Component {
             <Badge variant={statuses[task.status].color}>{statuses[task.status].name}</Badge>
             <br />
             Deadline: &nbsp;{task.dueDate}
-            <br/>
+            <br />
             Created: &nbsp; &nbsp;{task.creationDate}
-            <br/>
-            {task.modificationDate ? 'Modified:\t `'+ task.modificationDate : null }
+            <br />
+            {task.modificationDate ? 'Modified:\t `' + task.modificationDate : null}
 
         </Card.Subtitle>
     }

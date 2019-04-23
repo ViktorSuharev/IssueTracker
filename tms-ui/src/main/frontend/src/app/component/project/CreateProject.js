@@ -1,14 +1,13 @@
 import React from 'react';
 import * as axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-import { FormControl, Container, Modal, Button, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Container, Modal, Button, InputGroup } from 'react-bootstrap';
 import '../styles.css';
 // import './index.css';
 import TextEditor from '../TextEditor';
 import { authorizationHeader } from '../../actions';
 import { backurl, project_roles } from '../../properties';
 import { Redirect } from 'react-router-dom'
-import DropdownItem from 'react-bootstrap/DropdownItem';
 
 class CreateProject extends React.Component {
     constructor(props) {

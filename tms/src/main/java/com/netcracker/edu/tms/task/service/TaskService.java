@@ -38,4 +38,16 @@ public interface TaskService {
     List<Task> getTaskByPriority(Priority taskPriority);
 
     Iterable<History> getHistoryByTaskId(BigInteger id);
+
+    Iterable<Task> getActiveTasksByAssignee(User assignee);
+
+    void deleteAllTasksByProject(Project project);
+
+    Iterable<Task> getActiveTasksByProject(Project project);
+
+    Iterable<Task> getResolvedTasksByProject(Project project);
+
+    Iterable<Task> getAllActiveTasks();
+
+    Iterable<Task> getResolvedTasksByUser(User user);
 }

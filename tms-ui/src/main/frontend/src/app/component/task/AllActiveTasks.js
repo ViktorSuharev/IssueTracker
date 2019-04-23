@@ -5,7 +5,7 @@ import { backurl } from '../../properties';
 import { authorizationHeader } from '../../actions';
 import TaskBoard from './TaskBoard';
 
-export default class AllTasks extends Component {
+export default class AllActiveTasks extends Component {
     constructor(props) {
         super(props);
 
@@ -15,7 +15,7 @@ export default class AllTasks extends Component {
     }
 
     componentDidMount() {
-        axios.get(backurl + '/tasks/', authorizationHeader())
+        axios.get(backurl + '/tasks/active', authorizationHeader())
             .then(response => {
                 const tasks = response.data;
                 this.setState({ tasks: tasks });
@@ -28,7 +28,7 @@ export default class AllTasks extends Component {
 
     render() {
         return <Container>
-            <h3> All Tasks </h3> 
+            <h3> Active Tasks </h3> 
             <hr />
             <TaskBoard tasks={this.state.tasks}/>            
         </Container>;

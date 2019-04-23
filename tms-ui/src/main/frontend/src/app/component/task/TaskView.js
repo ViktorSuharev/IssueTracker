@@ -1,7 +1,7 @@
 import React from 'react';
 import * as axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Form, Modal, Badge, Container, Table, Button } from 'react-bootstrap';
+import { Modal, Badge, Container, Table, Button } from 'react-bootstrap';
 import TextEditor from '../TextEditor';
 import { authorizationHeader } from '../../actions';
 import { backurl } from '../../properties';
@@ -21,13 +21,8 @@ export default class TaskView extends React.Component {
 
         this.deleteTask = this.deleteTask.bind(this);
 
-        this.handleCancel = this.handleCancel.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-    }
-
-    handleCancel(event) {
-        event.preventDefault();
     }
 
     handleClose() {
@@ -106,6 +101,8 @@ export default class TaskView extends React.Component {
                     <h1 style={{ wordBreak: 'break-all' }}>{task.name}</h1>
                 </div>
                 <hr />
+                {task.project ? <div>Project: <Link className='black-link' to={'/projects/' + task.project.id}>{task.project.name}</Link> </div> : null}
+                <br/>
 
 
                 {task.description ? <TextEditor

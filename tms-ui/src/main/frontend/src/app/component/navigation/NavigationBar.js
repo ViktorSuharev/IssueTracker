@@ -1,59 +1,74 @@
 import React, { Component } from 'react';
-import { Spinner, Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { AuthConsumer } from '../login/AuthContext';
+import { Link } from 'react-router-dom';
 import '../styles.css';
 
 export default class NavigationBar extends Component {
-    loggedIn(user){
+    loggedIn(user) {
         let signedAsLabel = 'Signed in as: ' + user.name;
 
         return <Navbar fixed='top' expand='lg' bg='dark' variant='dark'>
-        <Navbar.Brand>
-            <img
-                src={require('./nc.ico')}
-                alt=''
-                className='d-inline-block align-top'
-                width='30'
-                height='30'
-            />
-            {' '}Issue Tracker
+            <Navbar.Brand>
+                <img
+                    src={require('./nc.ico')}
+                    alt=''
+                    className='d-inline-block align-top'
+                    width='30'
+                    height='30'
+                />
+                {' '}Issue Tracker
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+            <Navbar.Toggle aria-controls='responsive-navbar-nav' />
 
-        <Navbar.Collapse className='justify-content-end'>
-            <Nav className='mr-auto'>
-                <NavDropdown title='Project' id='collasible-nav-dropdown'>
-                    <NavDropdown.Item href='/projects/new'>Create</NavDropdown.Item>
-                    <NavDropdown.Item href='/projects'>Projects</NavDropdown.Item>
-                </NavDropdown>
-                <NavDropdown title='Task' id='collasible-nav-dropdown'>
-                    <NavDropdown.Item href='/tasks/new'>Add</NavDropdown.Item>
-                    <NavDropdown.Item href='/tasks/my'>My tasks</NavDropdown.Item>
-                    <NavDropdown.Item href='/tasks'>All tasks</NavDropdown.Item>
-                </NavDropdown>
-            </Nav>
+            <Navbar.Collapse className='justify-content-end'>
+                <Nav className='mr-auto'>
+                    <NavDropdown title='Project' id='collasible-nav-dropdown'>
+                        <NavDropdown.Item>
+                            <Link className='navbar-link' to='/projects/new'> Create</Link>
+                        </NavDropdown.Item>
+                        <NavDropdown.Item>
+                            <Link className='navbar-link' to='/projects'> All projects</Link>
+                        </NavDropdown.Item>
+                    </NavDropdown>
 
-            <NavDropdown title={signedAsLabel} id='collasible-nav-dropdown'>
+                    <NavDropdown title='Task' id='collasible-nav-dropdown'>
+                        <NavDropdown.Item>
+                            <Link className='navbar-link' to='/tasks/new'> Add task</Link>
+                        </NavDropdown.Item>
+                        <NavDropdown.Item>
+                            <Link className='navbar-link' to='/tasks/my'> My tasks</Link>
+                        </NavDropdown.Item>
+
+                        <NavDropdown.Item>
+                            <Link className='navbar-link' to='/tasks/active/all'>Active tasks</Link>
+                        </NavDropdown.Item>
+                        <NavDropdown.Item>
+                            <Link className='navbar-link' to='/tasks'>All tasks</Link>
+                        </NavDropdown.Item>
+                    </NavDropdown>
+                </Nav>
+
+                <NavDropdown title={signedAsLabel} id='collasible-nav-dropdown'>
                     <AuthConsumer>
-                        {({logout}) => <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>}
+                        {({ logout }) => <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>}
                     </AuthConsumer>
                 </NavDropdown>
-                {/* <Spinner animation='border' size='sm' variant='info' /> */}
 
-        </Navbar.Collapse>
-    </Navbar>;
+            </Navbar.Collapse>
+        </Navbar>;
     }
 
-    guest(){
+    guest() {
         return null;
     }
 
     render() {
         return <AuthConsumer>
             {
-                ({isAuth, user}) => isAuth? this.loggedIn(user) : this.guest()
+                ({ isAuth, user }) => isAuth ? this.loggedIn(user) : this.guest()
             }
-        </AuthConsumer>        
+        </AuthConsumer>
     }
 }
