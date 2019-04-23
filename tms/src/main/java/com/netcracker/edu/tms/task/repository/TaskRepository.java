@@ -24,4 +24,6 @@ public interface TaskRepository extends CrudRepository<Task, BigInteger> {
     void deleteAllByProject(Project project);
 
     Iterable<Task> findAllByStatus(Status status);
+
+    Iterable<Task> findAllByReporterAndStatus(User reporter, Status resolved);
 }

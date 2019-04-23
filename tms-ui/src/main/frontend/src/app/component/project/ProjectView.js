@@ -29,7 +29,7 @@ export default class ProjectView extends React.Component {
         axios.delete(backurl + '/projects/' + this.state.id, authorizationHeader())
             .then(response => {
                 alert(this.state.name + ' deleted');
-                window.location.reload(false);
+                this.props.history.goBack();
             })
             .catch(error => {
                 alert(error.response.status);
@@ -105,7 +105,7 @@ export default class ProjectView extends React.Component {
                         {this.state.team.map(({ user, role }) =>
                             <tr key={user.email}>
                                 <td> <Link className='black-link' to={'/users/' + user.id}>{user.name}</Link></td>
-                                <td> {user.email}</td>
+                                <td> <a href={'mailto:' + user.email}>{user.email}</a></td>
                                 <td> {role.name}</td>
                             </tr>)}
                     </tbody>
@@ -115,7 +115,9 @@ export default class ProjectView extends React.Component {
                     <h3>Tasks To Do</h3>
                     <br />
                     <TaskBoard tasks={this.state.tasks} />
-                </div> : null}
+                </div> : <div>
+                    No tasks <Link to='/tasks/new'>yet</Link>
+                </div>}
 
             </Container>
         </div >

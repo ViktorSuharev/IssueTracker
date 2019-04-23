@@ -178,7 +178,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Iterable<Task> getResolvedTasksByUser(User user) {
+    public Iterable<Task> getResolvedTasksByAssignee(User user) {
         return taskRepository.findAllByAssigneeAndStatus(user, Status.RESOLVED);
+    }
+
+    @Override
+    public Iterable<Task> getResolvedTasksByReporter(User reporter) {
+        return taskRepository.findAllByReporterAndStatus(reporter, Status.RESOLVED);
+    }
+
+    @Override
+    public Iterable<Task> getClosedTasksByAssignee(User assignee) {
+        return taskRepository.findAllByAssigneeAndStatus(assignee, Status.CLOSED);
     }
 }

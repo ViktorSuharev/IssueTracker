@@ -38,10 +38,12 @@ export default class TaskBoard extends Component {
     }
 
     onDelete(event) {
-        const taskId = event.target.value;
+        const taskId = parseInt(event.target.value);
 
         const task = this.props.tasks
             .find((p) => p.id === taskId);
+
+        console.log('TASK TO DELETE:', JSON.stringify(task.id));
 
         this.setState({ deleteTask: task });
         this.handleShow(event);

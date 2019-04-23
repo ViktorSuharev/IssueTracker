@@ -65,8 +65,8 @@ public class TaskRestController {
     public ReporterOrAssigneeTasks getMyTasks(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         User user = userService.getUserByEmail(userPrincipal.getUsername());
 
-        Iterable<Task> asAssignee = taskService.getTaskByAssignee(user);
-        Iterable<Task> asReporter = taskService.getTaskByReporter(user);
+        Iterable<Task> asAssignee = taskService.getActiveTasksByAssignee(user);
+        Iterable<Task> asReporter = taskService.getResolvedTasksByReporter(user);
 
         ReporterOrAssigneeTasks tasks = new ReporterOrAssigneeTasks(asAssignee, asReporter);
         return tasks;
@@ -173,8 +173,22 @@ public class TaskRestController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/resolved/assignee/{id}")
     public @ResponseBody Iterable<Task> getResolvedTasksByAssignee(@PathVariable(name = "id") BigInteger id){
-        User user = userService.getUserById(id);
-        return taskService.getResolvedTasksByUser(user);
+        User assignee = userService.getUserById(id);
+        return taskService.getResolvedTasksByAssignee(assignee);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/closed/assignee/{id}")
+    public @ResponseBody Iterable<Task> getClosedTasksByAssignee(@PathVariable(name = "id") BigInteger id){
+        User assignee = userService.getUserById(id);
+        return taskService.getClosedTasksByAssignee(assignee);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/resolved/reporter/{id}")
+    public @ResponseBody Iterable<Task> getResolvedTasksByReporter(@PathVariable(name = "id") BigInteger id){
+        User reporter = userService.getUserById(id);
+        return taskService.getResolvedTasksByReporter(reporter);
     }
 
     @AllArgsConstructor

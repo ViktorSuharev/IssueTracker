@@ -47,6 +47,12 @@ export default class AboutUser extends React.Component {
                 var resolvedTasks = response.data;
                 this.setState({ resolvedTasks: resolvedTasks });
             });
+
+        axios.get(backurl + '/tasks/closed/assignee/' + id, authorizationHeader())
+            .then(response => {
+                var closedTasks = response.data;
+                this.setState({ closedTasks: closedTasks });
+            });
     };
 
     aboutUser() {
@@ -56,7 +62,7 @@ export default class AboutUser extends React.Component {
             <h4>About user:</h4>
             <p>&nbsp; {u.name}
                 <br />
-                &nbsp; {u.email}
+                &nbsp; <a href={'mailto:' + u.email}>{u.email}</a>
             </p>
             <hr />
         </div>
@@ -114,24 +120,33 @@ export default class AboutUser extends React.Component {
         </div>
     }
 
-    showresolved() {
+    showResolved() {
         return <div>
             <h4>Resolved tasks: </h4>
             {this.state.resolvedTasks.length === 0 ? 'No resolved tasks' :
                 <TaskBoard tasks={this.state.resolvedTasks} />}
+            <hr />
+        </div>
+    }
+
+    showClosed() {
+        return <div>
+            <h4>Closed tasks: </h4>
+            {this.state.closedTasks.length === 0 ? 'No closed tasks' :
+                <TaskBoard tasks={this.state.closedTasks} />}
+            <hr />
         </div>
     }
 
 
     render() {
-        console.log(JSON.stringify(this.state))
-
         return <Container>
             {this.state.user ? this.aboutUser() : null}
             {this.state.projectsAsMember ? this.memberOf() : null}
             {this.state.projectsAsCreator ? this.creatorOf() : null}
             {this.state.activeTasks ? this.showActive() : null}
-            {this.state.resolvedTasks ? this.showresolved() : null}
+            {this.state.resolvedTasks ? this.showResolved() : null}
+            {this.state.closedTasks ? this.showClosed() : null}
         </Container>;
     }
 }

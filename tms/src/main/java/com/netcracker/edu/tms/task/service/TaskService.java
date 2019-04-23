@@ -49,5 +49,9 @@ public interface TaskService {
 
     Iterable<Task> getAllActiveTasks();
 
-    Iterable<Task> getResolvedTasksByUser(User user);
+    Iterable<Task> getResolvedTasksByAssignee(User assignee);
+
+    Iterable<Task> getResolvedTasksByReporter(User reporter);
+
+    Iterable<Task> getClosedTasksByAssignee(User assignee);
 }

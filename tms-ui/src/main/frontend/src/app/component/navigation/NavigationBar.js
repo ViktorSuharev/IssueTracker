@@ -52,7 +52,11 @@ export default class NavigationBar extends Component {
 
                 <NavDropdown title={signedAsLabel} id='collasible-nav-dropdown'>
                     <AuthConsumer>
-                        {({ logout }) => <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>}
+                        {({ logout, user }) => <div>
+                            <NavDropdown.Item><Link className='black-link' to={'/users/'+user.id}>About me</Link></NavDropdown.Item>
+                            <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+                            </div>
+                        }
                     </AuthConsumer>
                 </NavDropdown>
 

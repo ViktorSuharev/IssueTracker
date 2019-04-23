@@ -65,8 +65,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public boolean deleteProject(Project project) {
         teamRepository.deleteAllByProject(project);
-        projectRepository.deleteById(project.getId());
         taskService.deleteAllTasksByProject(project);
+        projectRepository.deleteById(project.getId());
 
         return true;
     }

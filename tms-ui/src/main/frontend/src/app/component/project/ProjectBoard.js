@@ -54,7 +54,7 @@ export default class ProjectBoard extends Component {
     }
 
     onDelete(event) {
-        const projectId = event.target.value;
+        const projectId = parseInt(event.target.value);
 
         const project = this.props.projects.find((p) => p.id === projectId);
 
