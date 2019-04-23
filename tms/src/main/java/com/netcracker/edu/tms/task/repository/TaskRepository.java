@@ -10,9 +10,9 @@ import java.math.BigInteger;
 public interface TaskRepository extends CrudRepository<Task, BigInteger> {
     boolean existsByProjectAndName(Project project, String name);
 
-    Iterable<Task> getAllByAssignee(User assignee);
+    Iterable<Task> findAllByAssignee(User assignee);
 
-    Iterable<Task> getAllByReporter(User reporter);
+    Iterable<Task> findAllByReporter(User reporter);
 
-    Iterable<Task> getAllByProject(Project project);
+    Iterable<Task> findAllByProject(Project project);
 }

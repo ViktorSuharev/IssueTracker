@@ -33,7 +33,7 @@ public class Task {
     @Column(name = "creation_date", updatable = false)
     @CreationTimestamp
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+//    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date creationDate;
 
     @Column(name = "due_date")
@@ -90,5 +90,17 @@ public class Task {
         this.assignee = assignee;
         this.project = project;
         this.priority = priority;
+    }
+
+    public Task(String name, String description, @Future Date dueDate, User reporter,
+                User assignee, Project project, Priority priority, Status status) {
+        this.name = name;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.reporter = reporter;
+        this.assignee = assignee;
+        this.project = project;
+        this.priority = priority;
+        this.status = status;
     }
 }

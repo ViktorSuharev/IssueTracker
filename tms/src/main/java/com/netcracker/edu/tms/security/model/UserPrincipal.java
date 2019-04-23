@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@EqualsAndHashCode
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +21,6 @@ public class UserPrincipal implements UserDetails {
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
-
 
     public static UserPrincipal create(UserWithPassword userWithPassword) {
         List<GrantedAuthority> authorities = userWithPassword.getRoles().stream().map(role ->
@@ -34,11 +32,6 @@ public class UserPrincipal implements UserDetails {
                 userWithPassword.getPassword(),
                 authorities
         );
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
     }
 
     @Override

@@ -3,15 +3,13 @@ package com.netcracker.edu.tms.task.controller;
 import com.netcracker.edu.tms.project.model.Project;
 import com.netcracker.edu.tms.project.service.ProjectService;
 import com.netcracker.edu.tms.security.model.UserPrincipal;
-import com.netcracker.edu.tms.task.model.Priority;
-import com.netcracker.edu.tms.task.model.Status;
-import com.netcracker.edu.tms.task.model.Task;
-import com.netcracker.edu.tms.task.model.TaskDTO;
+import com.netcracker.edu.tms.task.model.*;
 import com.netcracker.edu.tms.task.service.TaskService;
 import com.netcracker.edu.tms.user.model.User;
 import com.netcracker.edu.tms.user.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -66,46 +64,52 @@ public class TaskController {
     }
 
     @GetMapping("/project/{id}")
-    public @ResponseBody Iterable<Task> getTaskByProject(@PathVariable("id") BigInteger projectId){//argument should be Project instance
+    public @ResponseBody Iterable<Task> getTaskByProject(@PathVariable("id") BigInteger projectId){
         Project project = projectService.getProjectById(projectId);
         return taskService.getTaskByProject(project);
     }
 
 
-    @GetMapping("/{taskId}")
-    public ResponseEntity getTaskById(@PathVariable BigInteger taskId) {
-        return ResponseEntity.ok(taskService.getTaskById(taskId));
+    @GetMapping("/{id}")
+    public ResponseEntity getTaskById(@PathVariable BigInteger id) {
+        return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
-    @GetMapping("/getTaskByName")
-    public List<Task> getTaskByName(@RequestParam("taskName") String taskName) {
-        return taskService.getTaskByName(taskName);
+    @GetMapping("/history/{id}")
+    public ResponseEntity<Iterable<History>> getTaskHistoryByTaskId(@PathVariable BigInteger id) {
+        return ResponseEntity.ok(taskService.getHistoryByTaskId(id));
     }
 
-    @PutMapping
-    public ResponseEntity updateTask(@RequestBody Task task) {
-        return ResponseEntity.ok(taskService.updateTask(task));
+    @PutMapping("/{id}")
+    public ResponseEntity updateTask(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                     @PathVariable BigInteger id,
+                                     @RequestBody TaskWithComment taskWithComment) {
+        User user = userService.getUserByEmail(userPrincipal.getUsername());
+        Task task = taskWithComment.getTask().convert(userService, projectService);
+        task.setId(id);
+        String comment = taskWithComment.getComment();
+        return ResponseEntity.ok(taskService.updateTask(task, comment, user));
     }
 
-    @DeleteMapping("/{taskId}")
-    ResponseEntity deleteTask(@PathVariable BigInteger taskId) {
+    @DeleteMapping("/{id}")
+    ResponseEntity deleteTask(@PathVariable BigInteger id) {
         try {
-            return ResponseEntity.ok(taskService.deleteTask(taskService.getTaskById(taskId)));
+            return ResponseEntity.ok(taskService.deleteTask(taskService.getTaskById(id)));
         } catch (ResourceNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "task " +
-                    taskService.getTaskById(taskId).getId() +
+                    taskService.getTaskById(id).getId() +
                     " not found", ex);
         }
     }
 
     @GetMapping("/reporter")
-    public @ResponseBody Iterable<Task> getTaskByReporter(@RequestParam("reporterId") BigInteger reporterId) { //argument should be UserWithPassword instance
+    public @ResponseBody Iterable<Task> getTaskByReporter(@RequestParam("reporterId") BigInteger reporterId) {
         User reporter = userService.getUserById(reporterId);
         return taskService.getTaskByReporter(reporter);
     }
 
     @GetMapping("/assignee")
-    public @ResponseBody Iterable<Task> getTaskByAssignee(@RequestParam("assigneeId") BigInteger assigneeId) { //argument should be UserWithPassword instance
+    public @ResponseBody Iterable<Task> getTaskByAssignee(@RequestParam("assigneeId") BigInteger assigneeId) {
         User assignee = userService.getUserById(assigneeId);
         return taskService.getTaskByAssignee(assignee);
     }
@@ -131,5 +135,13 @@ public class TaskController {
     private class ReporterOrAssigneeTasks{
         private Iterable<Task> toDo;
         private Iterable<Task> toReport;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    private static class TaskWithComment{
+        private TaskDTO task;
+        private String comment;
     }
 }

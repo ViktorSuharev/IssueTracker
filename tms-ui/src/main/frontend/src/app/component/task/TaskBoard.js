@@ -114,6 +114,8 @@ export default class TaskBoard extends Component {
             Deadline: &nbsp;{task.dueDate}
             <br/>
             Created: &nbsp; &nbsp;{task.creationDate}
+            <br/>
+            {task.modificationDate ? 'Modified:\t `'+ task.modificationDate : null }
 
         </Card.Subtitle>
     }

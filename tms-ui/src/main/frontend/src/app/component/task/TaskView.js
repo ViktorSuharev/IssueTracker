@@ -5,8 +5,7 @@ import { Form, Modal, Badge, Container, Table, Button } from 'react-bootstrap';
 import TextEditor from '../TextEditor';
 import { authorizationHeader } from '../../actions';
 import { backurl } from '../../properties';
-import TaskBoard from './/TaskBoard';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 export default class TaskView extends React.Component {
     constructor(props) {
@@ -65,6 +64,12 @@ export default class TaskView extends React.Component {
             .then(res => {
                 const task = res.data;
                 this.setState({ task: task });
+
+                axios.get(backurl + '/tasks/history/' + this.state.id, header)
+                    .then(res => {
+                        var history = res.data;
+                        this.setState({ history: history });
+                    })
             })
     };
 
@@ -90,7 +95,7 @@ export default class TaskView extends React.Component {
             {this.modalDeleteTask()}
             <Container>
                 <div className='float-right'>
-                    <Button variant='success'>&nbsp; Edit &nbsp;</Button>&nbsp;&nbsp;
+                    <Button variant='success'><Link className='link' to={'/tasks/edit/' + this.state.id}>&nbsp; Edit &nbsp;</Link></Button>&nbsp;&nbsp;
                     <Button variant='danger' onClick={this.handleShow}>&nbsp; Delete &nbsp;</Button>
                 </div>
                 <div className='flex-row'>
@@ -130,22 +135,22 @@ export default class TaskView extends React.Component {
                 <h3>History</h3>
                 <br />
 
-                {/* <Table striped bordered hover>
-                <thead className='thead-dark'>
-                    <tr>
-                        <th>name</th>
-                        <th>email</th>
-                        <th>role</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.state.team.map(u => <tr>
-                        <td>{u.name}</td>
-                        <td>{u.email}</td>
-                        <td>{u.role}</td>
-                    </tr>)}
-                </tbody>
-            </Table> */}
+                {this.state.history ? <Table striped bordered hover>
+                    <thead className='thead-dark'>
+                        <tr>
+                            <th>Date</th>
+                            <th>Author</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.history.map(h => <tr>
+                            <td style={{ 'width': '20%' }}>{h.created.substring(0, 10) + ' at ' + h.created.substring(11, 16)}</td>
+                            <td style={{ 'width': '20%' }}>{h.author.name}</td>
+                            <td >{h.comment}</td>
+                        </tr>)}
+                    </tbody>
+                </Table> : null}
                 <hr />
             </Container>
         </div>

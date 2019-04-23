@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
 
-@PreAuthorize("hasRole('ROLE')")
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {

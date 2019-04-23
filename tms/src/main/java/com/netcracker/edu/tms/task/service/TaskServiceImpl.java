@@ -1,9 +1,11 @@
 package com.netcracker.edu.tms.task.service;
 
 import com.netcracker.edu.tms.project.model.Project;
+import com.netcracker.edu.tms.task.model.History;
 import com.netcracker.edu.tms.task.model.Priority;
 import com.netcracker.edu.tms.task.model.Status;
 import com.netcracker.edu.tms.task.model.Task;
+import com.netcracker.edu.tms.task.repository.HistoryRepository;
 import com.netcracker.edu.tms.task.repository.TaskDao;
 import com.netcracker.edu.tms.task.repository.TaskRepository;
 import com.netcracker.edu.tms.user.model.User;
@@ -23,13 +25,15 @@ import java.util.List;
 @Service
 public class TaskServiceImpl implements TaskService {
 
-    private final TaskDao taskDao;
+    private TaskDao taskDao;
     private TaskRepository taskRepository;
+    private HistoryRepository historyRepository;
 
     @Autowired
-    TaskServiceImpl(TaskDao taskDao, TaskRepository taskRepository) {
+    public TaskServiceImpl(TaskDao taskDao, TaskRepository taskRepository, HistoryRepository historyRepository) {
         this.taskDao = taskDao;
         this.taskRepository = taskRepository;
+        this.historyRepository = historyRepository;
     }
 
     @Override
@@ -57,7 +61,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public boolean updateTask(Task task) {
+    public boolean updateTask(Task task, String comment, User author) {
+        Task t = taskRepository.findById(task.getId()).get();
+        task.setCreationDate(t.getCreationDate());
+
+        History history = new History(task.getId(), comment, author, new java.sql.Date(System.currentTimeMillis()));
+        historyRepository.save(history);
+
         task.setModificationDate(new java.sql.Date(System.currentTimeMillis()));
         return taskDao.updateTask(task);
     }
@@ -78,13 +88,13 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Iterable<Task> getTaskByReporter(User reporter) {
-        return taskRepository.getAllByReporter(reporter);
+        return taskRepository.findAllByReporter(reporter);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Iterable<Task> getTaskByAssignee(User assignee) {
-        return taskRepository.getAllByAssignee(assignee);
+        return taskRepository.findAllByAssignee(assignee);
     }
 
     @Override
@@ -98,7 +108,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Iterable<Task> getTaskByProject(Project project) {
-        return taskRepository.getAllByProject(project);
+        return taskRepository.findAllByProject(project);
     }
 
     @Override
@@ -111,5 +121,10 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Task> getTaskByPriority(Priority taskPriority) {
         return taskDao.getTaskByPriority(taskPriority);
+    }
+
+    @Override
+    public Iterable<History> getHistoryByTaskId(BigInteger id) {
+        return historyRepository.findAllByTaskId(id);
     }
 }
