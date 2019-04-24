@@ -193,7 +193,7 @@ export default class CreateTask extends React.Component {
                     </div>
                     <Button
                         className='d-flex mr-4 justify-content-end align-self-end mt-2'
-                        variant='danger'
+                        variant='secondary'
                         onClick={this.handleCancel}>
                         Cancel
                 </Button>

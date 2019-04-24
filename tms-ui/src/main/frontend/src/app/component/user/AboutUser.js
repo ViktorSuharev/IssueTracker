@@ -143,7 +143,7 @@ export default class AboutUser extends React.Component {
         return <Container>
             {this.state.user ? this.aboutUser() : null}
             {this.state.projectsAsMember ? this.memberOf() : null}
-            {this.state.projectsAsCreator ? this.creatorOf() : null}
+            {this.state.projectsAsCreator && this.state.projectsAsCreator.length ? this.creatorOf() : null}
             {this.state.activeTasks ? this.showActive() : null}
             {this.state.resolvedTasks ? this.showResolved() : null}
             {this.state.closedTasks ? this.showClosed() : null}

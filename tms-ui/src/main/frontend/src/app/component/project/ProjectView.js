@@ -8,6 +8,8 @@ import { authorizationHeader } from '../../actions';
 import { backurl } from '../../properties';
 import TaskBoard from '../task/TaskBoard';
 import { Link } from 'react-router-dom';
+import { AuthConsumer } from '../login/AuthContext';
+import NotFound from '../NotFound';
 
 export default class ProjectView extends React.Component {
     constructor(props) {
@@ -56,14 +58,15 @@ export default class ProjectView extends React.Component {
                         const tasks = res.data;
                         this.setState({ tasks: tasks });
                     })
-                
+
             })
     };
+
 
     render() {
         var project = this.state.project;
 
-        return <div>
+        return <div> {project ? <div>
             <Modal show={this.state.show}>
                 <Modal.Header >
                     <Modal.Title>Delete project</Modal.Title>
@@ -81,8 +84,9 @@ export default class ProjectView extends React.Component {
             <Container>
                 <div className='float-right'>
                     <Button variant='success'><Link className='link' to={'/projects/edit/' + this.state.id}>&nbsp; Edit &nbsp;</Link></Button>&nbsp;&nbsp;
-                <Button variant='danger' onClick={() => this.setState({show: true})}>&nbsp; Delete &nbsp;</Button>
+                    <Button variant='danger' onClick={() => this.setState({ show: true })}>&nbsp; Delete &nbsp;</Button>
                 </div>
+
                 <h1 style={{ wordBreak: 'break-all' }}>{project.name}</h1>
                 <hr />
                 {project.description ? <TextEditor
@@ -116,10 +120,10 @@ export default class ProjectView extends React.Component {
                     <br />
                     <TaskBoard tasks={this.state.tasks} />
                 </div> : <div>
-                    No tasks <Link to='/tasks/new'>yet</Link>
-                </div>}
+                        No tasks <Link to='/tasks/new'>yet</Link>
+                    </div>}
 
-            </Container>
+            </Container></div> : <NotFound />}
         </div >
     }
 }

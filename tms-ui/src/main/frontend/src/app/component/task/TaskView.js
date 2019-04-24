@@ -126,13 +126,13 @@ export default class TaskView extends React.Component {
                     <li>Deadline: {task.dueDate}</li>
                     {task.modificationDate ? <li>Last modified: {task.modificationDate}</li> : null}
                 </ul>
-                <br />
-                <hr />
 
-                <h3>History</h3>
+                {this.state.history && this.state.history.length ? <div>
+                <br />
+                <hr /><h3>History</h3>
                 <br />
 
-                {this.state.history ? <Table striped bordered hover>
+                 <Table striped bordered hover>
                     <thead className='thead-dark'>
                         <tr>
                             <th>Date</th>
@@ -147,7 +147,7 @@ export default class TaskView extends React.Component {
                             <td >{h.comment}</td>
                         </tr>)}
                     </tbody>
-                </Table> : null}
+                </Table></div> : null}
                 <hr />
             </Container>
         </div>
