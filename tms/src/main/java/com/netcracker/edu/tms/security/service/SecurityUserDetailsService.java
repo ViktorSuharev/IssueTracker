@@ -19,11 +19,11 @@ public class SecurityUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserWithPassword userWithPassword = userWithPasswordRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserWithPassword userWithPassword = userWithPasswordRepository.findByEmail(username);
 
         if (userWithPassword == null) {
-            throw new UsernameNotFoundException("UserWithPassword not found by name : " + email);
+            throw new UsernameNotFoundException("UserWithPassword not found by name : " + username);
         }
 
         return UserPrincipal.create(userWithPassword);

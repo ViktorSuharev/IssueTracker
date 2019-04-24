@@ -8,6 +8,7 @@ import com.netcracker.edu.tms.project.model.ProjectRole;
 import com.netcracker.edu.tms.project.repository.ProjectRepository;
 import com.netcracker.edu.tms.project.repository.ProjectRoleRepository;
 import com.netcracker.edu.tms.project.repository.TeamRepository;
+import com.netcracker.edu.tms.task.service.TaskService;
 import com.netcracker.edu.tms.user.model.User;
 import com.netcracker.edu.tms.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.util.stream.StreamSupport;
 public class ProjectServiceImpl implements ProjectService {
 
     private UserService userService;
+    private TaskService taskService;
     private MailService mailService;
     private TeamRepository teamRepository;
     private ProjectRepository projectRepository;
@@ -31,9 +33,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     public ProjectServiceImpl(UserService userService, MailService mailService, TeamRepository teamRepository,
-                              ProjectRepository projectRepository, ProjectRoleRepository projectRoleRepository) {
+                              ProjectRepository projectRepository, ProjectRoleRepository projectRoleRepository,
+                              TaskService taskService) {
         this.userService = userService;
         this.mailService = mailService;
+        this.taskService = taskService;
         this.teamRepository = teamRepository;
         this.projectRepository = projectRepository;
         this.projectRoleRepository = projectRoleRepository;
@@ -61,12 +65,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public boolean deleteProject(Project project) {
         teamRepository.deleteAllByProject(project);
+        taskService.deleteAllTasksByProject(project);
         projectRepository.deleteById(project.getId());
+
         return true;
     }
 
     @Override
-    public Iterable<Project> findProjectsByCreator(User creator) {
+    public Iterable<Project> getProjectsByCreator(User creator) {
         return projectRepository.findAllByCreator(creator);
     }
 
@@ -130,6 +136,11 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectRole createRoleIfNotExists(String name) {
         ProjectRole role = projectRoleRepository.findByName(name);
         return role == null ? projectRoleRepository.save(new ProjectRole(name)) : role;
+    }
+
+    @Override
+    public Iterable<ProjectMember> getProjectsWithUser(User user) {
+        return teamRepository.findAllByUser(user);
     }
 
 }

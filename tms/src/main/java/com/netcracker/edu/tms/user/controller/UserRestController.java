@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
 
-@PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
@@ -38,8 +37,8 @@ public class UserRestController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/me")
     public ResponseEntity<User> aboutMe(@AuthenticationPrincipal UserPrincipal currentUser) {
-        User user = userService.getUserByEmail(currentUser.getUsername());
-        return ResponseEntity.ok(user);
+            User user = userService.getUserByEmail(currentUser.getUsername());
+            return ResponseEntity.ok(user);
     }
 
     @PreAuthorize("hasRole('USER')")

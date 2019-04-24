@@ -1,12 +1,11 @@
 import React from 'react';
 import * as axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Form, Modal, Badge, Container, Table, Button } from 'react-bootstrap';
+import { Modal, Badge, Container, Table, Button } from 'react-bootstrap';
 import TextEditor from '../TextEditor';
 import { authorizationHeader } from '../../actions';
 import { backurl } from '../../properties';
-import TaskBoard from './/TaskBoard';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 export default class TaskView extends React.Component {
     constructor(props) {
@@ -22,13 +21,8 @@ export default class TaskView extends React.Component {
 
         this.deleteTask = this.deleteTask.bind(this);
 
-        this.handleCancel = this.handleCancel.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-    }
-
-    handleCancel(event) {
-        event.preventDefault();
     }
 
     handleClose() {
@@ -65,6 +59,12 @@ export default class TaskView extends React.Component {
             .then(res => {
                 const task = res.data;
                 this.setState({ task: task });
+
+                axios.get(backurl + '/tasks/history/' + this.state.id, header)
+                    .then(res => {
+                        var history = res.data;
+                        this.setState({ history: history });
+                    })
             })
     };
 
@@ -90,19 +90,19 @@ export default class TaskView extends React.Component {
             {this.modalDeleteTask()}
             <Container>
                 <div className='float-right'>
-                    <Button variant='success'>&nbsp; Edit &nbsp;</Button>&nbsp;&nbsp;
-                <Button variant='danger' onClick={this.handleShow}>&nbsp; Delete &nbsp;</Button>
+                    <Button variant='success'><Link className='link' to={'/tasks/edit/' + this.state.id}>&nbsp; Edit &nbsp;</Link></Button>&nbsp;&nbsp;
+                    <Button variant='danger' onClick={this.handleShow}>&nbsp; Delete &nbsp;</Button>
                 </div>
                 <div className='flex-row'>
                     {task.priority ? <Badge className='align-self-start' variant={priorities[task.priority].color}>{task.priority}</Badge> : null}
                     &nbsp;
                 {task.priority ? <Badge className='align-self-start' variant={statuses[task.status].color}>{statuses[task.status].name}</Badge> : null}
 
-                    <div className='py-2  flex-grow-1'>
-                        <h1>{task.name}</h1>
-                    </div>
+                    <h1 style={{ wordBreak: 'break-all' }}>{task.name}</h1>
                 </div>
                 <hr />
+                {task.project ? <div>Project: <Link className='black-link' to={'/projects/' + task.project.id}>{task.project.name}</Link> </div> : null}
+                <br/>
 
 
                 {task.description ? <TextEditor
@@ -126,28 +126,28 @@ export default class TaskView extends React.Component {
                     <li>Deadline: {task.dueDate}</li>
                     {task.modificationDate ? <li>Last modified: {task.modificationDate}</li> : null}
                 </ul>
-                <br />
-                <hr />
 
-                <h3>History</h3>
+                {this.state.history && this.state.history.length ? <div>
+                <br />
+                <hr /><h3>History</h3>
                 <br />
 
-                {/* <Table striped bordered hover>
-                <thead className='thead-dark'>
-                    <tr>
-                        <th>name</th>
-                        <th>email</th>
-                        <th>role</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.state.team.map(u => <tr>
-                        <td>{u.name}</td>
-                        <td>{u.email}</td>
-                        <td>{u.role}</td>
-                    </tr>)}
-                </tbody>
-            </Table> */}
+                 <Table striped bordered hover>
+                    <thead className='thead-dark'>
+                        <tr>
+                            <th>Date</th>
+                            <th>Author</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.history.map(h => <tr>
+                            <td style={{ 'width': '20%' }}>{h.created.substring(0, 10) + ' at ' + h.created.substring(11, 16)}</td>
+                            <td style={{ 'width': '20%' }}>{h.author.name}</td>
+                            <td >{h.comment}</td>
+                        </tr>)}
+                    </tbody>
+                </Table></div> : null}
                 <hr />
             </Container>
         </div>

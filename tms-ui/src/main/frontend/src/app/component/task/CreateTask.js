@@ -15,8 +15,6 @@ export default class CreateTask extends React.Component {
     constructor(props) {
         super(props);
 
-        const date = new Date();
-
         this.state = {
             task: {
                 name: null,
@@ -77,6 +75,7 @@ export default class CreateTask extends React.Component {
 
     handleCancel(event) {
         event.preventDefault();
+        this.props.history.goBack();
     }
 
     handleClose() {
@@ -148,8 +147,9 @@ export default class CreateTask extends React.Component {
             .then(res => {
                 console.log(res.status);
                 console.log(res.data);
-                alert('Success!');
+                // alert('Success!');
                 this.handleClose();
+                this.props.history.goBack();
             })
             .catch(error => {
                 switch (error.response.status) {
@@ -193,7 +193,7 @@ export default class CreateTask extends React.Component {
                     </div>
                     <Button
                         className='d-flex mr-4 justify-content-end align-self-end mt-2'
-                        variant='danger'
+                        variant='secondary'
                         onClick={this.handleCancel}>
                         Cancel
                 </Button>

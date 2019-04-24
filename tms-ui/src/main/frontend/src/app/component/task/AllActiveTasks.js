@@ -1,25 +1,24 @@
 import * as axios from 'axios';
 import React, { Component } from 'react';
 import { Container } from 'react-bootstrap'
-import ProjectContainer from './ProjectContainer';
 import { backurl } from '../../properties';
 import { authorizationHeader } from '../../actions';
+import TaskBoard from './TaskBoard';
 
-export default class ProjectDashboard extends Component {
+export default class AllActiveTasks extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            projects: []
+            tasks: []
         }
     }
 
     componentDidMount() {
-
-        axios.get(backurl + '/projects/', authorizationHeader())
+        axios.get(backurl + '/tasks/active', authorizationHeader())
             .then(response => {
-                const projects = response.data;
-                this.setState({ projects: projects });
+                const tasks = response.data;
+                this.setState({ tasks: tasks });
             })
             .catch((error) => {
                 alert('error');
@@ -29,9 +28,9 @@ export default class ProjectDashboard extends Component {
 
     render() {
         return <Container>
-            <h3> All projects</h3>
+            <h3> Active Tasks </h3> 
             <hr />
-            <ProjectContainer projects={this.state.projects} />
+            <TaskBoard tasks={this.state.tasks}/>            
         </Container>;
     }
 }

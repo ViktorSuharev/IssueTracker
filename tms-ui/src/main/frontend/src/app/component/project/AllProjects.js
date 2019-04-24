@@ -3,22 +3,23 @@ import React, { Component } from 'react';
 import { Container } from 'react-bootstrap'
 import { backurl } from '../../properties';
 import { authorizationHeader } from '../../actions';
-import TaskBoard from './TaskBoard';
+import ProjectBoard from './ProjectBoard';
 
-export default class AllTasks extends Component {
+export default class AllProjects extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            tasks: []
+            projects: []
         }
     }
 
     componentDidMount() {
-        axios.get(backurl + '/tasks/', authorizationHeader())
+
+        axios.get(backurl + '/projects/', authorizationHeader())
             .then(response => {
-                const tasks = response.data;
-                this.setState({ tasks: tasks });
+                const projects = response.data;
+                this.setState({ projects: projects });
             })
             .catch((error) => {
                 alert('error');
@@ -28,9 +29,9 @@ export default class AllTasks extends Component {
 
     render() {
         return <Container>
-            <h3> All Tasks </h3> 
+            <h3> All projects</h3>
             <hr />
-            <TaskBoard tasks={this.state.tasks}/>            
+            <ProjectBoard projects={this.state.projects} />
         </Container>;
     }
 }

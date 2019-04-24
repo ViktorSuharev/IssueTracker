@@ -1,16 +1,32 @@
 import axios from 'axios';
 import { backurl } from './properties';
 
+export function wordWrap(toWrap, length) {
+    const len = length ? length : 30;
+    const word = toWrap;
+
+    var res = [];
+    let i = 0;
+    for(i = 0; i < word.length; i+= len) {
+        res.push(word.substr(i, len));
+        console.log(JSON.stringify(res));
+    }
+    return res;
+}
+
+
 //USEFUL
 export function shortenIfLong(title, length) {
-    return title.length > length ? title.substring(0, length - 4) + '...' : title;
+    const len = length ? length : 20;
+
+    return title.length > len ? title.substring(0, len - 4) + '...' : title;
 }
 
 
 //STORAGE
 export function authorizationHeader() {
     let token = localStorage.getItem('token');
-    return {headers: {Authorization: token}};
+    return { headers: { Authorization: token } };
 }
 
 export function getUser() {

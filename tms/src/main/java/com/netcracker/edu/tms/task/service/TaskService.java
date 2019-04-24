@@ -1,6 +1,7 @@
 package com.netcracker.edu.tms.task.service;
 
 import com.netcracker.edu.tms.project.model.Project;
+import com.netcracker.edu.tms.task.model.History;
 import com.netcracker.edu.tms.task.model.Priority;
 import com.netcracker.edu.tms.task.model.Status;
 import com.netcracker.edu.tms.task.model.Task;
@@ -18,7 +19,7 @@ public interface TaskService {
 
     boolean addTask(Task task);
 
-    boolean updateTask(Task task);
+    boolean updateTask(Task task, String comment, User updater);
 
     boolean deleteTask(Task task);
 
@@ -35,4 +36,22 @@ public interface TaskService {
     List<Task> getTaskByStatus(Status taskStatus);
 
     List<Task> getTaskByPriority(Priority taskPriority);
+
+    Iterable<History> getHistoryByTaskId(BigInteger id);
+
+    Iterable<Task> getActiveTasksByAssignee(User assignee);
+
+    void deleteAllTasksByProject(Project project);
+
+    Iterable<Task> getActiveTasksByProject(Project project);
+
+    Iterable<Task> getResolvedTasksByProject(Project project);
+
+    Iterable<Task> getAllActiveTasks();
+
+    Iterable<Task> getResolvedTasksByAssignee(User assignee);
+
+    Iterable<Task> getResolvedTasksByReporter(User reporter);
+
+    Iterable<Task> getClosedTasksByAssignee(User assignee);
 }

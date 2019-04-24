@@ -4,10 +4,11 @@ import Login from './Login'
 import Register from './Register'
 import { AuthConsumer } from './AuthContext';
 import '../styles.css';
+import { Link } from 'react-router-dom';
 
 export default class SignTabs extends Component {
-    loggedIn() {
-        return null;
+    loggedIn(user) {
+        this.props.history.push("/users/" + user.id);
     }
 
     auth(login) {
@@ -25,7 +26,7 @@ export default class SignTabs extends Component {
 
     render() {
         return <AuthConsumer>
-            {({isAuth, login}) => isAuth? this.loggedIn() : this.auth(login) }
+            {({isAuth, login, user}) => isAuth? this.loggedIn(user) : this.auth(login) }
         </AuthConsumer>
     }
 }

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { backurl } from '../../properties';
 import { authorizationHeader } from '../../actions';
 import TextEditor from '../TextEditor';
-// import { DateTime } from 'react-datetime-bootstrap';
+import './styles.css';
 
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
@@ -19,15 +19,6 @@ export default class TaskEditor extends React.Component {
 
         this.state = {
             id: this.props.match.params.id,
-            task: {
-                name: null,
-                description: null,
-                dueDate: null,
-                project: null,
-                priority: priorities[0].name,
-                reporter: null,
-                assignee: null
-            },
 
             projects: [],
             users: [],
@@ -37,6 +28,8 @@ export default class TaskEditor extends React.Component {
         }
 
         this.onUpdateTask = this.onUpdateTask.bind(this);
+        this.handleComment = this.handleComment.bind(this);
+
         this.onDescriptionSave = this.onDescriptionSave.bind(this);
         this.onDueDateChanged = this.onDueDateChanged.bind(this);
 
@@ -46,15 +39,19 @@ export default class TaskEditor extends React.Component {
 
         this.color = this.color.bind(this);
 
+        this.taskEditor = this.taskEditor.bind(this);
+
         this.onSubmitTask = this.onSubmitTask.bind(this);
+    }
+
+    handleComment(event) {
+        this.setState({comment: event.target.value})
     }
 
     updateTask(target, value) {
         var task = { ...this.state.task };
         task[target] = value;
         this.setState({ task: task });
-
-        console.log(JSON.stringify(task));
     }
 
     onUpdateTask(event) {
@@ -76,6 +73,7 @@ export default class TaskEditor extends React.Component {
 
     handleCancel(event) {
         event.preventDefault();
+        this.props.history.goBack();
     }
 
     handleClose() {
@@ -90,26 +88,40 @@ export default class TaskEditor extends React.Component {
     componentDidMount() {
         var reqHeader = authorizationHeader();
 
+        axios.get(backurl + '/tasks/' + this.state.id, reqHeader)
+            .then((response) => {
+                const task = response.data;
+
+                var t = {
+                    name: task.name,
+                    description: task.description,
+                    assignee: task.assignee.id,
+                    reporter: task.reporter.id,
+                    priority: task.priority,
+                    status: task.status,
+                    dueDate: task.dueDate,
+                    project: task.project.id
+                }
+                
+                this.setState({task: t})
+            });
+
+
         axios.get(backurl + '/users/', reqHeader)
             .then((response) => {
                 const users = response.data;
-                this.updateTask(assignee, users[0].id);
-                this.updateTask(reporter, users[0].id);
                 this.setState({ users: users });
             });
 
         axios.get(backurl + '/projects/', reqHeader)
             .then((response) => {
                 const projects = response.data;
-                this.updateTask(project, projects[0].id);
                 this.setState({ projects: projects });
             });
     }
 
     onSubmitTask(event) {
         event.preventDefault();
-
-        const task = this.state.task;
 
         if (!this.state.task.name) {
             alert('Empty name');
@@ -129,26 +141,40 @@ export default class TaskEditor extends React.Component {
             return;
         }
 
+        if (!this.state.comment) {
+            alert('Empty comment');
+            this.handleClose();
+            return;
+        }
+
         let header = authorizationHeader();
 
-        axios(backurl + '/tasks/', {
-            method: 'POST',
+        const t = {
+            id: this.state.id,
+            name: this.state.task.name,
+            description: this.state.task.description,
+            assigneeId : this.state.task.assignee,
+            reporterId: this.state.task.reporter,
+            projectId: this.state.task.project,
+            priority: this.state.task.priority,
+            status: this.state.task.status,
+            dueDate: this.state.task.dueDate
+        }
+        const c = this.state.comment;
+
+        axios(backurl + '/tasks/' + this.state.id, {
+            method: 'PUT',
             headers: header.headers,
             data: {
-                name: task.name,
-                description: task.description,
-                dueDate: task.dueDate,
-                projectId: task.project,
-                priority: task.priority,
-                reporterId: task.reporter,
-                assigneeId: task.assignee
+                task: t,
+                comment: c
             }
         })
             .then(res => {
                 console.log(res.status);
                 console.log(res.data);
-                alert('Success!');
                 this.handleClose();
+                this.props.history.goBack();
             })
             .catch(error => {
                 switch (error.response.status) {
@@ -169,100 +195,119 @@ export default class TaskEditor extends React.Component {
         return priorities.find(p => p.name === this.state.task.priority).color;
     }
 
+    taskEditor(task) {
+        console.log(JSON.stringify(task));
+
+        return <Container>
+            <div className='float-right'>
+                <Button className='d-inline-flex p-2 main-control' variant='secondary' onClick={this.handleCancel}>Cancel</Button>&nbsp;
+            <Button className='d-inline-flex p-2 main-control' variant='success' onClick={this.handleShow}>Update</Button>
+            </div>
+            <h2>Edit task</h2>
+            <hr />
+
+            <Form inline>
+                <Form.Label>Task name: &emsp;</Form.Label>
+                <Form.Control type='text' name={name} onChange={this.onUpdateTask} placeholder='Task name' defaultValue={task.name} />
+            </Form>
+            <br />
+
+            <Form inline>
+                <Form.Label>Assignee:&emsp;&emsp;</Form.Label>
+                <Form.Control as='select' name={assignee} defaultValue={task.assignee} onChange={this.onUpdateTask}>
+                    {this.state.users.map((user) => <option key={user.id} value={user.id}>{user.name}</option>)}
+                </Form.Control>
+            </Form>
+            <br />
+
+            { task.reporter ? <Form inline>
+                <Form.Label>Reporter:&emsp;&emsp;</Form.Label>
+                <Form.Control as='select' name={reporter} defaultValue={task.reporter}  onChange={this.onUpdateTask}>
+                    {this.state.users.map((user) => <option value={user.id}>{user.name}</option>)}
+                </Form.Control>
+            </Form> : null}
+            <br />
+
+            {task.project ? <Form inline>
+                <Form.Label>Project:&emsp;&emsp;&emsp;</Form.Label>
+                <Form.Control as='select' name={project} defaultValue={task.project} onChange={this.onUpdateTask}>
+                    {this.state.projects.map((project) => <option value={project.id}>{project.name}</option>)}
+                </Form.Control>
+            </Form> : null}
+            <br />
+ 
+            {task.priority ? <Form inline >
+                 <Form.Label>Priority:&emsp;&emsp;&emsp;</Form.Label>
+                 <Form.Control as='select' style={{ color: this.color() }} defaultValue={task.priority} name={priority} onChange={this.onUpdateTask}>
+                     {priorities.map((priority) => <option value={priority.name} style={{ color: priority.color }}>{priority.name}</option>)}
+                 </Form.Control>
+             </Form> : null}
+
+             <br/>
+
+             {task.status ? <Form inline >
+                 <Form.Label>Status:&emsp; &emsp;&emsp;</Form.Label>
+                 <Form.Control as='select' defaultValue={task.status} name={status_} onChange={this.onUpdateTask}>
+                     {statuses.map((status) => <option value={status.name}>{status.name}</option>)}
+                 </Form.Control>
+             </Form> : null}
+
+            <br />
+            <Form inline>
+                Due date:&emsp;&emsp;
+                <SingleDatePicker
+                    small={true}
+                    numberOfMonths={1}
+                    date={this.state.date}
+                    onDateChange={date => this.onDueDateChanged(date)}
+                    focused={this.state.focused}
+                    onFocusChange={({ focused }) =>
+                        this.setState({ focused })
+                    }
+                    openDirection='up'
+                    hideKeyboardShortcutsPanel={true}
+                />
+                {/* </Form.Control> */}
+            </Form>
+            <br />
+
+            <Form>
+                <Form.Label>Description</Form.Label>
+                {task.description ? <TextEditor
+                    placeholder='Enter description here...'
+                    onSave={this.onDescriptionSave}
+                    value={task.description}
+                /> : null}
+            </Form>            
+            <br />
+            <Form inline>
+                <Form.Label>Comment modification: &emsp;</Form.Label>
+                <Form.Control 
+                    type='text' 
+                    onChange={this.handleComment}
+                    placeholder='Comment'/>
+            </Form>
+        </Container>
+    }
+
     render() {
+        const task = this.state.task;
         return <div>
             <Modal show={this.state.show} onHide={this.handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Save new task</Modal.Title>
+                    <Modal.Title>Update task</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Are you sure you want to save new task?</Modal.Body>
+                <Modal.Body>Are you sure you want to update task?</Modal.Body>
                 <Modal.Footer>
                     <Button variant='secondary' onClick={this.handleClose}>
                         Cancel
                         </Button>
                     <Button variant='primary' onClick={this.onSubmitTask}>
-                        Save
+                        Update
                         </Button>
                 </Modal.Footer>
             </Modal>
-            <Container>
-                <div className='float-right'>
-                    <Button className='d-inline-flex p-2' variant='secondary' href='/tasks/my'>&nbsp; Cancel &nbsp;</Button>
-                    <Button className='d-inline-flex p-2' variant='danger' onClick={this.handleShow}>&nbsp; Edit &nbsp;</Button>
-                </div>
-                <h2>Edit task</h2>
-                <hr />
-
-                <Form inline>
-                    <Form.Label>Task name: &emsp;</Form.Label>
-                    <Form.Control type='text' name={name} onChange={this.onUpdateTask} placeholder='Task name' />
-                </Form>
-                <br />
-
-                <Form inline>
-                    <Form.Label>Assignee:&emsp;&emsp;</Form.Label>
-                    <Form.Control as='select' name={assignee} onChange={this.onUpdateTask}>
-                        {this.state.users.map((user) => <option value={user.id}>{user.name}</option>)}
-                    </Form.Control>
-                </Form>
-                <br />
-
-                <Form inline>
-                    <Form.Label>Reporter:&emsp;&emsp;</Form.Label>
-                    <Form.Control as='select' name={reporter} onChange={this.onUpdateTask}>
-                        {this.state.users.map((user) => <option value={user.id}>{user.name}</option>)}
-                    </Form.Control>
-                </Form>
-                <br />
-
-                <Form inline>
-                    <Form.Label>Project:&emsp;&emsp;&emsp;</Form.Label>
-                    <Form.Control as='select' name={project} onChange={this.onUpdateTask}>
-                        {this.state.projects.map((project) => <option value={project.id}>{project.name}</option>)}
-                    </Form.Control>
-                </Form>
-                <br />
-
-                <Form inline >
-                    <Form.Label>Priority:&emsp;&emsp;&emsp;</Form.Label>
-                    <Form.Control as='select' style={{ color: this.color() }} name={priority} onChange={this.onUpdateTask}>
-                        {priorities.map((priority) => <option value={priority.name} style={{ color: priority.color }}>{priority.name}</option>)}
-                    </Form.Control>
-                </Form>
-                <br />
-                <Form inline>
-                    Due date:&emsp;&emsp;
-                        {/* <DateTime /> */}
-                    {/* <Form.Control> */}
-                    <SingleDatePicker
-                        //   inputIconPosition='after'
-                        small={true}
-                        // block={true}
-                        numberOfMonths={1}
-                        date={this.state.date}
-                        onDateChange={date => this.onDueDateChanged(date)}
-                        focused={this.state.focused}
-                        // focused={true}
-                        onFocusChange={({ focused }) =>
-                            this.setState({ focused })
-                        }
-                        openDirection='up'
-                        hideKeyboardShortcutsPanel={true}
-                    />
-                    {/* </Form.Control> */}
-                </Form>
-                <br />
-
-                <Form>
-                    <Form.Label>Description</Form.Label>
-                    <TextEditor
-                        placeholder='Enter description here...'
-                        onSave={this.onDescriptionSave}
-                        maxLength={300}
-                    />
-                </Form>
-                <br />
-            </Container>
+            {task ? this.taskEditor(task) : null}
         </div>
     }
 }
@@ -272,9 +317,18 @@ const project = 'project';
 const name = 'name';
 const priority = 'priority';
 const description = 'description';
+const status_ = 'status';
 
 const priorities = [
     { color: 'green', name: 'MINOR' },
     { color: 'blue', name: 'MAJOR' },
     { color: 'orange', name: 'CRITICAL' },
     { color: 'red', name: 'BLOCKER' }];
+
+    const statuses = [
+        { color: 'secondary', name: 'NOT_STARTED' },
+        { color: 'danger', name: 'CANCELED' },
+        { color: 'info', name: 'IN_PROGRESS' },
+        { color: 'primary', name: 'RESOLVED' },
+        { color: 'dark', name: 'CLOSED' }
+    ];

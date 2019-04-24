@@ -1,13 +1,13 @@
 import React from 'react';
 import * as axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-import { FormControl, Container, Modal, Button, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Container, Modal, Button, InputGroup } from 'react-bootstrap';
 import '../styles.css';
-import './index.css';
+// import './index.css';
 import TextEditor from '../TextEditor';
 import { authorizationHeader } from '../../actions';
 import { backurl, project_roles } from '../../properties';
-import DropdownItem from 'react-bootstrap/DropdownItem';
+import { Redirect } from 'react-router-dom'
 
 class CreateProject extends React.Component {
     constructor(props) {
@@ -21,6 +21,8 @@ class CreateProject extends React.Component {
             user: null,
             role: project_roles[0],
             show: false,
+
+            redirect: false,
 
             editor: {
                 placeholder: 'Enter description...'
@@ -112,7 +114,7 @@ class CreateProject extends React.Component {
             .then(res => {
                 console.log(res.status);
                 console.log(res.data);
-                alert('Success!');
+                this.setRedirect();
             })
             .catch(error => {
                 console.log(error.response);
@@ -150,7 +152,7 @@ class CreateProject extends React.Component {
             alert('Employee was not selected!');
             return;
         }
-        
+
 
         var curUser = {user: this.state.user, role: this.state.role};
 
@@ -169,10 +171,21 @@ class CreateProject extends React.Component {
             console.log('delete com.netcracker.edu.tms.user: ', userToDelete.email));
     };
 
+    setRedirect = () => {
+        this.setState({
+            redirect: true
+        })
+    }
+
+    renderRedirect = () => {
+        if (this.state.redirect) {
+            return <Redirect to='/projects' />
+        }
+    }
+
 
     render() {
         return <div>
-            {/* SAVE PROJECT DIALOG */}
             <Modal show={this.state.show} onHide={this.handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Save new project</Modal.Title>
@@ -189,49 +202,43 @@ class CreateProject extends React.Component {
             </Modal>
 
             <Container>
-                <div id='wrapper'>
-                    <div className='d-flex flex-row'>
-                        <div className='py-2  flex-grow-1'>
-                            <h2>Create project</h2>
-                        </div>
-                        <Button className='d-flex mr-4 justify-content-end align-self-end mt-2' variant='danger' onClick={this.handleCancel}>
-                            Cancel
-                            </Button>
-                        <Button
-                            className='d-flex mr-4 justify-content-end align-self-end mt-2'
-                            variant='success'
-                            onClick={this.handleShow}>
-                            Create project
-                            </Button>
-
+                <div className="d-flex">
+                    <div className='mr-auto'><h2>Create project</h2></div>
+                    <div className='float-right'>
+                        <Button variant='secondary' onClick={this.setRedirect}>Cancel</Button>
+                        <span>&nbsp;&nbsp;</span>
+                        {this.renderRedirect()}
+                        <Button variant='success' onClick={this.handleShow}>Create</Button>
                     </div>
-                    <hr />
+                </div>
 
-                    <form>
-                        <div className='d-flex flex-row mx-1'>
-                            <div className=' d-flex mr-4 justify-content-end align-self-end mt-2'>
-                                <h4> Name: <input type='text' value={this.state.name} className='form-control'
-                                    onChange={this.onNameChange} />
-                                </h4>
-                            </div>
-                        </div>
-                    </form>
+                <hr />
 
-                    <br />
-                    <h4>Description:</h4>
-                    <TextEditor
-                        placeholder={this.state.editor.placeholder}
-                        onSave={this.saveDescription}
-                        maxLength={300}
-                    />
-                    <br />
+                <form>
+                    <h4 className='d-flex'> Name:&nbsp;
+                    </h4>
+                    <input
+                        type='text' value={this.state.name}
+                        className='d-flex form-control'
+                        placeholder='Enter project name...'
+                        onChange={this.onNameChange} />
+                </form>
 
-                    <br />
-                    <div className=' d-flex flex-row align-items-center'>
-                        <h4>Project team:</h4>
-                    </div>
-                    <br />
+                <br />
+                <h4>Description:</h4>
+                <TextEditor
+                    placeholder={this.state.editor.placeholder}
+                    onSave={this.saveDescription}
+                />
+                <br />
 
+                <br />
+                <div className='d-flex flex-row align-items-center'>
+                    <h4>Project team:</h4>
+                </div>
+                <br />
+
+                <div className='d-flex'>
                     <InputGroup>
                         <InputGroup.Prepend>
                             <InputGroup.Text>User </InputGroup.Text>
@@ -244,6 +251,8 @@ class CreateProject extends React.Component {
                                 </option>)}
                             )}
                                 </select>
+                    </InputGroup>
+                    <InputGroup>
                         <InputGroup.Prepend>
                             <InputGroup.Text>Role </InputGroup.Text>
                         </InputGroup.Prepend>
@@ -256,53 +265,42 @@ class CreateProject extends React.Component {
                                 </option>)}
                             )}
                                 </select>
-                                <Button variant='dark' onClick={this.onAddUser}>Add</Button>
                     </InputGroup>
-                    <hr/>
+                    <Button variant='dark' onClick={this.onAddUser}>Add</Button>
+                </div>
+                <hr />
 
-                    <div className='table-responsive'>
-                        <table className='table table-light table-striped table-bordered table-hover table-sm  '>
-                            <thead className='thead-dark'>
-                                <tr>
-                                    <th style={{ 'width': '20%' }} scope='col'>Full Name</th>
-                                    <th style={{ 'width': '10%' }} scope='col'>Email</th>
-                                    <th style={{ 'width': '10%' }} scope='col'>Role</th>
-                                    <th style={{ 'width': '4%' }} scope='col'>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                <div className='table-responsive'>
+                    <table className='table table-light table-striped table-bordered table-hover table-sm  '>
+                        <thead className='thead-dark'>
+                            <tr>
+                                <th style={{ 'width': '20%' }} scope='col'>Full Name</th>
+                                <th style={{ 'width': '10%' }} scope='col'>Email</th>
+                                <th style={{ 'width': '10%' }} scope='col'>Role</th>
+                                <th style={{ 'width': '4%' }} scope='col'>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                                {this.state.team.map(({user, role}) =>
-                                    <tr key={user.email}>
-                                        <td> {user.name}</td>
-                                        <td> {user.email}</td>
-                                        <td> {role.name}</td>
-                                        <th scope='row'>
-                                            <Button variant='dark' onClick={this.onDeleteClick.bind(this, user)}>
-                                                X
+                            {this.state.team.map(({ user, role }) =>
+                                <tr key={user.email}>
+                                    <td> {user.name}</td>
+                                    <td> {user.email}</td>
+                                    <td> {role.name}</td>
+                                    <th scope='row'>
+                                        <Button variant='dark' onClick={this.onDeleteClick.bind(this, user)}>
+                                            X
                                                 </Button>
-                                        </th>
-                                    </tr>
-                                )
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                                    </th>
+                                </tr>
+                            )
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </Container >
-            <br />
-            <br />
-            <br />
         </div>
     }
 }
 
 export default CreateProject;
-
-class User {
-    constructor(name, email, role) {
-        this.name = name;
-        this.email = email;
-        this.role = role;
-    }
-}

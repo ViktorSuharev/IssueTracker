@@ -24,6 +24,8 @@ public class TaskDTO {
 
     private Priority priority;
 
+    private Status status;
+
     private String dueDate;
 
     private String description;
@@ -32,16 +34,20 @@ public class TaskDTO {
         User assignee = userService.getUserById(assigneeId);
         User reporter = userService.getUserById(reporterId);
         Project project = projectService.getProjectById(projectId);
-        //TODO
-//        Date dueDate = null;
+
         Date dueDate = null;
         try {
             dueDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S").parse(this.dueDate);
         } catch (ParseException e) {
+            try {
+                dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(this.dueDate);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
             e.printStackTrace();
         }
 
 
-        return new Task(name, description, dueDate, reporter, assignee, project, priority);
+        return new Task(name, description, dueDate, reporter, assignee, project, priority, status);
     }
 }

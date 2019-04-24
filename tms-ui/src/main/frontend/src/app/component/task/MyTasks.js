@@ -28,16 +28,25 @@ export default class MyTasks extends Component {
             });
     }
 
+    showToDo() {
+        return <TaskBoard tasks={this.state.toDo} />
+    }
+
+    showToReport() {
+        return <TaskBoard tasks={this.state.toReport} />
+    }
+
+
+
     render() {
         return <Container>
             <h3> To Do</h3>
             <hr />
-            <TaskBoard tasks={this.state.toDo} />
-            <hr /><br/>
-
+            {this.state.toDo.length > 0 ? this.showToDo() : 'Nothing to do'}
+            <hr />
             <h3> Report </h3>
             <hr />
-            <TaskBoard tasks={this.state.toReport} />
+            {this.state.toReport.length > 0 ? this.showToReport() : 'Nothing to report'}
         </Container>;
     }
 }
