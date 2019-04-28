@@ -20,12 +20,10 @@ import java.math.BigInteger;
 @RequestMapping("/api/users")
 public class UserRestController {
     private UserService userService;
-    private ProjectService projectService;
 
     @Autowired
-    public UserRestController(UserService userService, ProjectService projectService) {
+    public UserRestController(UserService userService) {
         this.userService = userService;
-        this.projectService = projectService;
     }
 
     @PreAuthorize("hasRole('USER')")
