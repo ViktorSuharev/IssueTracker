@@ -103,11 +103,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserWithPassword getUserWithPasswordById(BigInteger id) {
-        return userWithPasswordRepository.findById(id).get();
-    }
-
-    @Override
     public User getUserById(BigInteger id) {
         return userRepository.findById(id).get();
     }

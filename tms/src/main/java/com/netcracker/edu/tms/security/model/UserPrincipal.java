@@ -3,7 +3,6 @@ package com.netcracker.edu.tms.security.model;
 import com.netcracker.edu.tms.user.model.UserWithPassword;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
