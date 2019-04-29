@@ -105,7 +105,7 @@ export default class TaskBoard extends Component {
             </Card.Body>
             <Card.Body>
                 <Card.Text>
-                    Assignee &nbsp; <a href={'/projects/' + task.project.id}>{task.project.name}</a>
+                    Project &nbsp; &nbsp; <a href={'/projects/' + task.project.id}>{task.project.name}</a>
                     <br />
                     Assignee &nbsp; <a href={'/users/' + task.assignee.id}>{task.assignee.name}</a>
                     <br />
@@ -193,7 +193,7 @@ const priorities = {
 
 const statuses = {
     NOT_STARTED: { color: 'secondary', name: 'NOT STARTED' },
-    CANCELED: { color: 'danger', name: 'CANCELED' },
+    CANCELLED: { color: 'danger', name: 'CANCELLED' },
     IN_PROGRESS: { color: 'info', name: 'IN_PROGRESS' },
     RESOLVED: { color: 'primary', name: 'RESOLVED' },
     CLOSED: { color: 'dark', name: 'CLOSED' }
