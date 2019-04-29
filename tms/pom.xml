@@ -3,14 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.netcracker.edu</groupId>
-    <artifactId>tms</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>IssueTracker</artifactId>
+    <version>1.0.1-RELEASE</version>
 
     <properties>
         <java.version>1.8</java.version>
         <third-party.mail.version>1.4</third-party.mail.version>
         <third-party.jsonwebtoken.version>0.6.0</third-party.jsonwebtoken.version>
         <third-party.jaxb.version>2.3.0</third-party.jaxb.version>
+        <start-class>com.netcracker.edu.tms.App</start-class>
     </properties>
 
     <parent>
@@ -105,6 +106,34 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <mainClass>com.netcracker.edu.tms.App</mainClass>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>${start-class}</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>assemble-all</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
