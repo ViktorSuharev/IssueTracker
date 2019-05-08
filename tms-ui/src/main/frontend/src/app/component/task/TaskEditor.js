@@ -327,7 +327,7 @@ const priorities = [
 
     const statuses = [
         { color: 'secondary', name: 'NOT_STARTED' },
-        { color: 'danger', name: 'CANCELLED' },
+        { color: 'danger', name: 'CANCELED' },
         { color: 'info', name: 'IN_PROGRESS' },
         { color: 'primary', name: 'RESOLVED' },
         { color: 'dark', name: 'CLOSED' }

@@ -100,18 +100,18 @@ export default class ProjectBoard extends Component {
         return <Card>
             <Card.Header>
                 <Link to={'/projects/' + project.id}>
-                    <h4>{shortenIfLong(project.name, 29)}</h4>
+                    <h4>{shortenIfLong(project.name, 20)}</h4>
                 </Link>
             </Card.Header>
             <Card.Body>
                 <Card.Subtitle className='mb-2 text-muted'>
                     <Link to={'/users/' + project.creator.id}>{project.creator.name}</Link>
+                    {this.controlIfCreator(project)}
                 </Card.Subtitle>
                 <br />
                 <Card.Text>
                     {parseMdToText(project.description)}
                 </Card.Text>
-        {this.controlIfCreator(project)}
             </Card.Body>
         </Card>
     }
