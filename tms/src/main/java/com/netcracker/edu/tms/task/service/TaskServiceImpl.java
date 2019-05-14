@@ -211,11 +211,11 @@ public class TaskServiceImpl implements TaskService {
         mailService.send(assigneeEmail, Mail.builder().subject(
                 "You were assignee to a new task " + newTask.getName() + " !").body(
                 "Your new task: " + newTask.getDescription() +
-                        "\\nCongratulations!").build());
+                        "\nCongratulations!").build());
     }
 
     @Override
-    public  void taskUpdateMailNotification(Task updatedTask, String comment, User author){
+    public void taskUpdateMailNotification(Task updatedTask, String comment, User author) {
         List<String> assigneeEmail = new ArrayList<>();
         List<String> taskCreatorEmail = new ArrayList<>();
         assigneeEmail.add(updatedTask.getAssignee().getEmail());
@@ -229,29 +229,29 @@ public class TaskServiceImpl implements TaskService {
 
         mailService.send(assigneeEmail, Mail.builder().subject(
                 "Your task " + updatedTask.getName() + "  was updated!").body(
-                "Comment: "+ comment+
-                "\\nby user: "+ author.getName()+
-                "\\nYour updated task: " + updatedTask.getDescription()+
-                "\\nDue date: "+updatedTask.getDueDate()+
-                "\\nModification date: "+ updatedTask.getModificationDate()+
-                "\\nReporter: "+updatedTask.getReporter().getName()+
-                "\\nAssignee: "+updatedTask.getAssignee()+
-                "\\nProject: "+updatedTask.getProject().getName()+
-                "\\nStatus: "+updatedTask.getStatus()+
-                "\\nPriority: "+updatedTask.getPriority()
-                ).build());
+                "Comment: " + comment +
+                        "\nby user: " + author.getName() +
+                        "\nYour updated task: " + updatedTask.getDescription() +
+                        "\nDue date: " + updatedTask.getDueDate() +
+                        "\nModification date: " + updatedTask.getModificationDate() +
+                        "\nReporter: " + updatedTask.getReporter().getName() +
+                        "\nAssignee: " + updatedTask.getAssignee().getName() +
+                        "\nProject: " + updatedTask.getProject().getName() +
+                        "\nStatus: " + updatedTask.getStatus() +
+                        "\nPriority: " + updatedTask.getPriority()
+        ).build());
         mailService.send(taskCreatorEmail, Mail.builder().subject(
                 "Your task " + updatedTask.getName() + "  was updated!").body(
-                "Comment: "+ comment+
-                        "\\nby user: "+ author.getName()+
-                        "\\nYour updated task: " + updatedTask.getDescription()+
-                        "\\nDue date: "+updatedTask.getDueDate()+
-                        "\\nModification date: "+ updatedTask.getModificationDate()+
-                        "\\nReporter: "+updatedTask.getReporter().getName()+
-                        "\\nAssignee: "+updatedTask.getAssignee()+
-                        "\\nProject: "+updatedTask.getProject().getName()+
-                        "\\nStatus: "+updatedTask.getStatus()+
-                        "\\nPriority: "+updatedTask.getPriority()
+                "Comment: " + comment +
+                        "\nby user: " + author.getName() +
+                        "\nYour updated task: " + updatedTask.getDescription() +
+                        "\nDue date: " + updatedTask.getDueDate() +
+                        "\nModification date: " + updatedTask.getModificationDate() +
+                        "\nReporter: " + updatedTask.getReporter().getName() +
+                        "\nAssignee: " + updatedTask.getAssignee().getName() +
+                        "\nProject: " + updatedTask.getProject().getName() +
+                        "\nStatus: " + updatedTask.getStatus() +
+                        "\nPriority: " + updatedTask.getPriority()
         ).build());
     }
 }

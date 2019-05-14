@@ -37,7 +37,6 @@ public class Task {
     private Date creationDate;
 
     @Column(name = "due_date")
-    @Future
     @Temporal(TemporalType.DATE)
     private Date dueDate;
 

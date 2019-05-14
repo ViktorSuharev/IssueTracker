@@ -25,13 +25,19 @@ public class    MailSender implements Runnable {
     @Override
     public void run() {
         try {
+            System.out.println("BEGINING\n");
             Message message = new MimeMessage(currentSession);
+            System.out.println(message);
             message.setFrom(new InternetAddress(usernameForSession));
+            System.out.println(message.getFrom());
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(address));
+            System.out.println("AFTER SETRECIPIENTS\n");
             message.setSubject(mail.getSubject());
+            System.out.println(message.getSubject());
             message.setText(mail.getBody());
-
+            System.out.println("AFTER SETTEXT\n");
+            System.out.println("MESSAGE: "+ message);
             Transport.send(message);
         } catch (MessagingException e) {
             LOGGER.error("Message exeption in MailSender with stack trace: ", e.getMessage());
