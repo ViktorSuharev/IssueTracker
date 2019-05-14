@@ -54,4 +54,8 @@ public interface TaskService {
     Iterable<Task> getResolvedTasksByReporter(User reporter);
 
     Iterable<Task> getClosedTasksByAssignee(User assignee);
+
+    void sendNewTaskToAssignee(Task newTask);
+
+    void taskUpdateMailNotification(Task updatedTask, String comment, User author);
 }
