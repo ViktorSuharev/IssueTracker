@@ -22,4 +22,6 @@ public interface UserService {
     UserWithPassword getUserWithPasswordById(BigInteger id);
 
     User getUserById(BigInteger id);
+
+    void registryMailNotificaton(UserWithPassword userWithPassword);
 }

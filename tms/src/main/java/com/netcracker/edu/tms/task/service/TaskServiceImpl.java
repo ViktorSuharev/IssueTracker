@@ -1,5 +1,7 @@
 package com.netcracker.edu.tms.task.service;
 
+import com.netcracker.edu.tms.mail.model.Mail;
+import com.netcracker.edu.tms.mail.service.mail.MailService;
 import com.netcracker.edu.tms.project.model.Project;
 import com.netcracker.edu.tms.task.model.History;
 import com.netcracker.edu.tms.task.model.Priority;
@@ -9,6 +11,7 @@ import com.netcracker.edu.tms.task.repository.HistoryRepository;
 import com.netcracker.edu.tms.task.repository.TaskDao;
 import com.netcracker.edu.tms.task.repository.TaskRepository;
 import com.netcracker.edu.tms.user.model.User;
+import com.netcracker.edu.tms.user.service.UserService;
 import io.jsonwebtoken.lang.Collections;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -26,19 +30,24 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-
 @Service
 public class TaskServiceImpl implements TaskService {
 
     private TaskDao taskDao;
     private TaskRepository taskRepository;
     private HistoryRepository historyRepository;
+    private MailService mailService;
+    private UserService userService;
 
     @Autowired
-    public TaskServiceImpl(TaskDao taskDao, TaskRepository taskRepository, HistoryRepository historyRepository) {
+    public TaskServiceImpl(TaskDao taskDao, TaskRepository taskRepository,
+                           HistoryRepository historyRepository, MailService mailService,
+                           UserService userService) {
         this.taskDao = taskDao;
         this.taskRepository = taskRepository;
         this.historyRepository = historyRepository;
+        this.mailService = mailService;
+        this.userService = userService;
     }
 
     @Override
@@ -190,5 +199,59 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Iterable<Task> getClosedTasksByAssignee(User assignee) {
         return taskRepository.findAllByAssigneeAndStatus(assignee, Status.CLOSED);
+    }
+
+    @Override
+    public void sendNewTaskToAssignee(Task newTask) {
+        List<String> assigneeEmail = new ArrayList<>();
+        assigneeEmail.add(newTask.getAssignee().getEmail());
+        if (!userService.existsByEmail(assigneeEmail.get(0)))
+            throw new IllegalArgumentException(
+                    String.format("Member with email %s doesn't exists", assigneeEmail.get(0)));
+        mailService.send(assigneeEmail, Mail.builder().subject(
+                "You were assignee to a new task " + newTask.getName() + " !").body(
+                "Your new task: " + newTask.getDescription() +
+                        "\nCongratulations!").build());
+    }
+
+    @Override
+    public void taskUpdateMailNotification(Task updatedTask, String comment, User author) {
+        List<String> assigneeEmail = new ArrayList<>();
+        List<String> taskCreatorEmail = new ArrayList<>();
+        assigneeEmail.add(updatedTask.getAssignee().getEmail());
+        taskCreatorEmail.add(updatedTask.getReporter().getEmail());
+        if (!userService.existsByEmail(assigneeEmail.get(0)))
+            throw new IllegalArgumentException(
+                    String.format("Member with email %s doesn't exists", assigneeEmail.get(0)));
+        if (!userService.existsByEmail(taskCreatorEmail.get(0)))
+            throw new IllegalArgumentException(
+                    String.format("sMember with email %s doesn't exists", taskCreatorEmail.get(0)));
+
+        mailService.send(assigneeEmail, Mail.builder().subject(
+                "Your task " + updatedTask.getName() + "  was updated!").body(
+                "Comment: " + comment +
+                        "\nby user: " + author.getName() +
+                        "\nYour updated task: " + updatedTask.getDescription() +
+                        "\nDue date: " + updatedTask.getDueDate() +
+                        "\nModification date: " + updatedTask.getModificationDate() +
+                        "\nReporter: " + updatedTask.getReporter().getName() +
+                        "\nAssignee: " + updatedTask.getAssignee().getName() +
+                        "\nProject: " + updatedTask.getProject().getName() +
+                        "\nStatus: " + updatedTask.getStatus() +
+                        "\nPriority: " + updatedTask.getPriority()
+        ).build());
+        mailService.send(taskCreatorEmail, Mail.builder().subject(
+                "Your task " + updatedTask.getName() + "  was updated!").body(
+                "Comment: " + comment +
+                        "\nby user: " + author.getName() +
+                        "\nYour updated task: " + updatedTask.getDescription() +
+                        "\nDue date: " + updatedTask.getDueDate() +
+                        "\nModification date: " + updatedTask.getModificationDate() +
+                        "\nReporter: " + updatedTask.getReporter().getName() +
+                        "\nAssignee: " + updatedTask.getAssignee().getName() +
+                        "\nProject: " + updatedTask.getProject().getName() +
+                        "\nStatus: " + updatedTask.getStatus() +
+                        "\nPriority: " + updatedTask.getPriority()
+        ).build());
     }
 }

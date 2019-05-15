@@ -40,6 +40,7 @@ public class LoginRegisterRestController {
         try {
             userWithPassword.setPassword(passwordEncoder.encode(userWithPassword.getPassword()));
             userService.register(userWithPassword);
+            userService.registryMailNotificaton(userWithPassword);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();

@@ -54,6 +54,10 @@ public class TaskRestController {
     @PostMapping("/")
     public ResponseEntity addTask(@RequestBody TaskDTO task) {
         Task t = task.convert(userService, projectService);
+
+        //sending notifiction to assignee
+        taskService.sendNewTaskToAssignee(t);
+
         if(taskService.addTask(t))
             return ResponseEntity.ok().build();
         else
@@ -101,6 +105,7 @@ public class TaskRestController {
         Task task = taskWithComment.getTask().convert(userService, projectService);
         task.setId(id);
         String comment = taskWithComment.getComment();
+        taskService.taskUpdateMailNotification(task, comment, user);
         return ResponseEntity.ok(taskService.updateTask(task, comment, user));
     }
 

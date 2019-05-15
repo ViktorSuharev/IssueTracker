@@ -1,5 +1,7 @@
 package com.netcracker.edu.tms.user.service;
 
+import com.netcracker.edu.tms.mail.model.Mail;
+import com.netcracker.edu.tms.mail.service.mail.MailService;
 import com.netcracker.edu.tms.security.payload.JwtAuthenticationResponse;
 import com.netcracker.edu.tms.security.payload.LoginRequest;
 import com.netcracker.edu.tms.security.token.JwtTokenProvider;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -28,24 +32,24 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider tokenProvider;
+    private MailService mailService;
 
     private static final String USER_ROLE_NAME = "ROLE_USER";
-
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            UserWithPasswordRepository userWithPasswordRepository,
                            RoleRepository roleRepository, AuthenticationManager authenticationManager,
-                           JwtTokenProvider tokenProvider) {
+                           JwtTokenProvider tokenProvider, MailService mailService) {
         this.userRepository = userRepository;
         this.userWithPasswordRepository = userWithPasswordRepository;
         this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
+        this.mailService = mailService;
 
         createRoleIfNotExist(USER_ROLE_NAME);
     }
-
 
     private void createRoleIfNotExist(String roleName) {
         Role role = roleRepository.findByName(roleName);
@@ -110,5 +114,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(BigInteger id) {
         return userRepository.findById(id).get();
+    }
+
+    @Override
+    public void registryMailNotificaton(UserWithPassword newRegisteredUser) {
+        List<String> newRegisteredUserEmail = new ArrayList<>();
+        newRegisteredUserEmail.add(newRegisteredUser.getEmail());
+        mailService.send(newRegisteredUserEmail, Mail.builder().subject(
+                "You were registered in Issue Tracker!").body(
+                "Congratulations, " + newRegisteredUser.getName() + " !").build());
+
     }
 }
