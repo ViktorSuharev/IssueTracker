@@ -48,6 +48,9 @@ public class UserServiceImplTest {
     @Mock
     JwtTokenProvider jwtTokenProvider = mock(JwtTokenProvider.class);
 
+    @Mock
+    Authentication authentication = mock(Authentication.class);
+
     private final UserService userService =
             new UserServiceImpl(userRepository, userWithPasswordRepository, roleRepository, authenticationManager, jwtTokenProvider);
 
@@ -72,48 +75,13 @@ public class UserServiceImplTest {
         String stubPassword = "stubPassword";
         LoginRequest stubLoginRequest = new LoginRequest();
         String jwtStub = "jwtStub";
-        Authentication stubAuthentication = new Authentication() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return null;
-            }
 
-            @Override
-            public Object getCredentials() {
-                return null;
-            }
-
-            @Override
-            public Object getDetails() {
-                return null;
-            }
-
-            @Override
-            public Object getPrincipal() {
-                return null;
-            }
-
-            @Override
-            public boolean isAuthenticated() {
-                return false;
-            }
-
-            @Override
-            public void setAuthenticated(boolean b) throws IllegalArgumentException {
-
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-        };
         when(authenticationManager.authenticate(any()))
-                .thenReturn(stubAuthentication);
-        when(jwtTokenProvider.generateToken(stubAuthentication)).thenReturn(jwtStub);
+                .thenReturn(authentication);
+        when(jwtTokenProvider.generateToken(authentication)).thenReturn(jwtStub);
 
         Assert.assertEquals(new JwtAuthenticationResponse(jwtStub), userService.login(stubLoginRequest));
-        Assert.assertEquals(stubAuthentication, SecurityContextHolder.getContext().getAuthentication());
+        Assert.assertEquals(authentication, SecurityContextHolder.getContext().getAuthentication());
     }
 
     @Test
