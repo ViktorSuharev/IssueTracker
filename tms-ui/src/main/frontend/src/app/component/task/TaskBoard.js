@@ -105,7 +105,7 @@ export default class TaskBoard extends Component {
             </Card.Body>
             <Card.Body>
                 <Card.Text>
-                    Assignee &nbsp; <a href={'/projects/' + task.project.id}>{task.project.name}</a>
+                    Project &nbsp; <a href={'/projects/' + task.project.id}>{task.project.name}</a>
                     <br />
                     Assignee &nbsp; <a href={'/users/' + task.assignee.id}>{task.assignee.name}</a>
                     <br />
