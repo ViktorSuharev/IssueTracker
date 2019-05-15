@@ -120,9 +120,17 @@ public class UserServiceImpl implements UserService {
     public void registryMailNotificaton(UserWithPassword newRegisteredUser) {
         List<String> newRegisteredUserEmail = new ArrayList<>();
         newRegisteredUserEmail.add(newRegisteredUser.getEmail());
-        mailService.send(newRegisteredUserEmail, Mail.builder().subject(
-                "You were registered in Issue Tracker!").body(
-                "Congratulations, " + newRegisteredUser.getName() + " !").build());
+        mailService.send(
+                newRegisteredUserEmail,
+                Mail.builder()
+                        .subject("Welcome to the Issue Tracker")
+                        .body("Congratulations, " + newRegisteredUser.getName() + "!\n"
+                                + "You were registered in Issue Tracker!"
+                                + "\n\n"
+                                + "---\n"
+                                + "Cheers,\n"
+                                + "Issue Tracker Team")
+                        .build());
 
     }
 }

@@ -208,10 +208,16 @@ public class TaskServiceImpl implements TaskService {
         if (!userService.existsByEmail(assigneeEmail.get(0)))
             throw new IllegalArgumentException(
                     String.format("Member with email %s doesn't exists", assigneeEmail.get(0)));
-        mailService.send(assigneeEmail, Mail.builder().subject(
-                "You were assignee to a new task " + newTask.getName() + " !").body(
-                "Your new task: " + newTask.getDescription() +
-                        "\nCongratulations!").build());
+        mailService.send(
+                assigneeEmail,
+                Mail.builder()
+                        .subject("New task [" + newTask.getName() + "]")
+                        .body("New task was assigned to you: " + newTask.getDescription()
+                                + "\n\n"
+                                + "---\n"
+                                + "Cheers,\n"
+                                + "Issue Tracker Team")
+                        .build());
     }
 
     @Override
@@ -225,33 +231,26 @@ public class TaskServiceImpl implements TaskService {
                     String.format("Member with email %s doesn't exists", assigneeEmail.get(0)));
         if (!userService.existsByEmail(taskCreatorEmail.get(0)))
             throw new IllegalArgumentException(
-                    String.format("sMember with email %s doesn't exists", taskCreatorEmail.get(0)));
+                    String.format("Member with email %s doesn't exists", taskCreatorEmail.get(0)));
 
-        mailService.send(assigneeEmail, Mail.builder().subject(
-                "Your task " + updatedTask.getName() + "  was updated!").body(
-                "Comment: " + comment +
-                        "\nby user: " + author.getName() +
-                        "\nYour updated task: " + updatedTask.getDescription() +
-                        "\nDue date: " + updatedTask.getDueDate() +
-                        "\nModification date: " + updatedTask.getModificationDate() +
-                        "\nReporter: " + updatedTask.getReporter().getName() +
-                        "\nAssignee: " + updatedTask.getAssignee().getName() +
-                        "\nProject: " + updatedTask.getProject().getName() +
-                        "\nStatus: " + updatedTask.getStatus() +
-                        "\nPriority: " + updatedTask.getPriority()
-        ).build());
-        mailService.send(taskCreatorEmail, Mail.builder().subject(
-                "Your task " + updatedTask.getName() + "  was updated!").body(
-                "Comment: " + comment +
-                        "\nby user: " + author.getName() +
-                        "\nYour updated task: " + updatedTask.getDescription() +
-                        "\nDue date: " + updatedTask.getDueDate() +
-                        "\nModification date: " + updatedTask.getModificationDate() +
-                        "\nReporter: " + updatedTask.getReporter().getName() +
-                        "\nAssignee: " + updatedTask.getAssignee().getName() +
-                        "\nProject: " + updatedTask.getProject().getName() +
-                        "\nStatus: " + updatedTask.getStatus() +
-                        "\nPriority: " + updatedTask.getPriority()
-        ).build());
+        Mail mail = Mail.builder()
+                .subject("Task updated [" + updatedTask.getName() + "]")
+                .body("User " + author.getName() + " updated task" + updatedTask.getDescription() + "\n"
+                        + "Comment: " + comment + "\n"
+                        + "\n"
+                        + "Due date: " + updatedTask.getDueDate() + "\n"
+                        + "Last update: " + updatedTask.getModificationDate() + "\n"
+                        + "Reporter: " + updatedTask.getReporter().getName() + "\n"
+                        + "Assignee: " + updatedTask.getAssignee().getName() + "\n"
+                        + "Project: " + updatedTask.getProject().getName() + "\n"
+                        + "Status: " + updatedTask.getStatus() + "\n"
+                        + "Priority: " + updatedTask.getPriority() + "\n"
+                        + "\n\n"
+                        + "---\n"
+                        + "Cheers,\n"
+                        + "Issue Tracker Team")
+                .build();
+        mailService.send(assigneeEmail, mail);
+        mailService.send(taskCreatorEmail, mail);
     }
 }

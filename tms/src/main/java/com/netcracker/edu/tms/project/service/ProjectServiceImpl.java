@@ -127,9 +127,17 @@ public class ProjectServiceImpl implements ProjectService {
             addedUsersAddresses.add(m.getUser().getEmail());
         }
 
-        mailService.send(addedUsersAddresses, Mail.builder().subject(
-                "You were invited in new project " + project.getName() + " over MailSenderImpl!").body(
-                "Congratulations!").build());
+        mailService.send(
+                addedUsersAddresses,
+                Mail.builder()
+                        .subject("Welcome to project [" + project.getName() + "]")
+                        .body("You were invited to project " + project.getName()
+                                + "\n\n"
+                                + "---\n"
+                                + "Cheers,\n"
+                                + "Issue Tracker Team")
+                        .build()
+        );
     }
 
     @Override
