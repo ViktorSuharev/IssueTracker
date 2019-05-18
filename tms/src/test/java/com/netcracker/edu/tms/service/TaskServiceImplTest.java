@@ -1,5 +1,6 @@
 package com.netcracker.edu.tms.service;
 
+import com.netcracker.edu.tms.mail.service.mail.MailService;
 import com.netcracker.edu.tms.project.model.Project;
 import com.netcracker.edu.tms.task.model.History;
 import com.netcracker.edu.tms.task.model.Priority;
@@ -12,6 +13,7 @@ import com.netcracker.edu.tms.task.repository.TaskRepository;
 import com.netcracker.edu.tms.task.service.TaskService;
 import com.netcracker.edu.tms.task.service.TaskServiceImpl;
 import com.netcracker.edu.tms.user.model.User;
+import com.netcracker.edu.tms.user.service.UserService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,15 +34,21 @@ import static org.mockito.Mockito.when;
 public class TaskServiceImplTest {
 
     @Mock
-    TaskDao taskDao = mock(TaskDaoJpaImpl.class);
+    private TaskDao taskDao = mock(TaskDaoJpaImpl.class);
 
     @Mock
-    TaskRepository taskRepository = mock(TaskRepository.class);
+    private TaskRepository taskRepository = mock(TaskRepository.class);
 
     @Mock
-    HistoryRepository historyRepository = mock(HistoryRepository.class);
+    private HistoryRepository historyRepository = mock(HistoryRepository.class);
 
-    private final TaskService taskService = new TaskServiceImpl(taskDao, taskRepository, historyRepository);
+    @Mock
+    private MailService mailService = mock(MailService.class);
+
+    @Mock
+    private UserService userService = mock(UserService.class);
+
+    private final TaskService taskService = new TaskServiceImpl(taskDao, taskRepository, historyRepository, mailService, userService);
 
     @Test
     public void getTaskById() {

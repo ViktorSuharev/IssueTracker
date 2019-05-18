@@ -16,7 +16,6 @@ import com.netcracker.edu.tms.user.model.User;
 import com.netcracker.edu.tms.user.service.UserService;
 import com.netcracker.edu.tms.user.service.UserServiceImpl;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.mockito.Mock;

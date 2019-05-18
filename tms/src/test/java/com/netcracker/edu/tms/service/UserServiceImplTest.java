@@ -1,5 +1,6 @@
 package com.netcracker.edu.tms.service;
 
+import com.netcracker.edu.tms.mail.service.mail.MailService;
 import com.netcracker.edu.tms.security.payload.JwtAuthenticationResponse;
 import com.netcracker.edu.tms.security.payload.LoginRequest;
 import com.netcracker.edu.tms.security.token.JwtTokenProvider;
@@ -16,12 +17,10 @@ import org.junit.Test;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,25 +33,33 @@ import static org.mockito.Mockito.when;
 public class UserServiceImplTest {
 
     @Mock
-    UserRepository userRepository = mock(UserRepository.class);
+    private UserRepository userRepository = mock(UserRepository.class);
 
     @Mock
-    UserWithPasswordRepository userWithPasswordRepository = mock(UserWithPasswordRepository.class);
+    private UserWithPasswordRepository userWithPasswordRepository = mock(UserWithPasswordRepository.class);
 
     @Mock
-    RoleRepository roleRepository = mock(RoleRepository.class);
+    private RoleRepository roleRepository = mock(RoleRepository.class);
 
     @Mock
-    AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+    private AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
 
     @Mock
-    JwtTokenProvider jwtTokenProvider = mock(JwtTokenProvider.class);
+    private JwtTokenProvider jwtTokenProvider = mock(JwtTokenProvider.class);
 
     @Mock
-    Authentication authentication = mock(Authentication.class);
+    private Authentication authentication = mock(Authentication.class);
 
-    private final UserService userService =
-            new UserServiceImpl(userRepository, userWithPasswordRepository, roleRepository, authenticationManager, jwtTokenProvider);
+    @Mock
+    private MailService mailService = mock(MailService.class);
+
+    private final UserService userService = new UserServiceImpl(
+            userRepository,
+            userWithPasswordRepository,
+            roleRepository,
+            authenticationManager,
+            jwtTokenProvider,
+            mailService);
 
     @Test
     public void createRoleNonExistent() {
