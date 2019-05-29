@@ -11,6 +11,10 @@
         <third-party.mail.version>1.4</third-party.mail.version>
         <third-party.jsonwebtoken.version>0.6.0</third-party.jsonwebtoken.version>
         <third-party.jaxb.version>2.3.0</third-party.jaxb.version>
+        <third-party.velocity.version>1.7</third-party.velocity.version>
+        <third-party.jasypt.version>2.1.1</third-party.jasypt.version>
+        <third-party.junit.version>4.13-beta-1</third-party.junit.version>
+        <third-party.mockito.version>2.23.0</third-party.mockito.version>
     </properties>
 
     <parent>
@@ -29,11 +33,6 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.netcracker.edu</groupId>-->
-            <!--<artifactId>tms-ui</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -47,18 +46,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13-beta-1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.23.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -74,29 +61,38 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>${third-party.velocity.version}</version>
+        </dependency>
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>${third-party.mail.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>2.1.1</version>
+            <version>${third-party.jasypt.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.velocity/velocity -->
         <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${third-party.junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${third-party.mockito.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
