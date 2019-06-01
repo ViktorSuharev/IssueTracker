@@ -12,7 +12,6 @@ import com.netcracker.edu.tms.task.repository.TaskDao;
 import com.netcracker.edu.tms.task.repository.TaskRepository;
 import com.netcracker.edu.tms.user.model.User;
 import com.netcracker.edu.tms.user.service.UserService;
-import io.jsonwebtoken.lang.Collections;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -199,6 +197,12 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Iterable<Task> getClosedTasksByAssignee(User assignee) {
         return taskRepository.findAllByAssigneeAndStatus(assignee, Status.CLOSED);
+    }
+
+    @Override
+    public Iterable<Task> getByNamePattern(String namePattern) {
+        String preprocessed = namePattern.toLowerCase();
+        return taskRepository.findByNameContainingIgnoreCase(preprocessed);
     }
 
     @Override

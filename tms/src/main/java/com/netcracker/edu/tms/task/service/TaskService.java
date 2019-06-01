@@ -55,6 +55,8 @@ public interface TaskService {
 
     Iterable<Task> getClosedTasksByAssignee(User assignee);
 
+    Iterable<Task> getByNamePattern(String namePattern);
+
     void sendNewTaskToAssignee(Task newTask);
 
     void taskUpdateMailNotification(Task updatedTask, String comment, User author);

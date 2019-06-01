@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
 import { AuthConsumer } from '../login/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import '../styles.css';
 
 export default class NavigationBar extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            shouldRedirect: false
+        };
+    }
+
     loggedIn(user) {
         let signedAsLabel = 'Signed in as: ' + user.name;
 
@@ -50,6 +58,31 @@ export default class NavigationBar extends Component {
                     </NavDropdown>
                 </Nav>
 
+                {/* SEARCH BOX */}
+                <Form inline>
+                    <FormControl 
+                        type="text" 
+                        placeholder="Search" 
+                        className="mr-sm-2"
+                        onChange={ (event) => {console.log(event.target.value); this.setState({searchText: event.target.value}) }} 
+                    />
+
+                    <Button variant="outline-info"
+                            onClick= {(e) => {
+                                e.preventDefault();
+
+                                let name = this.state.searchText;
+                                if(!name)
+                                    return;
+
+                                const link = '/tasks/search/' + name;
+                                this.setState({shouldRedirect: true, redirectLink: link});      
+                            }}>
+                        Search
+                    </Button>
+                </Form>
+
+                {/* USER ACTIONS */}
                 <NavDropdown title={signedAsLabel} id='collasible-nav-dropdown'>
                     <AuthConsumer>
                         {({ logout, user }) => <div>
@@ -60,6 +93,7 @@ export default class NavigationBar extends Component {
                     </AuthConsumer>
                 </NavDropdown>
 
+                { this.state.shouldRedirect ? <Redirect to={this.state.redirectLink} /> : null }
             </Navbar.Collapse>
         </Navbar>;
     }

@@ -15,7 +15,7 @@ export default class TaskEditor extends React.Component {
     constructor(props) {
         super(props);
 
-        const date = new Date();
+        // const date = new Date();
 
         this.state = {
             id: this.props.match.params.id,

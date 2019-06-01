@@ -26,4 +26,6 @@ public interface TaskRepository extends CrudRepository<Task, BigInteger> {
     Iterable<Task> findAllByStatus(Status status);
 
     Iterable<Task> findAllByReporterAndStatus(User reporter, Status resolved);
+
+    Iterable<Task> findByNameContainingIgnoreCase(String namePattern);
 }

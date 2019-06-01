@@ -27,6 +27,7 @@ import TaskEditor from './component/task/TaskEditor';
 import ProjectEditor from './component/project/ProjectEditor';
 import AllProjects from './component/project/AllProjects';
 import ProjectView from './component/project/ProjectView';
+import SearchTasks from './component/task/SearchTasks';
 
 class App extends Component {
     render() {
@@ -47,6 +48,7 @@ class App extends Component {
                         <ProtectedRoute exact path='/tasks/new' component={CreateTask} />
                         <ProtectedRoute exact path='/tasks/edit/:id' component={TaskEditor} />
                         <ProtectedRoute exact path='/tasks/my' component={MyTasks} />
+                        <ProtectedRoute exact path='/tasks/search/:name' component={SearchTasks} />
                         <ProtectedRoute exact path='/tasks/active/all' component={AllActiveTasks} />
                         <ProtectedRoute exact path='/tasks/:id' component={TaskView} />
 

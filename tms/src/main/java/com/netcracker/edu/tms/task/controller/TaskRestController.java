@@ -77,6 +77,12 @@ public class TaskRestController {
     }
 
     @PreAuthorize("hasRole('USER')")
+    @GetMapping("/search/{name}")
+    public Iterable<Task> searchByName(@PathVariable("name") String name) {
+        return taskService.getByNamePattern(name);
+    }
+
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/project/{id}")
     public @ResponseBody Iterable<Task> getTaskByProject(@PathVariable("id") BigInteger projectId){
         Project project = projectService.getProjectById(projectId);
