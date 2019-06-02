@@ -206,6 +206,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Iterable<Task> getTop10ByNamePattern(String namePattern) {
+        String preprocessed = namePattern.toLowerCase();
+        return taskRepository.findTop2ByNameContainingIgnoreCase(preprocessed);
+    }
+
+    @Override
     public void sendNewTaskToAssignee(Task newTask) {
         List<String> assigneeEmail = new ArrayList<>();
         assigneeEmail.add(newTask.getAssignee().getEmail());

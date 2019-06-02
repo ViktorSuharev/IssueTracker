@@ -57,6 +57,8 @@ public interface TaskService {
 
     Iterable<Task> getByNamePattern(String namePattern);
 
+    Iterable<Task> getTop10ByNamePattern(String namePattern);
+
     void sendNewTaskToAssignee(Task newTask);
 
     void taskUpdateMailNotification(Task updatedTask, String comment, User author);

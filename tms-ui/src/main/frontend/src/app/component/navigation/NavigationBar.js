@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, FormControl, Button, InputGroup } from 'react-bootstrap';
 import { AuthConsumer } from '../login/AuthContext';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import '../styles.css';
 
-export default class NavigationBar extends Component {
+class NavigationBar extends Component {
     constructor(props) {
         super(props);
 
@@ -59,41 +59,43 @@ export default class NavigationBar extends Component {
                 </Nav>
 
                 {/* SEARCH BOX */}
-                <Form inline>
-                    <FormControl 
-                        type="text" 
-                        placeholder="Search" 
-                        className="mr-sm-2"
-                        onChange={ (event) => {console.log(event.target.value); this.setState({searchText: event.target.value}) }} 
+                <Form inline><InputGroup>
+                    <FormControl
+                        placeholder="Search"
+                        defaultValue={this.props.match.params.name}
+                        onChange={(event) => this.setState({ searchText: event.target.value })}
                     />
-
-                    <Button variant="outline-info"
-                            onClick= {(e) => {
+                    <InputGroup.Append>
+                        <Button variant="outline-info"
+                            onClick={(e) => {
                                 e.preventDefault();
 
                                 let name = this.state.searchText;
-                                if(!name)
+                                if (!name)
                                     return;
 
                                 const link = '/tasks/search/' + name;
-                                this.setState({shouldRedirect: true, redirectLink: link});      
+                                // this.props.history.goBack();
+                                this.props.history.replace(link);
+                                // this.setState({shouldRedirect: true, redirectLink: link});      
                             }}>
-                        Search
-                    </Button>
+                            Search</Button>
+                    </InputGroup.Append>
+                </InputGroup>
                 </Form>
 
                 {/* USER ACTIONS */}
                 <NavDropdown title={signedAsLabel} id='collasible-nav-dropdown'>
                     <AuthConsumer>
                         {({ logout, user }) => <div>
-                            <NavDropdown.Item><Link className='black-link' to={'/users/'+user.id}>About me</Link></NavDropdown.Item>
+                            <NavDropdown.Item><Link className='black-link' to={'/users/' + user.id}>About me</Link></NavDropdown.Item>
                             <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
-                            </div>
+                        </div>
                         }
                     </AuthConsumer>
                 </NavDropdown>
 
-                { this.state.shouldRedirect ? <Redirect to={this.state.redirectLink} /> : null }
+                {/* { this.state.shouldRedirect ? <Redirect to={this.state.redirectLink} /> : null } */}
             </Navbar.Collapse>
         </Navbar>;
     }
@@ -110,3 +112,5 @@ export default class NavigationBar extends Component {
         </AuthConsumer>
     }
 }
+
+export default withRouter(NavigationBar);
