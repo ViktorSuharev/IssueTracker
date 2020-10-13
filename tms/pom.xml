@@ -13,7 +13,7 @@
         <third-party.jaxb.version>2.3.0</third-party.jaxb.version>
         <third-party.velocity.version>1.7</third-party.velocity.version>
         <third-party.jasypt.version>2.1.1</third-party.jasypt.version>
-        <third-party.junit.version>4.13-beta-1</third-party.junit.version>
+        <third-party.junit.version>4.13.1</third-party.junit.version>
         <third-party.mockito.version>2.23.0</third-party.mockito.version>
     </properties>
 
